@@ -12,7 +12,7 @@ import java.rmi.RemoteException;
  * Time: 9:50:01 AM
  * To change this template use File | Settings | File Templates.
  */
-public class RemoteTestData {
+public class TestDB {
 
     private static final int maxRecords = 25;
 

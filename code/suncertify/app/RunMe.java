@@ -9,10 +9,10 @@
 
 package suncertify.app;
 
-import suncertify.network.RemoteDataAdapter;
-import suncertify.network.RemoteDB;
+import suncertify.rmi.RemoteDataAdapter;
 import suncertify.ui.RunMeFrame;
 import suncertify.db.Data;
+import suncertify.db.DB;
 
 import java.rmi.Naming;
 import java.rmi.RMISecurityManager;
@@ -58,10 +58,10 @@ public class RunMe {
               Data adaptee = new Data("db-2x2.db");
               RemoteDataAdapter adapter = new RemoteDataAdapter(adaptee);
 
-              System.out.println("Publishing service \"" + RemoteDB.SERVICENAME + "\" in local registry.");
-              localRegistry.rebind(RemoteDB.SERVICENAME, adapter);
+              System.out.println("Publishing service \"" + DB.SERVICENAME + "\" in local registry.");
+              localRegistry.rebind(DB.SERVICENAME, adapter);
 
-              System.out.println("Published RemoteDB as service \"" + RemoteDB.SERVICENAME + "\". Ready.");
+              System.out.println("Published RemoteDB as service \"" + DB.SERVICENAME + "\". Ready.");
 
            } catch (RemoteException e) {
               System.out.println( "Problem with remote object" + e );

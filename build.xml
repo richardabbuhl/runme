@@ -4,6 +4,7 @@
     <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
     <property environment="env"/>
     <property name="src.dir" value="${basedir}/code"/>
+    <property name="testsrc.dir" value="${basedir}/test-src"/>
     <property name="out.dir" value="${basedir}/out"/>
     <property name="classes.dir" value="${basedir}/classes"/>
     <property name="javadocs.dir" value="${basedir}/docs/javadocs"/>
@@ -20,6 +21,10 @@
         <mkdir dir="${out.dir}"/>
         <javac debug="on" srcdir="${src.dir}" destdir="${classes.dir}"/>
         <rmic classname="suncertify.rmi.RemoteDataAdapter" base="${classes.dir}"/>
+    </target>
+
+    <target name="compiletest" depends="compile">
+        <javac debug="on" srcdir="${testsrc.dir}" destdir="${classes.dir}"/>
     </target>
 
     <target name="doc">
@@ -55,6 +60,9 @@
                 <attribute name="Main-Class" value="suncertify.app.RunMe"/>
             </manifest>
         </jar>
+    </target>
+
+    <target name="buildtest" depends="compiletest">
     </target>
 
     <target name="release" depends="doc, build"/>
