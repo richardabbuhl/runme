@@ -61,19 +61,22 @@ public class Data implements DB {
             schema = readSchema(file);
             file.seek(schema.getOffset() + recNo * (schema.getLengthAllFields() + 2));
             short flag = file.readShort();
-            for (int i = 0; i < schema.getNumFields(); i++) {
-                StringBuffer sb = new StringBuffer();
-                for (int k = 0; k < schema.getFields()[i].getLength(); k++) {
-                    sb.append((char)file.readByte());
+            if (flag == 0) {
+                for (int i = 0; i < schema.getNumFields(); i++) {
+                    StringBuffer sb = new StringBuffer();
+                    for (int k = 0; k < schema.getFields()[i].getLength(); k++) {
+                        sb.append((char)file.readByte());
+                    }
+                    System.out.print(schema.getFields()[i].getName() + "=" + sb.toString().trim());
+                    if (i + 1 == schema.getNumFields()) {
+                        System.out.println();
+                    } else {
+                        System.out.print(", ");
+                    }
                 }
-                System.out.print(schema.getFields()[i].getName() + "=" + sb.toString().trim());
-                if (i + 1 == schema.getNumFields()) {
-                    System.out.println();
-                } else {
-                    System.out.print(", ");
-                }
+            } else {
+                throw new RecordNotFoundException("Record " + recNo + " was not found");
             }
-            file.close();
 
         } catch(Exception e) {
             System.out.println("Error" + e.toString());
