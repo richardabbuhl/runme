@@ -60,6 +60,7 @@
                 <attribute name="Main-Class" value="suncertify.app.RunMe"/>
             </manifest>
         </jar>
+        <copy file="db-2x2.db" todir="${out.dir}"/>
     </target>
 
     <target name="buildtest" depends="compiletest">
