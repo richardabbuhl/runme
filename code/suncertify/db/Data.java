@@ -55,6 +55,7 @@ public class Data implements DB {
     }
 
     public String[] read(int recNo) throws RecordNotFoundException {
+        String[] result = null;
         RandomAccessFile file = null;
         try {
             file = new RandomAccessFile(filename, "r");
@@ -62,17 +63,13 @@ public class Data implements DB {
             file.seek(schema.getOffset() + recNo * (schema.getLengthAllFields() + 2));
             short flag = file.readShort();
             if (flag == 0) {
+                result = new String[schema.getNumFields()];
                 for (int i = 0; i < schema.getNumFields(); i++) {
                     StringBuffer sb = new StringBuffer();
                     for (int k = 0; k < schema.getFields()[i].getLength(); k++) {
                         sb.append((char)file.readByte());
                     }
-                    System.out.print(schema.getFields()[i].getName() + "=" + sb.toString().trim());
-                    if (i + 1 == schema.getNumFields()) {
-                        System.out.println();
-                    } else {
-                        System.out.print(", ");
-                    }
+                    result[i] = sb.toString();
                 }
             } else {
                 throw new RecordNotFoundException("Record " + recNo + " was not found");
@@ -90,7 +87,7 @@ public class Data implements DB {
                 }
             }
         }
-        return new String[0];
+        return result;
     }
 
     public void update(int recNo, String[] data, long lockCookie) throws RecordNotFoundException, SecurityException {
@@ -100,30 +97,60 @@ public class Data implements DB {
             schema = readSchema(file);
             file.seek(schema.getOffset() + recNo * (schema.getLengthAllFields() + 2));
             short flag = file.readShort();
-            for (int i = 0; i < schema.getNumFields(); i++) {
-                StringBuffer sb = new StringBuffer();
-                for (int k = 0; k < schema.getFields()[i].getLength(); k++) {
-                    sb.append((char)file.readByte());
+            if (flag == 0) {
+                for (int i = 0; i < schema.getNumFields(); i++) {
+                    if (i < data.length && data[i] != null) {
+                        file.writeBytes(data[i]);
+                        for (int k = 0; k < schema.getFields()[i].getLength() - data[i].length(); k++) {
+                            file.writeBytes(" ");
+                        }
+                    } else {
+                        StringBuffer sb = new StringBuffer();
+                        for (int k = 0; k < schema.getFields()[i].getLength(); k++) {
+                            sb.append((char)file.readByte());
+                        }
+                    }
                 }
-                System.out.print(schema.getFields()[i].getName() + "=" + sb.toString().trim());
-                if (i + 1 == schema.getNumFields()) {
-                    System.out.println();
-                } else {
-                    System.out.print(", ");
-                }
+            } else {
+                throw new RecordNotFoundException("Record " + recNo + " was not found");
             }
-            file.close();
 
         } catch(Exception e) {
             throw new RecordNotFoundException(e.getMessage());
+        } finally {
+            if (file != null) {
+                try {
+                    file.close();
+                } catch (Exception e) {
+                    System.out.println("Error" + e.toString());
+                }
+            }
         }
     }
 
     public void delete(int recNo, long lockCookie) throws RecordNotFoundException, SecurityException {
+        RandomAccessFile file = null;
         try {
-            RandomAccessFile file = readOpen();
+            file = new RandomAccessFile(filename, "rw");
+            schema = readSchema(file);
+            file.seek(schema.getOffset() + recNo * (schema.getLengthAllFields() + 2));
+            file.writeShort(0x8000);
+            for (int i = 0; i < schema.getNumFields(); i++) {
+                for (int k = 0; k < schema.getFields()[i].getLength(); k++) {
+                    file.writeBytes(" ");
+                }
+            }
+
         } catch(Exception e) {
             throw new RecordNotFoundException(e.getMessage());
+        } finally {
+            if (file != null) {
+                try {
+                    file.close();
+                } catch (Exception e) {
+                    System.out.println("Error" + e.toString());
+                }
+            }
         }
     }
 
@@ -137,30 +164,64 @@ public class Data implements DB {
     }
 
     public int create(String[] data) throws DuplicateKeyException {
+        int recNo = 0;
         RandomAccessFile file = null;
         try {
             file = new RandomAccessFile(filename, "rw");
             schema = readSchema(file);
-            file.seek(file.length());
-            short flag = file.readShort();
-            for (int i = 0; i < schema.getNumFields(); i++) {
-                StringBuffer sb = new StringBuffer();
-                for (int k = 0; k < schema.getFields()[i].getLength(); k++) {
-                    sb.append((char)file.readByte());
+            int nextPos = schema.getOffset() + recNo * (schema.getLengthAllFields() + 2);
+            while (nextPos < file.length()) {
+                file.seek(nextPos);
+                short flag = file.readShort();
+                if (flag == 0x8000) {
+                    file.seek(nextPos);
+                    file.writeShort(0);
+                    for (int i = 0; i < schema.getNumFields(); i++) {
+                        if (i < data.length && data[i] != null) {
+                            file.writeBytes(data[i]);
+                            for (int k = 0; k < schema.getFields()[i].getLength() - data[i].length(); k++) {
+                                file.writeBytes(" ");
+                            }
+                        } else {
+                            for (int k = 0; k < schema.getFields()[i].getLength(); k++) {
+                                file.writeBytes(" ");
+                            }
+                        }
+                    }
+                    return recNo;
                 }
-                System.out.print(schema.getFields()[i].getName() + "=" + sb.toString().trim());
-                if (i + 1 == schema.getNumFields()) {
-                    System.out.println();
+                recNo++;
+                nextPos = schema.getOffset() + recNo * (schema.getLengthAllFields() + 2);
+            }
+
+            file.seek(file.length());
+            file.writeShort(0);
+            for (int i = 0; i < schema.getNumFields(); i++) {
+                if (i < data.length && data[i] != null) {
+                    file.writeBytes(data[i]);
+                    for (int k = 0; k < schema.getFields()[i].getLength() - data[i].length(); k++) {
+                        file.writeBytes(" ");
+                    }
                 } else {
-                    System.out.print(", ");
+                    for (int k = 0; k < schema.getFields()[i].getLength(); k++) {
+                        file.writeBytes(" ");
+                    }
                 }
             }
-            file.close();
 
         } catch(Exception e) {
-            System.out.println(e.getMessage());
+            throw new DuplicateKeyException(e.getMessage());
+        } finally {
+            if (file != null) {
+                try {
+                    file.close();
+                } catch (Exception e) {
+                    System.out.println("Error" + e.toString());
+                }
+            }
         }
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+
+        return recNo;
     }
 
     public long lock(int recNo) throws RecordNotFoundException {
