@@ -305,8 +305,7 @@ public class Data implements DB {
             Long key = new Long(recNo);
             while (cookies.get(key) != null) {
                 try {
-                    // Wait a while for the lock to be freed.
-                    System.out.println("Waiting for recNo = " + recNo);
+                    // Wait for notification to check the lock.
                     cookies.wait();
                 } catch (InterruptedException e) { }
             }
