@@ -1,125 +1,26 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="runme" default="all">
+<project name="runme" default="all" basedir=".">
 
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+    <property environment="env"/>
+    <property name="src.dir" value="${basedir}/code"/>
+    <property name="out.dir" value="${basedir}/out"/>
+    <property name="classes.dir" value="${basedir}/classes"/>
 
-    <!-- Uncomment the following property if no tests compilation is needed -->
-    <!--
-    <property name="skip.tests" value="true"/>
-     -->
-
-    <!-- Compiler options -->
-
-    <property name="compiler.debug" value="on"/>
-    <property name="compiler.generate.no.warnings" value="off"/>
-    <property name="compiler.args" value=""/>
-    <property name="compiler.max.memory" value="128m"/>
-    <patternset id="compiler.excluded"/>
-    <patternset id="compiler.resources">
-        <include name="**/?*.properties"/>
-        <include name="**/?*.xml"/>
-        <include name="**/?*.gif"/>
-        <include name="**/?*.png"/>
-        <include name="**/?*.jpeg"/>
-        <include name="**/?*.jpg"/>
-        <include name="**/?*.html"/>
-        <include name="**/?*.dtd"/>
-        <include name="**/?*.tld"/>
-    </patternset>
-    <!-- JDK definitions -->
-
-    <property name="jdk.home.java_version_1.4.2_05" value="C:/devtools/j2sdk1.4.2_05"/>
-    <path id="jdk.classpath.java_version_1.4.2_05">
-        <fileset dir="${jdk.home.java_version_1.4.2_05}">
-            <include name="jre/lib/charsets.jar"/>
-            <include name="jre/lib/jce.jar"/>
-            <include name="jre/lib/jsse.jar"/>
-            <include name="jre/lib/plugin.jar"/>
-            <include name="jre/lib/rt.jar"/>
-            <include name="jre/lib/sunrsasign.jar"/>
-            <include name="jre/lib/ext/dnsns.jar"/>
-            <include name="jre/lib/ext/ldapsec.jar"/>
-            <include name="jre/lib/ext/localedata.jar"/>
-            <include name="jre/lib/ext/sunjce_provider.jar"/>
-        </fileset>
-    </path>
-
-    <property name="project.jdk.home" value="${jdk.home.java_version_1.4.2_05}"/>
-    <property name="project.jdk.classpath" value="jdk.classpath.java_version_1.4.2_05"/>
-    <!-- Project Libraries -->
-    <!-- Global Libraries -->
-
-
-    <dirname property="module.runme.basedir" file="${ant.file}"/>
-
-
-    <property name="module.jdk.home.runme" value="${project.jdk.home}"/>
-    <property name="module.jdk.classpath.runme" value="${project.jdk.classpath}"/>
-
-    <property name="compiler.args.runme" value="${compiler.args}"/>
-
-    <property name="runme.output.dir" value="${module.runme.basedir}/classes"/>
-    <property name="runme.testoutput.dir" value="${module.runme.basedir}/classes"/>
-
-    <path id="runme.module.bootclasspath">
-        <!-- Paths to be included in compilation bootclasspath -->
-    </path>
-
-    <path id="runme.module.classpath">
-        <path refid="${module.jdk.classpath.runme}"/>
-    </path>
-
-
-    <patternset id="excluded.from.module.runme"/>
-
-    <patternset id="excluded.from.compilation.runme">
-        <patternset refid="excluded.from.module.runme"/>
-        <patternset refid="compiler.excluded"/>
-    </patternset>
-
-    <path id="runme.module.sourcepath">
-        <dirset dir="${module.runme.basedir}">
-            <include name="code"/>
-        </dirset>
-    </path>
-
-
-    <target name="compile.module.runme" depends="compile.module.runme.production,compile.module.runme.tests" description="compile module runme"/>
-
-    <target name="compile.module.runme.production" description="compile module runme production classes">
-        <mkdir dir="${runme.output.dir}"/>
-        <javac destdir="${runme.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memoryMaximumSize="${compiler.max.memory}" fork="true" executable="${module.jdk.home.runme}/bin/javac">
-            <compilerarg line="${compiler.args.runme}"/>
-            <bootclasspath refid="runme.module.bootclasspath"/>
-            <classpath refid="runme.module.classpath"/>
-            <src refid="runme.module.sourcepath"/>
-            <patternset refid="excluded.from.compilation.runme"/>
-        </javac>
-        <copy todir="${runme.output.dir}">
-            <fileset dir="${module.runme.basedir}/code">
-                <patternset refid="compiler.resources"/>
-                <type type="file"/>
-                <patternset refid="excluded.from.compilation.runme"/>
-            </fileset>
-        </copy>
+    <target name="clean">
+      <delete dir="${out.dir}"/>
+      <delete dir="${classes.dir}"/>
     </target>
 
-    <target name="compile.module.runme.tests" depends="compile.module.runme.production" description="compile module runme test classes" unless="skip.tests"/>
-
-    <target name="clean.module.runme" description="cleanup module">
-        <delete dir="${runme.output.dir}"/>
-        <delete dir="${runme.testoutput.dir}"/>
-        <delete dir="out"/>
+    <target name="compile" depends="clean">
+        <mkdir dir="${classes.dir}"/>
+        <mkdir dir="${out.dir}"/>
+        <javac debug="on" srcdir="${src.dir}" destdir="${classes.dir}/"/>
     </target>
 
-    <target name="init" description="Build initialization">
-        <!-- Perform any build initialization in this target -->
-    </target>
-
-    <target name="clean" depends="clean.module.runme" description="cleanup all"/>
-
-    <target name="jar">
-        <mkdir dir="out"/>
-        <jar jarfile="out/runme.jar">
+    <target name="build" depends="compile">
+        <mkdir dir="${out.dir}"/>
+        <jar destfile="${out.dir}/runme.jar">
             <fileset dir="." includes="**/*.class, **/*.java, docs/*.*, version.txt, db-2x2.db"/>
             <manifest>
                 <attribute name="Main-Class" value="runme"/>
@@ -127,6 +28,6 @@
         </jar>
     </target>
 
-    <target name="all" depends="init, clean, compile.module.runme, jar" description="build all"/>
+    <target name="all" depends="build" description="build all"/>
 
 </project>
