@@ -46,6 +46,14 @@ public class Data implements DB {
 
     public String[] read(int recNo) throws RecordNotFoundException {
         synchronized (cookies) {
+            Long key = new Long(recNo);
+            while (cookies.get(key) != null) {
+                try {
+                    // Wait for notification to again check the lock.
+                    cookies.wait();
+                } catch (InterruptedException e) { }
+            }
+
             String[] result = null;
             RandomAccessFile file = null;
             try {
@@ -309,7 +317,7 @@ public class Data implements DB {
             Long key = new Long(recNo);
             while (cookies.get(key) != null) {
                 try {
-                    // Wait for notification to check the lock.
+                    // Wait for notification to again check the lock.
                     cookies.wait();
                 } catch (InterruptedException e) { }
             }
