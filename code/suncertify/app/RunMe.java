@@ -35,9 +35,8 @@ public class RunMe {
 
     /**
      * Start the server.
-     * @param hostName hostname to user for starting the server.
      */
-    public void createServer(String hostName) {
+    public void createServer() {
 //        if (System.getSecurityManager() == null) {
 //            System.setSecurityManager(new RMISecurityManager());
 //        }
@@ -53,7 +52,7 @@ public class RunMe {
 
         try {
               System.out.println("Creating a local RMI registry on the default port.");
-              Registry localRegistry = LocateRegistry.createRegistry(1098);
+              Registry localRegistry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
 
               System.out.println("Creating local object and remote adapter.");
               Data adaptee = new Data("db-2x2.db");
@@ -116,7 +115,7 @@ public class RunMe {
         if (mode == SERVER_MODE) {
 
             RunMe app = new RunMe();
-            app.createServer("localhost");
+            app.createServer();
 
         } else if (mode == CLIENT_MODE) {
 
