@@ -1,9 +1,6 @@
 package suncertify.db;
 
-import java.io.FileInputStream;
-import java.io.DataInputStream;
-import java.io.FileNotFoundException;
-import java.io.BufferedInputStream;
+import java.io.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -20,6 +17,30 @@ public class Data implements DB {
         this.filename = filename;
     }
 
+    private Schema readSchema(DataInputStream file) throws IOException {
+        Schema schema = new Schema();
+        schema.setMagicCookie(file.readInt());
+        schema.setOffset(file.readInt());
+        schema.setNumFields(file.readShort());
+        schema.printHeader();
+
+        Schema.Field[] fields = new Schema.Field[schema.getNumFields()];
+        for (int i = 0; i < schema.getNumFields(); i++) {
+            short nameLength = file.readShort();
+            StringBuffer name = new StringBuffer();
+            for (int k = 0; k < nameLength ; k++){
+                char c = (char)file.readByte();
+                name.append(c);
+            }
+            fields[i] = new Schema.Field();
+            fields[i].setName(name.toString());
+            fields[i].setLength(file.readShort());
+            fields[i].print();
+        }
+        schema.setFields(fields);
+        return schema;
+    }
+
     private DataInputStream open() throws FileNotFoundException {
         /* Open the file for reading */
         FileInputStream pfd = new FileInputStream(filename);
@@ -30,24 +51,7 @@ public class Data implements DB {
     public String[] read(int recNo) throws RecordNotFoundException {
         try {
             DataInputStream file = open();
-            int magicCookie = file.readInt();  // 4 bytes
-            int offset = file.readInt();  // 4 bytes
-            short numFields = file.readShort(); // 2 bytes
-            System.out.println("Mc = " + magicCookie + " offset = " + offset + " nf = " + numFields);
-
-            for (int i = 0; i < numFields; i++) {
-                short nameLength = file.readShort();
-                System.out.print("nameLength = " + nameLength );
-                StringBuffer name = new StringBuffer();
-                for (int k = 0; k < nameLength ; k++){
-                    char c = (char)file.readByte(); 
-                    name.append(c);
-                }
-                System.out.print(", name = " + name);
-                short fieldLength = file.readShort();
-                System.out.println(", fieldLength = " + fieldLength);
-            }
-
+            Schema schema = readSchema(file);
         } catch(Exception e) {
             System.out.println("Error" + e.toString());
             throw new RecordNotFoundException(e.getMessage());
