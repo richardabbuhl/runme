@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="runme" default="all" basedir=".">
+<project name="runme" default="build" basedir=".">
 
     <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
     <property environment="env"/>
@@ -27,7 +27,5 @@
             </manifest>
         </jar>
     </target>
-
-    <target name="all" depends="build" description="build all"/>
 
 </project>
