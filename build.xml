@@ -20,10 +20,11 @@
 
     <target name="build" depends="compile">
         <mkdir dir="${out.dir}"/>
-        <jar destfile="${out.dir}/runme.jar">
-            <fileset dir="." includes="**/*.class, **/*.java, docs/*.*, version.txt, db-2x2.db"/>
+        <jar jarfile="${out.dir}/runme.jar">
+            <fileset dir="${classes.dir}" includes="**/*.class"/>
+            <fileset dir="." includes="**/*.java, docs/*.*, version.txt, db-2x2.db"/>
             <manifest>
-                <attribute name="Main-Class" value="runme"/>
+                <attribute name="Main-Class" value="suncertify.driver.runme"/>
             </manifest>
         </jar>
     </target>
