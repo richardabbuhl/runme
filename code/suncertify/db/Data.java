@@ -1,6 +1,8 @@
 package suncertify.db;
 
 import java.io.*;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by IntelliJ IDEA.
@@ -155,12 +157,59 @@ public class Data implements DB {
     }
 
     public int[] find(String[] criteria) {
+        int[] result = null;
+        RandomAccessFile file = null;
         try {
-            RandomAccessFile file = readOpen();
+            file = new RandomAccessFile(filename, "rw");
+            schema = readSchema(file);
+            List resultList = new ArrayList();
+            int recNo = 0;
+            int nextPos = schema.getOffset() + recNo * (schema.getLengthAllFields() + 2);
+            while (nextPos < file.length()) {
+                file.seek(nextPos);
+                short flag = file.readShort();
+                boolean match = false;
+                if (flag == 0) {
+                    for (int i = 0; i < schema.getNumFields(); i++) {
+                        StringBuffer sb = new StringBuffer();
+                        for (int k = 0; k < schema.getFields()[i].getLength(); k++) {
+                            sb.append((char)file.readByte());
+                        }
+                        if (criteria[i] != null) {
+                            if ("*".equals(criteria[i]) || sb.toString().startsWith(criteria[i])) {
+                                match = true;
+                            }
+                        }
+                    }
+                }
+                if (match) {
+                    resultList.add(new Integer(recNo));
+                }
+                recNo++;
+                nextPos = schema.getOffset() + recNo * (schema.getLengthAllFields() + 2);
+            }
+
+            if (resultList.size() > 0) {
+                result = new int[resultList.size()];
+                for (int i = 0; i < resultList.size(); i++) {
+                    Integer a = (Integer)resultList.get(i);
+                    result[i] = a.intValue();
+                }
+            }
+
         } catch(Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("Exception " + e.toString());
+        } finally {
+            if (file != null) {
+                try {
+                    file.close();
+                } catch (Exception e) {
+                    System.out.println("Error" + e.toString());
+                }
+            }
         }
-        return new int[0];
+
+        return result;
     }
 
     public int create(String[] data) throws DuplicateKeyException {
