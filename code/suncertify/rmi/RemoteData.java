@@ -18,8 +18,9 @@ public class RemoteDataAdapter extends UnicastRemoteObject implements RemoteData
 
     protected Data adaptee;
 
-    public RemoteDataAdapter( Data adaptee ) throws RemoteException {
-       this.adaptee = adaptee;
+    public RemoteDataAdapter(Data adaptee) throws RemoteException {
+        super();
+        this.adaptee = adaptee;
     }
 
     public String[] read(int recNo) throws RecordNotFoundException {

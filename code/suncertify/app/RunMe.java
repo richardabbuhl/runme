@@ -1,11 +1,15 @@
 package suncertify;
 
+import suncertify.network.RemoteDataAdapter;
+
 import javax.swing.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.*;
+import java.rmi.Naming;
+import java.rmi.RMISecurityManager;
 
 /**
  * Created by IntelliJ IDEA.
@@ -62,6 +66,17 @@ public class runme {
             UIManager.setLookAndFeel(
                 UIManager.getCrossPlatformLookAndFeelClassName());
         } catch (Exception e) { }
+
+        if (System.getSecurityManager() == null) {
+            System.setSecurityManager(new RMISecurityManager());
+        }
+        try {
+            String name = "//" + args[0] + "/RemoteData";
+            RemoteDataAdapter data = (RemoteDataAdapter) Naming.lookup(name);
+        } catch (Exception e) {
+            System.err.println("Exception: " + e.getMessage());
+            e.printStackTrace();
+        }
 
         //Create the top-level container and add contents to it.
         JFrame frame = new JFrame("SwingApplication");
