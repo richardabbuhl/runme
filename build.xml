@@ -18,7 +18,8 @@
     <target name="compile" depends="clean">
         <mkdir dir="${classes.dir}"/>
         <mkdir dir="${out.dir}"/>
-        <javac debug="on" srcdir="${src.dir}" destdir="${classes.dir}/"/>
+        <javac debug="on" srcdir="${src.dir}" destdir="${classes.dir}"/>
+        <rmic classname="suncertify.network.RemoteDataAdapter" base="${classes.dir}"/>
     </target>
 
     <target name="doc">
