@@ -3,6 +3,8 @@ package suncertify.ui;
 import suncertify.db.Data;
 
 import javax.swing.*;
+import javax.swing.table.TableModel;
+import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -17,7 +19,41 @@ import java.util.Vector;
  */
 public class RunMeFrame extends JFrame {
 
+    private Data data = new Data("db-2x2.db");
     private JTextField subcontractorName = new JTextField();
+    private Button searchButton = new Button("Search");
+    private String[] columnNames = {"Subcontractor Name",
+                                    "City",
+                                    "Types of work performed",
+                                    "Number of staff in organization",
+                                    "Hourly charge",
+                                    "Customer holding this record"};
+    JTable resultsTable = new JTable();
+    MyTableModel resultsModel = new MyTableModel(new Vector());
+
+    public class MyTableModel extends AbstractTableModel {
+        private Vector v = new Vector();
+
+        MyTableModel(Vector v){
+            this.v = v;
+        }
+
+        public String getColumnName(int colIndex) {
+            return columnNames[colIndex];
+        }
+
+        public int getColumnCount() {
+            return columnNames.length;
+        }
+
+        public int getRowCount() {
+            return (v.size() - 1);
+        }
+
+        public Object getValueAt(int rowIndex, int colIndex) {
+            return ((String[])v.get(rowIndex + 1))[colIndex];
+        }
+    }
 
     public JMenuBar createMenuBar() {
         JMenuBar menuBar;
@@ -48,10 +84,12 @@ public class RunMeFrame extends JFrame {
         return menuBar;
     }
 
-    private Vector matchTest(Data data) {
+    private Vector matchTest() {
         Vector v = new Vector();
         try {
-            String [] d = new String[6];
+            String [] d = { "", "", "", "", "", "" };
+            d[0] = subcontractorName.getText().trim().length() > 0 ? subcontractorName.getText().trim() : "";
+            System.out.println("subcontractorName = " + subcontractorName.getText().trim());
             int[] matches = data.find(d);
             if (matches != null) {
                 for (int i = 0; i < matches.length; i++) {
@@ -80,36 +118,31 @@ public class RunMeFrame extends JFrame {
                 50) //right
         );
         pane.setLayout(new GridLayout());
-        pane.add(new Button("Search"));
+        pane.add(searchButton);
         pane.add(subcontractorName);
-        //pane.add(label);
+
+        searchButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Vector o = matchTest();
+                resultsTable.setModel(new MyTableModel(o));
+//                searchData = new Object[o.size()][6];
+//                for (int i = 0; i < o.size(); i++) {
+//                    String [] t = (String[])o.get(i);
+//                    for (int j = 0; j < 6; j++) {
+//                        searchData[i][j] = t[j].trim();
+//                    }
+//                }
+            }
+        });
 
         return pane;
     }
 
     private JScrollPane addComponents() {
-        String[] columnNames = {"Subcontractor Name",
-                                "City",
-                                "Types of work performed",
-                                "Number of staff in organization",
-                                "Hourly charge",
-                                "Customer holding this record"};
-        Data d = new Data("db-2x2.db");
-
-        Vector o = matchTest(d);
-        Object[][] c = new Object[o.size()][6];
-        for (int i = 0; i < o.size(); i++) {
-            String [] t = (String[])o.get(i);
-            for (int j = 0; j < 6; j++) {
-                c[i][j] = t[j].trim();
-            }
-        }
-
-        final JTable table = new JTable(c, columnNames);
-        table.setPreferredScrollableViewportSize(new Dimension(800, 600));
-
-        //Create the scroll pane and add the table to it.
-        JScrollPane scrollPane = new JScrollPane(table);
+        // Create the scroll pane and add the table to it.
+        resultsTable.setModel(resultsModel);
+        resultsTable.setPreferredScrollableViewportSize(new Dimension(800, 600));
+        JScrollPane scrollPane = new JScrollPane(resultsTable);
 
         // Return the scroll pane.
         return scrollPane;
