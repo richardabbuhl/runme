@@ -69,16 +69,13 @@ public class Data implements DB {
                 throw new RecordNotFoundException("Record " + recNo + " was not found");
             }
 
-        } catch(Exception e) {
-            System.out.println("Error" + e.toString());
+        } catch (IOException e) {
             throw new RecordNotFoundException(e.getMessage());
         } finally {
             if (file != null) {
                 try {
                     file.close();
-                } catch (Exception e) {
-                    System.out.println("Error" + e.toString());
-                }
+                } catch (IOException e) { }
             }
         }
         return result;
@@ -120,9 +117,9 @@ public class Data implements DB {
                 throw new RecordNotFoundException("Record " + recNo + " was not found");
             }
 
-        } catch(FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             throw new RecordNotFoundException(e.getMessage());
-        } catch(IOException e) {
+        } catch (IOException e) {
             throw new RecordNotFoundException(e.getMessage());
         } finally {
             if (file != null) {
@@ -151,7 +148,9 @@ public class Data implements DB {
                 }
             }
 
-        } catch(Exception e) {
+        } catch (FileNotFoundException e) {
+            throw new RecordNotFoundException(e.getMessage());
+        } catch (IOException e) {
             throw new RecordNotFoundException(e.getMessage());
         } finally {
             if (file != null) {
@@ -207,7 +206,7 @@ public class Data implements DB {
                 }
             }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println("Exception " + e.toString());
         } finally {
             if (file != null) {
@@ -270,7 +269,7 @@ public class Data implements DB {
                 }
             }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new DuplicateKeyException(e.getMessage());
         } finally {
             if (file != null) {
@@ -306,8 +305,9 @@ public class Data implements DB {
                 throw new RecordNotFoundException("Record " + recNo + " was not found");
             }
 
-        } catch(Exception e) {
-            System.out.println("Error" + e.toString());
+        } catch (FileNotFoundException e) {
+            throw new RecordNotFoundException(e.getMessage());
+        } catch (IOException e) {
             throw new RecordNotFoundException(e.getMessage());
         } finally {
             if (file != null) {
@@ -330,8 +330,7 @@ public class Data implements DB {
                 throw new SecurityException("Record " + recNo + " cookie invalid");
             }
 
-        } catch(Exception e) {
-            System.out.println("Error" + e.toString());
+        } catch (Exception e) {
             throw new RecordNotFoundException(e.getMessage());
         }
     }
