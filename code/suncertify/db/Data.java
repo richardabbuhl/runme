@@ -15,22 +15,41 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by IntelliJ IDEA.
- * User: rabbuhl
- * Date: Nov 19, 2004
- * Time: 10:39:04 PM
- * To change this template use File | Settings | File Templates.
+ * Data implements the DB class in order to provide access to the customer data.
+ * @version 1.00
+ * @author Richard Abbuhl
  */
 public class Data implements DB {
 
+    /**
+     * The database schema is cached for performance reasons.
+     */
     private static Schema schema = null;
+
+    /**
+     * A HashMap is used for holding the locking information to lock the database using cookies.
+     */
     private static HashMap cookies = new HashMap();
+
+    /**
+     * The path to the data file.
+     */
     private String filename;
 
+    /**
+     * Initialize a Data object so that it contains the path to the data file.
+     * @param filename path to the data file.
+     */
     public Data(String filename) {
         this.filename = filename;
     }
 
+    /**
+     * Read in the schema and return a completed schema object.
+     * @param file a readable file object.
+     * @return a filled-in schema object.
+     * @throws IOException thrown if there are problems accessing the file.
+     */
     private Schema readSchema(RandomAccessFile file) throws IOException {
         Schema schema = new Schema();
         schema.setMagicCookie(file.readInt());
@@ -52,6 +71,14 @@ public class Data implements DB {
         return schema;
     }
 
+    /**
+     * Reads a record from the file and returns an array where each element is a record value.  If the record
+     * is locked then read waits until the record is unlocked before proceeding.  This prevents a dirty read
+     * of the record.
+     * @param recNo record from the file to be read.
+     * @return an array where each element is a record value.
+     * @throws RecordNotFoundException thrown if there are problems reading the record.
+     */
     public String[] read(int recNo) throws RecordNotFoundException {
         synchronized (cookies) {
             Long key = new Long(recNo);
@@ -104,6 +131,12 @@ public class Data implements DB {
         }
     }
 
+    /**
+     * Checks that record is actually locked
+     * @param recNo record number whose lock is to be checked.
+     * @param lockCookie cookie value that represents the lock.
+     * @throws SecurityException thrown if the record is not locked.
+     */
     private void lockCheck(int recNo, long lockCookie) throws SecurityException {
         Long key = new Long(recNo);
         Long value = (Long) cookies.get(key);
@@ -112,6 +145,14 @@ public class Data implements DB {
         }
     }
 
+    /**
+     * Modifies the fields of a record. The new value for field n appears in data[n].
+     * @param recNo record number to be updated.
+     * @param data new values for this record.
+     * @param lockCookie cookie value that represents the lock.
+     * @throws RecordNotFoundException thrown if the record can not be found in the database.
+     * @throws SecurityException thrown if the record is locked with a cookie other than lockCookie.
+     */
     public void update(int recNo, String[] data, long lockCookie) throws RecordNotFoundException, SecurityException {
         synchronized (cookies) {
             RandomAccessFile file = null;
@@ -159,6 +200,13 @@ public class Data implements DB {
         }
     }
 
+    /**
+     * Deletes a record, making the record number and associated disk storage available for reuse.
+     * @param recNo record number to be deleted.
+     * @param lockCookie cookie value that represents the lock.
+     * @throws RecordNotFoundException thrown if the record can not be found in the database.
+     * @throws SecurityException thrown if the record is locked with a cookie other than lockCookie.
+     */
     public void delete(int recNo, long lockCookie) throws RecordNotFoundException, SecurityException {
         synchronized (cookies) {
             RandomAccessFile file = null;
@@ -194,6 +242,13 @@ public class Data implements DB {
         }
     }
 
+    /**
+     * Returns an array of record numbers that match the specified criteria. Field n in the database file is described
+     * by criteria[n]. A null value in criteria[n] matches any field value. A non-null  value in criteria[n] matches
+     * any field value that begins with criteria[n]. (For example, "Fred" matches "Fred" or "Freddy".)
+     * @param criteria criteria used for matching records.
+     * @return an array of record numbers that match the specified criteria.
+     */
     public int[] find(String[] criteria) {
         synchronized (cookies) {
             int[] result = null;
@@ -260,6 +315,13 @@ public class Data implements DB {
         }
     }
 
+    /**
+     * Creates a new record in the database (possibly reusing a deleted entry). Inserts the given data, and returns
+     * the record number of the new record.
+     * @param data values for this new record.
+     * @return the record number of the new record.
+     * @throws DuplicateKeyException thrown if the record cannot be created.
+     */
     public int create(String[] data) throws DuplicateKeyException {
         synchronized (cookies) {
             int recNo = 0;
@@ -327,6 +389,14 @@ public class Data implements DB {
         }
     }
 
+    /**
+     * Locks a record so that it can only be updated or deleted by this client. Returned value is a cookie that must
+     * be used when the record is unlocked, updated, or deleted. If the specified record is already locked by a
+     * different client, the current thread gives up the CPU and consumes no CPU cycles until the record is unlocked.
+     * @param recNo record number to be locked.
+     * @return cookie value that represents the lock.
+     * @throws RecordNotFoundException thrown if the record can not be found in the database.
+     */
     public long lock(int recNo) throws RecordNotFoundException {
         synchronized (cookies) {
             Long key = new Long(recNo);
@@ -378,6 +448,14 @@ public class Data implements DB {
         }
     }
 
+    /**
+     * Releases the lock on a record. Cookie must be the cookie returned when the record was locked; otherwise
+     * throws SecurityException.
+     * @param recNo record number to be unlocked.
+     * @param cookie cookie value that represents the lock.
+     * @throws RecordNotFoundException thrown if the record can not be found in the database.
+     * @throws SecurityException thrown if the record is not locked.
+     */
     public void unlock(int recNo, long cookie) throws RecordNotFoundException, SecurityException {
         synchronized (cookies) {
             try {
@@ -387,6 +465,8 @@ public class Data implements DB {
                     throw new SecurityException("Record " + recNo + " cookie invalid");
                 }
 
+            } catch (SecurityException e) {
+                throw new SecurityException(e.getMessage());
             } catch (Exception e) {
                 throw new RecordNotFoundException(e.getMessage());
             } finally {
