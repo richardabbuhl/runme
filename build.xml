@@ -108,7 +108,7 @@
     <target name="clean.module.runme" description="cleanup module">
         <delete dir="${runme.output.dir}"/>
         <delete dir="${runme.testoutput.dir}"/>
-        <delete file="runme.jar"/>
+        <delete dir="out"/>
     </target>
 
     <target name="init" description="Build initialization">
@@ -118,10 +118,11 @@
     <target name="clean" depends="clean.module.runme" description="cleanup all"/>
 
     <target name="jar">
-        <jar jarfile="runme.jar">
+        <mkdir dir="out"/>
+        <jar jarfile="out/runme.jar">
             <fileset dir="." includes="**/*.class, **/*.java, docs/*.*, version.txt, db-2x2.db"/>
             <manifest>
-                <attribute name="Main-Class" value="mtrain"/>
+                <attribute name="Main-Class" value="runme"/>
             </manifest>
         </jar>
     </target>
