@@ -1,3 +1,9 @@
 A file called choices.txt that containing pure ASCII (not a word processor format) text describing the significant design choices
 you made. Detail the problems you perceived, the issues surrounding them, your value judgments, and the decisions that you made.
 This document should also describe any uncertainties you had regarding the project, and the decisions you made when resolving them.
+
+1.  Choose RandomAccessFile since seeks are necessary to read/write files.
+
+2.  Choose to cache the schema.
+
+3.  Choose to use a HashMap for holding the lock.
