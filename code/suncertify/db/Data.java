@@ -28,7 +28,6 @@ public class Data implements DB {
         schema.setMagicCookie(file.readInt());
         schema.setOffset(file.readInt());
         schema.setNumFields(file.readShort());
-        //schema.dump();
 
         Field[] fields = new Field[schema.getNumFields()];
         for (int i = 0; i < schema.getNumFields(); i++) {
@@ -40,7 +39,6 @@ public class Data implements DB {
             fields[i] = new Field();
             fields[i].setName(name.toString());
             fields[i].setLength(file.readShort());
-            //fields[i].dump();
         }
         schema.setFields(fields);
         return schema;
