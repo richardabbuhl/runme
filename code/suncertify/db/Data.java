@@ -24,7 +24,7 @@ public class Data implements DB {
         schema.setNumFields(file.readShort());
         schema.printHeader();
 
-        Schema.Field[] fields = new Schema.Field[schema.getNumFields()];
+        Field[] fields = new Field[schema.getNumFields()];
         for (int i = 0; i < schema.getNumFields(); i++) {
             short nameLength = file.readShort();
             StringBuffer name = new StringBuffer();
@@ -32,7 +32,7 @@ public class Data implements DB {
                 char c = (char)file.readByte();
                 name.append(c);
             }
-            fields[i] = new Schema.Field();
+            fields[i] = new Field();
             fields[i].setName(name.toString());
             fields[i].setLength(file.readShort());
             fields[i].print();

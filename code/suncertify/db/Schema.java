@@ -14,31 +14,6 @@ public class Schema {
     private short numFields;
     private Field[] fields;
 
-    public static class Field {
-        private String name = new String();
-        private short length;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public short getLength() {
-            return length;
-        }
-
-        public void setLength(short length) {
-            this.length = length;
-        }
-
-        public void print() {
-            System.out.println("Name = " + name + ", length = " + length);
-        }
-    }
-
     public int getMagicCookie() {
         return magicCookie;
     }
