@@ -169,7 +169,7 @@ public class TestDB {
             }
 
             for (int i = 0; i < 20; i++) {
-                Thread foo = new Thread(new RemoteTestData.testDataThread(data));
+                Thread foo = new Thread(new TestDB.testDataThread(data));
                 foo.start();
             }
 
