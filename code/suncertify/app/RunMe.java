@@ -12,17 +12,13 @@ package suncertify.app;
 import suncertify.network.RemoteDataAdapter;
 import suncertify.ui.RunMeFrame;
 
-import javax.swing.*;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.*;
 import java.rmi.Naming;
 import java.rmi.RMISecurityManager;
 
 /**
- * Class description goes here.
+ * RunMe is the driver for the runme application.  Based on the mode parameter it either starts the application
+ * in server mode (starts the server), standalone mode (starts the server and client), or the default mode (starts
+ * the client).
  * @version 1.00
  * @author Richard Abbuhl
  */
@@ -74,7 +70,7 @@ public class RunMe {
         }
 
         /**
-         * Show the usage if the user did not follow the command-line conventions.
+         * Show the usage if the user did not follow the command-line conventions and then exit.
          */
         if (displayUsage) {
             showUsage();
@@ -82,7 +78,7 @@ public class RunMe {
         }
 
         /**
-         *
+         * Start the RunMe application in the specified mode.
          */
         if (mode == SERVER_MODE) {
 
