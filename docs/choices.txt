@@ -10,10 +10,13 @@ Database Issues
 I was not sure how to access the records in the file.  By default, I choose the DataAccessStream but it does not allow
 seeking within the file.  Instead, I choose RandomAccessFile since seeks are necessary to read/write files.
 
-For performance reasons, I seemed necessary to cache the schema.  So, I created a Schema class and the schema is read
-and in saved so it can be used when future database accesses are requested.
+For performance reasons, I seemed necessary to cache the schema.  I created a Schema class and the schema is read and
+in saved so it can be used when future database accesses are requested.
 
-To lock the database, I choose to use a HashMap for holding the locking information.
+To lock the database using cookies, I choose to use a HashMap for holding the locking information.
+
+The DB class was modified so that it extends the Remote class so that it can support remote usage.  The handle/body
+pattern was used and an instance of the Data class can be instantiated for local database usage and 
 
 GUI Issues
 
@@ -23,4 +26,5 @@ It was chosen not to allow the user to delete a record.
 
 RMI Implementation
 
-Change:  However, sockets require the client and server to engage in applications-level protocols to encode and decode messages for exchange, and the design of such protocols is cumbersome and can be error-prone.
+Change:  However, sockets require the client and server to engage in applications-level protocols to encode and decode
+messages for exchange, and the design of such protocols is cumbersome and can be error-prone.

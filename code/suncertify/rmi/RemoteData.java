@@ -24,12 +24,11 @@ import java.rmi.RemoteException;
  * Time: 1:58:17 PM
  * To change this template use File | Settings | File Templates.
  */
-public class RemoteDataAdapter extends UnicastRemoteObject implements DB {
+public class RemoteData extends UnicastRemoteObject implements DB {
 
     protected Data adaptee;
 
-    public RemoteDataAdapter(Data adaptee)
-            throws RemoteException {
+    public RemoteData(Data adaptee) throws RemoteException {
         super();
         this.adaptee = adaptee;
     }
