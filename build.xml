@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="scjd" default="all">
+
+
+    <!-- Uncomment the following property if no tests compilation is needed -->
+    <!--
+    <property name="skip.tests" value="true"/>
+     -->
+
+    <!-- Compiler options -->
+
+    <property name="compiler.debug" value="on"/>
+    <property name="compiler.generate.no.warnings" value="off"/>
+    <property name="compiler.args" value=""/>
+    <property name="compiler.max.memory" value="128m"/>
+    <patternset id="compiler.excluded"/>
+    <patternset id="compiler.resources">
+        <include name="**/?*.properties"/>
+        <include name="**/?*.xml"/>
+        <include name="**/?*.gif"/>
+        <include name="**/?*.png"/>
+        <include name="**/?*.jpeg"/>
+        <include name="**/?*.jpg"/>
+        <include name="**/?*.html"/>
+        <include name="**/?*.dtd"/>
+        <include name="**/?*.tld"/>
+    </patternset>
+    <!-- JDK definitions -->
+
+    <property name="jdk.home.java_version_1.4.2_05" value="C:/devtools/j2sdk1.4.2_05"/>
+    <path id="jdk.classpath.java_version_1.4.2_05">
+        <fileset dir="${jdk.home.java_version_1.4.2_05}">
+            <include name="jre/lib/charsets.jar"/>
+            <include name="jre/lib/jce.jar"/>
+            <include name="jre/lib/jsse.jar"/>
+            <include name="jre/lib/plugin.jar"/>
+            <include name="jre/lib/rt.jar"/>
+            <include name="jre/lib/sunrsasign.jar"/>
+            <include name="jre/lib/ext/dnsns.jar"/>
+            <include name="jre/lib/ext/ldapsec.jar"/>
+            <include name="jre/lib/ext/localedata.jar"/>
+            <include name="jre/lib/ext/sunjce_provider.jar"/>
+        </fileset>
+    </path>
+
+    <property name="project.jdk.home" value="${jdk.home.java_version_1.4.2_05}"/>
+    <property name="project.jdk.classpath" value="jdk.classpath.java_version_1.4.2_05"/>
+    <!-- Project Libraries -->
+    <!-- Global Libraries -->
+
+
+    <dirname property="module.scjd.basedir" file="${ant.file}"/>
+
+
+    <property name="module.jdk.home.scjd" value="${project.jdk.home}"/>
+    <property name="module.jdk.classpath.scjd" value="${project.jdk.classpath}"/>
+
+    <property name="compiler.args.scjd" value="${compiler.args}"/>
+
+    <property name="scjd.output.dir" value="${module.scjd.basedir}/classes"/>
+    <property name="scjd.testoutput.dir" value="${module.scjd.basedir}/classes"/>
+
+    <path id="scjd.module.bootclasspath">
+        <!-- Paths to be included in compilation bootclasspath -->
+    </path>
+
+    <path id="scjd.module.classpath">
+        <path refid="${module.jdk.classpath.scjd}"/>
+    </path>
+
+
+    <patternset id="excluded.from.module.scjd"/>
+
+    <patternset id="excluded.from.compilation.scjd">
+        <patternset refid="excluded.from.module.scjd"/>
+        <patternset refid="compiler.excluded"/>
+    </patternset>
+
+    <path id="scjd.module.sourcepath">
+        <dirset dir="${module.scjd.basedir}">
+            <include name="code"/>
+        </dirset>
+    </path>
+
+
+    <target name="compile.module.scjd" depends="compile.module.scjd.production,compile.module.scjd.tests" description="compile module scjd"/>
+
+    <target name="compile.module.scjd.production" description="compile module scjd production classes">
+        <mkdir dir="${scjd.output.dir}"/>
+        <javac destdir="${scjd.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memoryMaximumSize="${compiler.max.memory}" fork="true" executable="${module.jdk.home.scjd}/bin/javac">
+            <compilerarg line="${compiler.args.scjd}"/>
+            <bootclasspath refid="scjd.module.bootclasspath"/>
+            <classpath refid="scjd.module.classpath"/>
+            <src refid="scjd.module.sourcepath"/>
+            <patternset refid="excluded.from.compilation.scjd"/>
+        </javac>
+        <copy todir="${scjd.output.dir}">
+            <fileset dir="${module.scjd.basedir}/code">
+                <patternset refid="compiler.resources"/>
+                <type type="file"/>
+                <patternset refid="excluded.from.compilation.scjd"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="compile.module.scjd.tests" depends="compile.module.scjd.production" description="compile module scjd test classes" unless="skip.tests"/>
+
+    <target name="clean.module.scjd" description="cleanup module">
+        <delete dir="${scjd.output.dir}"/>
+        <delete dir="${scjd.testoutput.dir}"/>
+        <delete file="runme.jar"/>
+    </target>
+
+    <target name="init" description="Build initialization">
+        <!-- Perform any build initialization in this target -->
+    </target>
+
+    <target name="clean" depends="clean.module.scjd" description="cleanup all"/>
+
+    <target name="jar">
+        <jar jarfile="runme.jar">
+            <fileset dir="." includes="**/*.class, **/*.java, docs/*.*, version.txt, db-2x2.db"/>
+            <manifest>
+                <attribute name="Main-Class" value="mtrain"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="all" depends="init, clean, compile.module.scjd, jar" description="build all"/>
+
+</project>
