@@ -11,6 +11,7 @@ import java.io.*;
  */
 public class Data implements DB {
 
+    private static Schema schema = null;
     private String filename;
 
     public Data(String filename) {
@@ -22,15 +23,14 @@ public class Data implements DB {
         schema.setMagicCookie(file.readInt());
         schema.setOffset(file.readInt());
         schema.setNumFields(file.readShort());
-        schema.dump();
+        //schema.dump();
 
         Field[] fields = new Field[schema.getNumFields()];
         for (int i = 0; i < schema.getNumFields(); i++) {
             short nameLength = file.readShort();
             StringBuffer name = new StringBuffer();
             for (int k = 0; k < nameLength ; k++){
-                char c = (char)file.readByte();
-                name.append(c);
+                name.append((char)file.readByte());
             }
             fields[i] = new Field();
             fields[i].setName(name.toString());
@@ -50,8 +50,22 @@ public class Data implements DB {
 
     public String[] read(int recNo) throws RecordNotFoundException {
         try {
+            if (schema == null) {
+                DataInputStream file = open();
+                schema = readSchema(file);
+                file.close();
+            }
             DataInputStream file = open();
-            Schema schema = readSchema(file);
+            file.skip(schema.getOffset() + recNo * (schema.getLengthAllFields() + 2));
+            short flag = file.readShort();
+            for (int i = 0; i < schema.getNumFields(); i++) {
+                StringBuffer sb = new StringBuffer();
+                for (int k = 0; k < schema.getFields()[i].getLength(); k++) {
+                    sb.append((char)file.readByte());
+                }
+                System.out.println(schema.getFields()[i].getName() + "=" + sb.toString());
+            }
+
         } catch(Exception e) {
             System.out.println("Error" + e.toString());
             throw new RecordNotFoundException(e.getMessage());

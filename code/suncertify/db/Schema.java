@@ -38,6 +38,14 @@ public class Schema {
         this.numFields = numFields;
     }
 
+    public int getLengthAllFields() {
+        int length = 0;
+        for (int i = 0; i < this.numFields; i++) {
+            length += this.fields[i].getLength();
+        }
+        return length;
+    }
+
     public Field[] getFields() {
         return fields;
     }
