@@ -9,7 +9,7 @@
 
 package suncertify.app;
 
-import suncertify.rmi.RemoteDataAdapter;
+import suncertify.rmi.RemoteData;
 import suncertify.ui.RunMeFrame;
 import suncertify.db.Data;
 import suncertify.db.DB;
@@ -43,7 +43,7 @@ public class RunMe {
 
               System.out.println("Creating local object and remote adapter.");
               Data adaptee = new Data("db-2x2.db");
-              RemoteDataAdapter adapter = new RemoteDataAdapter(adaptee);
+              RemoteData adapter = new RemoteData(adaptee);
 
               System.out.println("Publishing service \"" + DB.SERVICENAME + "\" in local registry.");
               localRegistry.rebind(DB.SERVICENAME, adapter);

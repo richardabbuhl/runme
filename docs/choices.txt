@@ -15,8 +15,9 @@ in saved so it can be used when future database accesses are requested.
 
 To lock the database using cookies, I choose to use a HashMap for holding the locking information.
 
-The DB class was modified so that it extends the Remote class so that it can support remote usage.  The handle/body
-pattern was used and an instance of the Data class can be instantiated for local database usage and 
+The DB class was modified so that it extends the Remote class so that it can support local or remote usage.  An
+instance of the Data class can be instantiated for local database usage or an instance of the RemoteData class can
+be instantiated for remote database usage. 
 
 GUI Issues
 
