@@ -58,8 +58,6 @@ public class runme {
             }
         }
 
-
-
         try {
             UIManager.setLookAndFeel(
                 UIManager.getCrossPlatformLookAndFeelClassName());
@@ -79,9 +77,5 @@ public class runme {
         });
         frame.pack();
         frame.setVisible(true);
-
-
-
-
     }
 }
