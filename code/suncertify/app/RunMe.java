@@ -14,8 +14,6 @@ import suncertify.ui.RunMeFrame;
 import suncertify.db.Data;
 import suncertify.db.DB;
 
-import java.rmi.Naming;
-import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
@@ -33,23 +31,12 @@ public class RunMe {
     private static final int STANDALONE_MODE = 2;
     private static final int CLIENT_MODE = 3;
 
+    private static int mode = CLIENT_MODE;
+
     /**
      * Start the server.
      */
     public void createServer() {
-//        if (System.getSecurityManager() == null) {
-//            System.setSecurityManager(new RMISecurityManager());
-//        }
-//
-//        try {
-//            String name = "//" + hostName + "/RemoteData";
-//            RemoteDataAdapter data = (RemoteDataAdapter) Naming.lookup(name);
-//        } catch (Exception e) {
-//            System.err.println("Exception: " + e.getMessage());
-//            e.printStackTrace();
-//        }
-
-
         try {
               System.out.println("Creating a local RMI registry on the default port.");
               Registry localRegistry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
@@ -64,7 +51,7 @@ public class RunMe {
               System.out.println("Published RemoteDB as service \"" + DB.SERVICENAME + "\". Ready.");
 
            } catch (RemoteException e) {
-              System.out.println( "Problem with remote object" + e );
+              System.out.println( "Problem starting the server" + e );
            }
     }
 
@@ -83,7 +70,6 @@ public class RunMe {
      * @param args command-line arguments.
      */
     public static void main(String[] args) {
-        int mode = CLIENT_MODE;
         boolean displayUsage = false;
 
         /**
@@ -117,12 +103,17 @@ public class RunMe {
             RunMe app = new RunMe();
             app.createServer();
 
-        } else if (mode == CLIENT_MODE) {
+        } else {
 
             //Schedule a job for the event-dispatching thread:  creating and showing this application's GUI.
             javax.swing.SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
                     RunMeFrame frame = new RunMeFrame();
+                    if (mode == CLIENT_MODE) {
+                        frame.setDbRemote(true);
+                    } else {
+                        frame.setDbRemote(false);
+                    }
                     frame.createUI();
                 }
             });
