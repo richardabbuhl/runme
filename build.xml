@@ -13,7 +13,6 @@
     <target name="clean">
         <delete dir="${out.dir}"/>
         <delete dir="${classes.dir}"/>
-        <delete dir="${javadocs.dir}"/>
     </target>
 
     <target name="compile" depends="clean">
@@ -50,7 +49,7 @@
         <mkdir dir="${out.dir}"/>
         <jar jarfile="${out.dir}/runme.jar">
             <fileset dir="${classes.dir}" includes="**/*.class"/>
-            <fileset dir="." includes="**/*.java, docs/*.*, docs/javadocs/*.*, version.txt, db-2x2.db"/>
+            <fileset dir="." includes="**/*.java, docs/**/*.*, version.txt, db-2x2.db"/>
             <manifest>
                 <attribute name="Main-Class" value="suncertify.app.runme"/>
             </manifest>
