@@ -105,7 +105,26 @@ public class RunMeFrame extends JFrame {
         return menuBar;
     }
 
-    private Component createComponents() {
+    private Vector matchTest(Data data) {
+        Vector v = new Vector();
+        try {
+            String [] d = new String[6];
+            int[] matches = data.find(d);
+            if (matches != null) {
+                for (int i = 0; i < matches.length; i++) {
+                    String [] o = data.read(matches[i]);
+                    v.add(o);
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println("Exception " + e.toString());
+        }
+
+        return v;
+    }
+
+    private void addSearchComponents() {
         final JLabel label = new JLabel(labelPrefix + "0    ");
 
         JButton button = new JButton("I'm a Swing button!");
@@ -133,26 +152,8 @@ public class RunMeFrame extends JFrame {
         pane.add(button);
         pane.add(label);
 
-        return pane;
-    }
-
-    private Vector matchTest(Data data) {
-        Vector v = new Vector();
-        try {
-            String [] d = new String[6];
-            int[] matches = data.find(d);
-            if (matches != null) {
-                for (int i = 0; i < matches.length; i++) {
-                    String [] o = data.read(matches[i]);
-                    v.add(o);
-                }
-            }
-
-        } catch (Exception e) {
-            System.out.println("Exception " + e.toString());
-        }
-
-        return v;
+        // Add pane.
+        getContentPane().add(pane);
     }
 
     private void addComponents() {
@@ -189,6 +190,7 @@ public class RunMeFrame extends JFrame {
         JFrame.setDefaultLookAndFeelDecorated(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setJMenuBar(createMenuBar());
+        addSearchComponents();
         addComponents();
 
         pack();
