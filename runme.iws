@@ -128,17 +128,17 @@
   <component name="J2EEProjectPane" />
   <component name="NamedScopeManager" />
   <component name="PackagesPane">
-    <expanded_node url="" module="scjd" type="module" />
-    <expanded_node url="suncertify" module="scjd" type="package" />
-    <expanded_node url="suncertify.db" module="scjd" type="package" />
+    <expanded_node url="" module="runme" type="module" />
+    <expanded_node url="suncertify" module="runme" type="package" />
+    <expanded_node url="suncertify.db" module="runme" type="package" />
   </component>
   <component name="ProjectPane">
-    <expanded_node url="file://$PROJECT_DIR$/docs" module="scjd" type="directory" />
-    <expanded_node url="file://$PROJECT_DIR$/code/suncertify" module="scjd" type="directory" />
-    <expanded_node url="file://$PROJECT_DIR$" module="scjd" type="directory" />
-    <expanded_node url="" module="scjd" type="module" />
-    <expanded_node url="file://$PROJECT_DIR$/code" module="scjd" type="directory" />
-    <expanded_node url="file://$PROJECT_DIR$/code/suncertify/db" module="scjd" type="directory" />
+    <expanded_node url="file://$PROJECT_DIR$/docs" module="runme" type="directory" />
+    <expanded_node url="file://$PROJECT_DIR$/code/suncertify" module="runme" type="directory" />
+    <expanded_node url="file://$PROJECT_DIR$" module="runme" type="directory" />
+    <expanded_node url="" module="runme" type="module" />
+    <expanded_node url="file://$PROJECT_DIR$/code" module="runme" type="directory" />
+    <expanded_node url="file://$PROJECT_DIR$/code/suncertify/db" module="runme" type="directory" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" splitterProportion="0.5">
