@@ -28,7 +28,7 @@
             author="true"
             version="true"
             use="true"
-            windowtitle="Sun Certified Developer for the Java 2 Platform: Application Submission (Version 2.1.2)">
+            windowtitle="Sun Certified Developer for the Java 2 Platform: Application Submission">
 
             <packageset dir="code" defaultexcludes="yes">
                 <include name="suncertify/**"/>
