@@ -207,12 +207,14 @@ public class Data implements DB {
                             for (int k = 0; k < schema.getFields()[i].getLength(); k++) {
                                 sb.append((char) file.readByte());
                             }
-                            if (criteria[i] != null) {
-                                if (criteria[i].length() > 0 && sb.toString().startsWith(criteria[i])) {
-                                    match = true;
-                                }
-                            } else {
+                            if (criteria[i] == null) {
                                 match = true;
+                            } else if (criteria[i].length() > 0) {
+                                if (sb.toString().startsWith(criteria[i])) {
+                                    match = true;
+                                } else {
+                                    match = false;
+                                }
                             }
                         }
                     }
