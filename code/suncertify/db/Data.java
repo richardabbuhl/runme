@@ -46,14 +46,6 @@ public class Data implements DB {
         return schema;
     }
 
-    private void lockCheck(int recNo, long lockCookie) throws SecurityException {
-        Long key = new Long(recNo);
-        Long value = (Long)cookies.get(key);
-        if (value == null || value.longValue() != lockCookie) {
-            throw new SecurityException("Record " + recNo + " was not locked");
-        }
-    }
-
     public String[] read(int recNo) throws RecordNotFoundException {
         String[] result = null;
         RandomAccessFile file = null;
@@ -90,6 +82,14 @@ public class Data implements DB {
             }
         }
         return result;
+    }
+
+    private void lockCheck(int recNo, long lockCookie) throws SecurityException {
+        Long key = new Long(recNo);
+        Long value = (Long)cookies.get(key);
+        if (value == null || value.longValue() != lockCookie) {
+            throw new SecurityException("Record " + recNo + " was not locked");
+        }
     }
 
     public void update(int recNo, String[] data, long lockCookie) throws RecordNotFoundException, SecurityException {
