@@ -51,7 +51,7 @@
             <fileset dir="${classes.dir}" includes="**/*.class"/>
             <fileset dir="." includes="**/*.java, docs/**/*.*, version.txt, db-2x2.db"/>
             <manifest>
-                <attribute name="Main-Class" value="suncertify.app.runme"/>
+                <attribute name="Main-Class" value="suncertify.app.RunMe"/>
             </manifest>
         </jar>
     </target>
