@@ -1,8 +1,12 @@
 package suncertify.ui;
 
+import suncertify.db.Data;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.Vector;
 
 /**
  * Created by IntelliJ IDEA.
@@ -132,14 +136,62 @@ public class RunMeFrame extends JFrame {
         return pane;
     }
 
+    private Vector matchTest(Data data) {
+        Vector v = new Vector();
+        try {
+            String [] d = new String[6];
+
+            d[0] = "*";
+            d[1] = null;
+            d[2] = null;
+            d[3] = null;
+            d[4] = null;
+            d[5] = null;
+            int[] matches = data.find(d);
+            if (matches != null) {
+                for (int i = 0; i < matches.length; i++) {
+                    String [] o = data.read(matches[i]);
+                    v.add(o);
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println("Exception " + e.toString());
+        }
+
+        return v;
+    }
+
+    private void addComponents() {
+        String[] columnNames = {"A", "B", "C", "D", "E", "F"};
+        Data d = new Data("db-2x2.db");
+
+        Vector o = matchTest(d);
+        Object[][] c = new Object[o.size()][6];
+        for (int i = 0; i < o.size(); i++) {
+            String [] t = (String[])o.get(i);
+            for (int j = 0; j < 6; j++) {
+                c[i][j] = t[j];
+            }
+        }
+
+        final JTable table = new JTable(c, columnNames);
+        table.setPreferredScrollableViewportSize(new Dimension(500, 70));
+
+        //Create the scroll pane and add the table to it.
+        JScrollPane scrollPane = new JScrollPane(table);
+
+        //Add the scroll pane to this panel.
+        getContentPane().add(scrollPane);
+    }
+
     public void createUI() {
         // Create the top-level container and add contents to it.
         setTitle("SwingApplication");
         JFrame.setDefaultLookAndFeelDecorated(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Component contents = createComponents();
         setJMenuBar(createMenuBar());
-        getContentPane().add(contents, BorderLayout.CENTER);
+        addComponents();
 
         pack();
         setVisible(true);
