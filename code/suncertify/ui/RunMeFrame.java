@@ -19,6 +19,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Vector;
+import java.rmi.registry.Registry;
+import java.rmi.registry.LocateRegistry;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,7 +31,6 @@ import java.util.Vector;
  */
 public class RunMeFrame extends JFrame {
 
-    private DB data = new Data("db-2x2.db");
     private JTextField subcontractorName = new JTextField();
     private JTextField subcontractorCity = new JTextField();
     private Button searchButton = new Button("Search");
@@ -39,10 +40,11 @@ public class RunMeFrame extends JFrame {
                                     "Number of staff in organization",
                                     "Hourly charge",
                                     "Customer holding this record"};
-    JTable resultsTable = new JTable();
-    MyTableModel resultsModel = new MyTableModel(new Vector());
+    private JTable resultsTable = new JTable();
+    private MyTableModel resultsModel = new MyTableModel(new Vector());
+    private boolean dbRemote = true;
 
-    public class MyTableModel extends AbstractTableModel {
+    private class MyTableModel extends AbstractTableModel {
         private Vector v = new Vector();
 
         MyTableModel(Vector v){
@@ -66,7 +68,22 @@ public class RunMeFrame extends JFrame {
         }
     }
 
-    public JMenuBar createMenuBar() {
+    private DB getDB() {
+        DB data = null;
+        try {
+            if (dbRemote) {
+                Registry remoteRegistry = LocateRegistry.getRegistry("192.168.1.53");
+                data = (DB)remoteRegistry.lookup(DB.SERVICENAME);
+            } else {
+                data = new Data("db-2x2.db");
+            }
+        } catch (Exception e) {
+            System.out.println("Exception " + e.toString());                        
+        }
+        return data ;
+    }
+
+    private JMenuBar createMenuBar() {
         JMenuBar menuBar;
         JMenu menu;
         JMenuItem menuItem;
@@ -113,6 +130,7 @@ public class RunMeFrame extends JFrame {
                 d[0] = null;
             }
 
+            DB data = getDB();
             int[] matches = data.find(d);
             if (matches != null) {
                 for (int i = 0; i < matches.length; i++) {
