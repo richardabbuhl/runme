@@ -27,20 +27,24 @@ public class RemoteDataAdapter extends UnicastRemoteObject implements RemoteDB {
 
     protected Data adaptee;
 
-    public RemoteDataAdapter(Data adaptee) throws RemoteException {
+    public RemoteDataAdapter(Data adaptee)
+            throws RemoteException {
         super();
         this.adaptee = adaptee;
     }
 
-    public String[] read(int recNo) throws RecordNotFoundException {
+    public String[] read(int recNo)
+            throws RecordNotFoundException, RemoteException {
         return adaptee.read(recNo);
     }
 
-    public void update(int recNo, String[] data, long lockCookie) throws RecordNotFoundException, SecurityException {
+    public void update(int recNo, String[] data, long lockCookie)
+            throws RecordNotFoundException, SecurityException, RemoteException {
         adaptee.update(recNo, data, lockCookie);
     }
 
-    public void delete(int recNo, long lockCookie) throws RecordNotFoundException, SecurityException {
+    public void delete(int recNo, long lockCookie)
+            throws RecordNotFoundException, SecurityException, RemoteException {
         adaptee.delete(recNo, lockCookie);
     }
 
@@ -48,15 +52,18 @@ public class RemoteDataAdapter extends UnicastRemoteObject implements RemoteDB {
         return adaptee.find(criteria);
     }
 
-    public int create(String[] data) throws DuplicateKeyException {
+    public int create(String[] data)
+            throws DuplicateKeyException, RemoteException {
         return adaptee.create(data);
     }
 
-    public long lock(int recNo) throws RecordNotFoundException {
+    public long lock(int recNo)
+            throws RecordNotFoundException, RemoteException {
         return adaptee.lock(recNo);
     }
 
-    public void unlock(int recNo, long cookie) throws RecordNotFoundException, SecurityException {
+    public void unlock(int recNo, long cookie)
+            throws RecordNotFoundException, SecurityException {
         adaptee.unlock(recNo, cookie);
     }
 
