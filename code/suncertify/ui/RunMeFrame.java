@@ -1,7 +1,6 @@
 package suncertify.ui;
 
 import javax.swing.*;
-import java.rmi.RMISecurityManager;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -20,7 +19,7 @@ public class RunMeFrame extends JFrame {
     private static String labelPrefix = "Number of button clicks: ";
     private int numClicks = 0;
 
-    public JMenuBar createMenu() {
+    private void createMenu() {
         JMenuBar mb = new JMenuBar();
         JMenu fileMenu = new JMenu();
         JMenuItem exitItem = new JMenuItem();
@@ -30,11 +29,10 @@ public class RunMeFrame extends JFrame {
         fileMenu.add(exitItem);
 
         mb.add(fileMenu);
-
-        return mb;
+        setJMenuBar(mb);
     }
 
-    public Component createComponents() {
+    private Component createComponents() {
         final JLabel label = new JLabel(labelPrefix + "0    ");
 
         JButton button = new JButton("I'm a Swing button!");
@@ -75,6 +73,9 @@ public class RunMeFrame extends JFrame {
         setTitle("SwingApplication");
         Component contents = createComponents();
         getContentPane().add(contents, BorderLayout.CENTER);
+
+        // Create the menu bar.
+        createMenu();
 
         //Finish setting up the frame, and show it.
         addWindowListener(new WindowAdapter() {
