@@ -93,8 +93,11 @@ public class RunMeFrame extends JFrame {
             int[] matches = data.find(d);
             if (matches != null) {
                 for (int i = 0; i < matches.length; i++) {
-                    String [] o = data.read(matches[i]);
-                    v.add(o);
+                    String [] result = data.read(matches[i]);
+                    for (int j = 0; j < result.length; j++) {
+                        result[j] = result[j].trim();
+                    }
+                    v.add(result);
                 }
             }
 
@@ -125,13 +128,6 @@ public class RunMeFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 Vector o = matchTest();
                 resultsTable.setModel(new MyTableModel(o));
-//                searchData = new Object[o.size()][6];
-//                for (int i = 0; i < o.size(); i++) {
-//                    String [] t = (String[])o.get(i);
-//                    for (int j = 0; j < 6; j++) {
-//                        searchData[i][j] = t[j].trim();
-//                    }
-//                }
             }
         });
 
