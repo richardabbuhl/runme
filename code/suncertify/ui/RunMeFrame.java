@@ -10,6 +10,7 @@
 package suncertify.ui;
 
 import suncertify.db.Data;
+import suncertify.db.DB;
 
 import javax.swing.*;
 import javax.swing.table.TableModel;
@@ -28,7 +29,7 @@ import java.util.Vector;
  */
 public class RunMeFrame extends JFrame {
 
-    private Data data = new Data("db-2x2.db");
+    private DB data = new Data("db-2x2.db");
     private JTextField subcontractorName = new JTextField();
     private JTextField subcontractorCity = new JTextField();
     private Button searchButton = new Button("Search");
