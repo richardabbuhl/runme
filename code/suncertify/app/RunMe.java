@@ -10,10 +10,15 @@
 package suncertify.app;
 
 import suncertify.network.RemoteDataAdapter;
+import suncertify.network.RemoteDB;
 import suncertify.ui.RunMeFrame;
+import suncertify.db.Data;
 
 import java.rmi.Naming;
 import java.rmi.RMISecurityManager;
+import java.rmi.RemoteException;
+import java.rmi.registry.Registry;
+import java.rmi.registry.LocateRegistry;
 
 /**
  * RunMe is the driver for the runme application.  Based on the mode parameter it either starts the application
@@ -33,18 +38,35 @@ public class RunMe {
      * @param hostName hostname to user for starting the server.
      */
     public void createServer(String hostName) {
-        if (System.getSecurityManager() == null) {
-            System.setSecurityManager(new RMISecurityManager());
-        }
+//        if (System.getSecurityManager() == null) {
+//            System.setSecurityManager(new RMISecurityManager());
+//        }
+//
+//        try {
+//            String name = "//" + hostName + "/RemoteData";
+//            RemoteDataAdapter data = (RemoteDataAdapter) Naming.lookup(name);
+//        } catch (Exception e) {
+//            System.err.println("Exception: " + e.getMessage());
+//            e.printStackTrace();
+//        }
+
 
         try {
-            String name = "//" + hostName + "/RemoteData";
-            RemoteDataAdapter data = (RemoteDataAdapter) Naming.lookup(name);
-        } catch (Exception e) {
-            System.err.println("Exception: " + e.getMessage());
-            e.printStackTrace();
-        }
+              System.out.println("Creating a local RMI registry on the default port.");
+              Registry localRegistry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
 
+              System.out.println("Creating local object and remote adapter.");
+              Data adaptee = new Data("db-2x2.db");
+              RemoteDataAdapter adapter = new RemoteDataAdapter(adaptee);
+
+              System.out.println("Publishing service \"" + RemoteDB.SERVICENAME + "\" in local registry.");
+              localRegistry.rebind(RemoteDB.SERVICENAME, adapter);
+
+              System.out.println("Published RemoteDB as service \"" + RemoteDB.SERVICENAME + "\". Ready.");
+
+           } catch (RemoteException e) {
+              System.out.println( "Problem with remote object" + e );
+           }
     }
 
     /**
