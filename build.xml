@@ -53,7 +53,7 @@
 
     <target name="build" depends="compile">
         <mkdir dir="${out.dir}"/>
-        <jar jarfile="${out.dir}/runme.jar">
+        <jar jarfile="${out.dir}/sr1623343.jar">
             <fileset dir="${classes.dir}" includes="**/*.class"/>
             <fileset dir="." excludes="test-src/**" includes="**/*.java, docs/**/*.*, version.txt, db-2x2.db"/>
             <manifest>
