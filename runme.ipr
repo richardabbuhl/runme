@@ -188,7 +188,7 @@
   </component>
   <component name="ProjectRootManager" version="2" assert-keyword="false" jdk-15="false" project-jdk-name="java version &quot;1.4.2_06&quot;" />
   <component name="RmicSettings">
-    <option name="IS_EANABLED" value="true" />
+    <option name="IS_EANABLED" value="false" />
     <option name="DEBUGGING_INFO" value="true" />
     <option name="GENERATE_NO_WARNINGS" value="false" />
     <option name="GENERATE_IIOP_STUBS" value="false" />

@@ -72,12 +72,13 @@ public class RunMeFrame extends JFrame {
     }
 
     private String getProperty(String key, String defaultValue) {
-        Properties properties = new Properties();
         String value = defaultValue;
         try {
+            Properties properties = new Properties();
             properties.load(new FileInputStream(PROPERTIES_FILE));
             value = properties.getProperty(key, defaultValue);
         } catch (IOException e) {
+            System.out.println("Exception " + e.toString());
         }
         return value;
     }
@@ -86,9 +87,14 @@ public class RunMeFrame extends JFrame {
         Properties properties = new Properties();
         try {
             properties.load(new FileInputStream(PROPERTIES_FILE));
-            properties.setProperty(key, value);
+        } catch (IOException e) {
+            System.out.println("Exception " + e.toString());
+        }
+        properties.setProperty(key, value);
+        try {
             properties.store(new FileOutputStream(PROPERTIES_FILE), null);
         } catch (IOException e) {
+            System.out.println("Exception " + e.toString());
         }
     }
 
