@@ -64,25 +64,16 @@ public class RunMeFrame extends JFrame {
     }
 
     public void createUI() {
-        try {
-            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-        } catch (Exception e) {
-        }
-
         // Create the top-level container and add contents to it.
         setTitle("SwingApplication");
+        JFrame.setDefaultLookAndFeelDecorated(true);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Component contents = createComponents();
         getContentPane().add(contents, BorderLayout.CENTER);
 
         // Create the menu bar.
         createMenu();
 
-        //Finish setting up the frame, and show it.
-        addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                System.exit(0);
-            }
-        });
         pack();
         setVisible(true);
     }
