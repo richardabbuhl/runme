@@ -40,7 +40,7 @@ public class RunMeFrame extends JFrame {
                                     "Customer holding this record"};
     private JTable resultsTable = new JTable();
     private MyTableModel resultsModel = new MyTableModel(new Vector());
-    private boolean dbRemote = true;
+    private boolean dbRemote = false;
 
     private class MyTableModel extends AbstractTableModel {
         private Vector v = new Vector();
