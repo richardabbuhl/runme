@@ -33,7 +33,7 @@
             destdir="${javadocs.dir}"
             author="true"
             version="true"
-            use="true"
+            use="false"
             windowtitle="Sun Certified Developer for the Java 2 Platform: Application Submission">
 
             <packageset dir="code" defaultexcludes="yes">
