@@ -7,6 +7,8 @@
     <property name="out.dir" value="${basedir}/out"/>
     <property name="classes.dir" value="${basedir}/classes"/>
 
+    <target name="prepare"/>
+
     <target name="clean">
       <delete dir="${out.dir}"/>
       <delete dir="${classes.dir}"/>
