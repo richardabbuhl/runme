@@ -295,6 +295,15 @@ public class Data implements DB {
 
     public long lock(int recNo) throws RecordNotFoundException {
         synchronized (cookies) {
+            Long key = new Long(recNo);
+            while (cookies.get(key) != null) {
+                try {
+                    // Wait a while for the lock to be freed.
+                    System.out.println("Waiting for 10 miliseconds");
+                    Thread.sleep(10);
+                } catch (InterruptedException e) { }
+            }
+
             int cookie = 0;
             RandomAccessFile file = null;
             try {
@@ -306,7 +315,6 @@ public class Data implements DB {
                 short flag = file.readShort();
                 if (flag == 0) {
 
-                    Long key = new Long(recNo);
                     cookie = key.hashCode();
                     Long value = new Long(cookie);
                     cookies.put(key, value);
