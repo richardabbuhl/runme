@@ -71,6 +71,9 @@ public class runme {
         int mode = CLIENT_MODE;
         boolean displayUsage = false;
 
+        /**
+         * Handle the command-line arguments.
+         */
         if (args.length == 1) {
             if ("server".equals(args[0])) {
                 mode = SERVER_MODE;
