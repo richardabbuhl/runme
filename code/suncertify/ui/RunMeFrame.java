@@ -67,27 +67,26 @@ public class RunMeFrame extends JFrame {
         return v;
     }
 
-    private void addSearchComponents() {
+    private JPanel addSearchComponents() {
         /*
          * An easy way to put space between a top-level container
          * and its contents is to put the contents in a JPanel
          * that has an "empty" border.
          */
         JPanel pane = new JPanel();
-        pane.setBorder(BorderFactory.createEmptyBorder(50, //top
-                50, //left
-                10, //bottom
-                50) //right
-        );
-        pane.setLayout(new GridLayout(0, 1));
-        //pane.add(button);
+        //pane.setBorder(BorderFactory.createEmptyBorder(50, //top
+        //        50, //left
+        //        10, //bottom
+        //        50) //right
+        //);
+        //pane.setLayout(new GridLayout(0, 1));
+        pane.add(new Button("Hello"));
         //pane.add(label);
 
-        // Add pane.
-        getContentPane().add(pane);
+        return pane;
     }
 
-    private void addComponents() {
+    private JScrollPane addComponents() {
         String[] columnNames = {"Subcontractor Name",
                                 "City",
                                 "Types of work performed",
@@ -111,8 +110,8 @@ public class RunMeFrame extends JFrame {
         //Create the scroll pane and add the table to it.
         JScrollPane scrollPane = new JScrollPane(table);
 
-        //Add the scroll pane to this panel.
-        getContentPane().add(scrollPane);
+        // Return the scroll pane.
+        return scrollPane;
     }
 
     public void createUI() {
@@ -121,12 +120,11 @@ public class RunMeFrame extends JFrame {
         JFrame.setDefaultLookAndFeelDecorated(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setJMenuBar(createMenuBar());
-        addSearchComponents();
-        addComponents();
+        getContentPane().setLayout(new FlowLayout());
+        getContentPane().add(addSearchComponents());
+        getContentPane().add(addComponents());
 
         pack();
         setVisible(true);
     }
-
-
 }
