@@ -19,7 +19,7 @@ import java.rmi.RMISecurityManager;
  * Time: 5:11:59 PM
  * To change this template use File | Settings | File Templates.
  */
-public class runme {
+public class RunMe {
 
     private static final int SERVER_MODE = 1;
     private static final int STANDALONE_MODE = 2;
@@ -73,9 +73,9 @@ public class runme {
         /**
          *
          */
-        runme app = new runme();
         if (mode == SERVER_MODE) {
 
+            RunMe app = new RunMe();
             app.createServer("localhost");
 
         } else if (mode == CLIENT_MODE) {
