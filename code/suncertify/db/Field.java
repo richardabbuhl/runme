@@ -28,8 +28,8 @@ public class Field {
         this.length = length;
     }
 
-    public void print() {
-        System.out.println("Name = " + name + ", length = " + length);
+    public void dump() {
+        System.out.println("Name=" + name + ",length=" + length);
     }
 
 }

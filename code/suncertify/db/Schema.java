@@ -46,7 +46,7 @@ public class Schema {
         this.fields = fields;
     }
 
-    public void printHeader() {
-        System.out.println("Mc = " + magicCookie + " offset = " + offset + " nf = " + numFields);
+    public void dump() {
+        System.out.println("Mc=" + magicCookie + ",offset=" + offset + ",nf=" + numFields);
     }
 }
