@@ -18,7 +18,7 @@ public class Data implements DB {
         this.filename = filename;
     }
 
-    private Schema readSchema(DataInputStream file) throws IOException {
+    private Schema readSchema(RandomAccessFile file) throws IOException {
         Schema schema = new Schema();
         schema.setMagicCookie(file.readInt());
         schema.setOffset(file.readInt());
@@ -41,10 +41,9 @@ public class Data implements DB {
         return schema;
     }
 
-    private DataInputStream readOpen() throws FileNotFoundException {
+    private RandomAccessFile readOpen() throws FileNotFoundException {
         /* Open the file for reading */
-        FileInputStream pfd = new FileInputStream(filename);
-        DataInputStream file = new DataInputStream(pfd);
+        RandomAccessFile file = new RandomAccessFile(filename, "r");
         return file;
     }
 
@@ -56,14 +55,11 @@ public class Data implements DB {
     }
 
     public String[] read(int recNo) throws RecordNotFoundException {
+        RandomAccessFile file = null;
         try {
-            if (schema == null) {
-                DataInputStream file = readOpen();
-                schema = readSchema(file);
-                file.close();
-            }
-            DataInputStream file = readOpen();
-            file.skip(schema.getOffset() + recNo * (schema.getLengthAllFields() + 2));
+            file = new RandomAccessFile(filename, "r");
+            schema = readSchema(file);
+            file.seek(schema.getOffset() + recNo * (schema.getLengthAllFields() + 2));
             short flag = file.readShort();
             for (int i = 0; i < schema.getNumFields(); i++) {
                 StringBuffer sb = new StringBuffer();
@@ -82,17 +78,38 @@ public class Data implements DB {
         } catch(Exception e) {
             System.out.println("Error" + e.toString());
             throw new RecordNotFoundException(e.getMessage());
+        } finally {
+            if (file != null) {
+                try {
+                    file.close();
+                } catch (Exception e) {
+                    System.out.println("Error" + e.toString());
+                }
+            }
         }
         return new String[0];
     }
 
     public void update(int recNo, String[] data, long lockCookie) throws RecordNotFoundException, SecurityException {
+        RandomAccessFile file = null;
         try {
-            if (schema == null) {
-                DataInputStream file = readOpen();
-                schema = readSchema(file);
-                file.close();
+            file = new RandomAccessFile(filename, "rw");
+            schema = readSchema(file);
+            file.seek(schema.getOffset() + recNo * (schema.getLengthAllFields() + 2));
+            short flag = file.readShort();
+            for (int i = 0; i < schema.getNumFields(); i++) {
+                StringBuffer sb = new StringBuffer();
+                for (int k = 0; k < schema.getFields()[i].getLength(); k++) {
+                    sb.append((char)file.readByte());
+                }
+                System.out.print(schema.getFields()[i].getName() + "=" + sb.toString().trim());
+                if (i + 1 == schema.getNumFields()) {
+                    System.out.println();
+                } else {
+                    System.out.print(", ");
+                }
             }
+            file.close();
 
         } catch(Exception e) {
             throw new RecordNotFoundException(e.getMessage());
@@ -101,7 +118,7 @@ public class Data implements DB {
 
     public void delete(int recNo, long lockCookie) throws RecordNotFoundException, SecurityException {
         try {
-            DataInputStream file = readOpen();
+            RandomAccessFile file = readOpen();
         } catch(Exception e) {
             throw new RecordNotFoundException(e.getMessage());
         }
@@ -109,7 +126,7 @@ public class Data implements DB {
 
     public int[] find(String[] criteria) {
         try {
-            DataInputStream file = readOpen();
+            RandomAccessFile file = readOpen();
         } catch(Exception e) {
             System.out.println(e.getMessage());
         }
@@ -117,8 +134,26 @@ public class Data implements DB {
     }
 
     public int create(String[] data) throws DuplicateKeyException {
+        RandomAccessFile file = null;
         try {
-            DataInputStream file = readOpen();
+            file = new RandomAccessFile(filename, "rw");
+            schema = readSchema(file);
+            file.seek(file.length());
+            short flag = file.readShort();
+            for (int i = 0; i < schema.getNumFields(); i++) {
+                StringBuffer sb = new StringBuffer();
+                for (int k = 0; k < schema.getFields()[i].getLength(); k++) {
+                    sb.append((char)file.readByte());
+                }
+                System.out.print(schema.getFields()[i].getName() + "=" + sb.toString().trim());
+                if (i + 1 == schema.getNumFields()) {
+                    System.out.println();
+                } else {
+                    System.out.print(", ");
+                }
+            }
+            file.close();
+
         } catch(Exception e) {
             System.out.println(e.getMessage());
         }
@@ -127,7 +162,7 @@ public class Data implements DB {
 
     public long lock(int recNo) throws RecordNotFoundException {
         try {
-            DataInputStream file = readOpen();
+            RandomAccessFile file = readOpen();
         } catch(Exception e) {
             System.out.println(e.getMessage());
         }
