@@ -82,6 +82,7 @@ public class Data implements DB {
                     try {
                         file.close();
                     } catch (IOException e) {
+                        System.out.println("Error closing file + " + filename + " " + e.toString());
                     }
                 }
 
@@ -138,7 +139,7 @@ public class Data implements DB {
                     try {
                         file.close();
                     } catch (Exception e) {
-                        System.out.println("Error" + e.toString());
+                        System.out.println("Error closing file + " + filename + " " + e.toString());
                     }
                 }
 
@@ -173,7 +174,7 @@ public class Data implements DB {
                     try {
                         file.close();
                     } catch (Exception e) {
-                        System.out.println("Error" + e.toString());
+                        System.out.println("Error closing file + " + filename + " " + e.toString());
                     }
                 }
 
@@ -235,7 +236,7 @@ public class Data implements DB {
                     try {
                         file.close();
                     } catch (Exception e) {
-                        System.out.println("Error" + e.toString());
+                        System.out.println("Error closing file + " + filename + " " + e.toString());
                     }
                 }
 
@@ -302,7 +303,7 @@ public class Data implements DB {
                     try {
                         file.close();
                     } catch (Exception e) {
-                        System.out.println("Error" + e.toString());
+                        System.out.println("Error closing file + " + filename + " " + e.toString());
                     }
                 }
 
@@ -351,7 +352,7 @@ public class Data implements DB {
                     try {
                         file.close();
                     } catch (Exception e) {
-                        System.out.println("Error" + e.toString());
+                        System.out.println("Error closing file + " + filename + " " + e.toString());
                     }
                 }
 
