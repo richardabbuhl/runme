@@ -28,6 +28,10 @@ public class RunMe {
     private static final int STANDALONE_MODE = 2;
     private static final int CLIENT_MODE = 3;
 
+    /**
+     * Start the server.
+     * @param hostName hostname to user for starting the server.
+     */
     public void createServer(String hostName) {
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new RMISecurityManager());
@@ -43,6 +47,9 @@ public class RunMe {
 
     }
 
+    /**
+     * Show the command-line options to the user.
+     */
     private static void showUsage() {
         System.out.println("Usage: java -jar runme.jar [server|alone]");
         System.out.println("  server - indicates server mode and that the server must run.");
@@ -50,6 +57,10 @@ public class RunMe {
         System.out.println("  default mode indicates client mode and that the client must run.");
     }
 
+    /**
+     * Driver for the RunMe application.
+     * @param args command-line arguments.
+     */
     public static void main(String[] args) {
         int mode = CLIENT_MODE;
         boolean displayUsage = false;
