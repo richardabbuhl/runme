@@ -60,7 +60,18 @@ public class runme {
         return pane;
     }
 
-    public static void createUI() {
+    public void createServer(String hostName) {
+        try {
+            String name = "//" + hostName + "/RemoteData";
+            RemoteDataAdapter data = (RemoteDataAdapter) Naming.lookup(name);
+        } catch (Exception e) {
+            System.err.println("Exception: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+    }
+
+    public void createUI() {
         try {
             UIManager.setLookAndFeel(
                 UIManager.getCrossPlatformLookAndFeelClassName());
@@ -72,8 +83,7 @@ public class runme {
 
         //Create the top-level container and add contents to it.
         JFrame frame = new JFrame("SwingApplication");
-        runme app = new runme();
-        Component contents = app.createComponents();
+        Component contents = this.createComponents();
         frame.getContentPane().add(contents, BorderLayout.CENTER);
 
         //Finish setting up the frame, and show it.
@@ -123,19 +133,15 @@ public class runme {
         /**
          *
          */
+        runme app = new runme();
         if (mode == SERVER_MODE) {
 
-            try {
-                String name = "//" + args[0] + "/RemoteData";
-                RemoteDataAdapter data = (RemoteDataAdapter) Naming.lookup(name);
-            } catch (Exception e) {
-                System.err.println("Exception: " + e.getMessage());
-                e.printStackTrace();
-            }
+            app.createServer("localhost");
 
         } else if (mode == CLIENT_MODE) {
 
-            createUI();
+            app.createUI();
+
         }
     }
 }
