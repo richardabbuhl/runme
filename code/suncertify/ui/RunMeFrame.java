@@ -21,6 +21,7 @@ public class RunMeFrame extends JFrame {
 
     private Data data = new Data("db-2x2.db");
     private JTextField subcontractorName = new JTextField();
+    private JTextField subcontractorCity = new JTextField();
     private Button searchButton = new Button("Search");
     private String[] columnNames = {"Subcontractor Name",
                                     "City",
@@ -88,8 +89,20 @@ public class RunMeFrame extends JFrame {
         Vector v = new Vector();
         try {
             String [] d = { "", "", "", "", "", "" };
-            d[0] = subcontractorName.getText().trim().length() > 0 ? subcontractorName.getText().trim() : null;
-            System.out.println("subcontractorName = " + subcontractorName.getText().trim());
+
+            String name = subcontractorName.getText().trim();
+            String city = subcontractorCity.getText().trim();
+            if (name != null && name.length() > 0) {
+                d[0] = name;
+                if (city != null && city.length() > 0) {
+                    d[1] = city;
+                }
+            } else if (city != null && city.length() > 0) {
+                d[1] = city;
+            } else {
+                d[0] = null;
+            }
+
             int[] matches = data.find(d);
             if (matches != null) {
                 for (int i = 0; i < matches.length; i++) {
@@ -123,6 +136,7 @@ public class RunMeFrame extends JFrame {
         pane.setLayout(new GridLayout());
         pane.add(searchButton);
         pane.add(subcontractorName);
+        pane.add(subcontractorCity);
 
         searchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
