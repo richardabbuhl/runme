@@ -3,6 +3,8 @@ package suncertify.db;
 import java.io.*;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,6 +16,7 @@ import java.util.ArrayList;
 public class Data implements DB {
 
     private static Schema schema = null;
+    private static HashMap cookies = new HashMap();
     private String filename;
 
     public Data(String filename) {
@@ -43,17 +46,12 @@ public class Data implements DB {
         return schema;
     }
 
-    private RandomAccessFile readOpen() throws FileNotFoundException {
-        /* Open the file for reading */
-        RandomAccessFile file = new RandomAccessFile(filename, "r");
-        return file;
-    }
-
-    private DataOutputStream writeOpen() throws FileNotFoundException {
-        /* Open the file for reading */
-        FileOutputStream pfd = new FileOutputStream(filename);
-        DataOutputStream file = new DataOutputStream(pfd);
-        return file;
+    private void lockCheck(int recNo, long lockCookie) throws SecurityException {
+        Long key = new Long(recNo);
+        Long value = (Long)cookies.get(key);
+        if (value == null || value.longValue() != lockCookie) {
+            throw new SecurityException("Record " + recNo + " was not locked");
+        }
     }
 
     public String[] read(int recNo) throws RecordNotFoundException {
@@ -61,7 +59,9 @@ public class Data implements DB {
         RandomAccessFile file = null;
         try {
             file = new RandomAccessFile(filename, "r");
-            schema = readSchema(file);
+            if (schema == null) {
+                schema = readSchema(file);
+            }
             file.seek(schema.getOffset() + recNo * (schema.getLengthAllFields() + 2));
             short flag = file.readShort();
             if (flag == 0) {
@@ -95,8 +95,11 @@ public class Data implements DB {
     public void update(int recNo, String[] data, long lockCookie) throws RecordNotFoundException, SecurityException {
         RandomAccessFile file = null;
         try {
+            lockCheck(recNo, lockCookie);
             file = new RandomAccessFile(filename, "rw");
-            schema = readSchema(file);
+            if (schema == null) {
+                schema = readSchema(file);
+            }
             file.seek(schema.getOffset() + recNo * (schema.getLengthAllFields() + 2));
             short flag = file.readShort();
             if (flag == 0) {
@@ -117,7 +120,9 @@ public class Data implements DB {
                 throw new RecordNotFoundException("Record " + recNo + " was not found");
             }
 
-        } catch(Exception e) {
+        } catch(FileNotFoundException e) {
+            throw new RecordNotFoundException(e.getMessage());
+        } catch(IOException e) {
             throw new RecordNotFoundException(e.getMessage());
         } finally {
             if (file != null) {
@@ -133,8 +138,11 @@ public class Data implements DB {
     public void delete(int recNo, long lockCookie) throws RecordNotFoundException, SecurityException {
         RandomAccessFile file = null;
         try {
+            lockCheck(recNo, lockCookie);
             file = new RandomAccessFile(filename, "rw");
-            schema = readSchema(file);
+            if (schema == null) {
+                schema = readSchema(file);
+            }
             file.seek(schema.getOffset() + recNo * (schema.getLengthAllFields() + 2));
             file.writeShort(0x8000);
             for (int i = 0; i < schema.getNumFields(); i++) {
@@ -161,7 +169,9 @@ public class Data implements DB {
         RandomAccessFile file = null;
         try {
             file = new RandomAccessFile(filename, "rw");
-            schema = readSchema(file);
+            if (schema == null) {
+                schema = readSchema(file);
+            }
             List resultList = new ArrayList();
             int recNo = 0;
             int nextPos = schema.getOffset() + recNo * (schema.getLengthAllFields() + 2);
@@ -217,7 +227,9 @@ public class Data implements DB {
         RandomAccessFile file = null;
         try {
             file = new RandomAccessFile(filename, "rw");
-            schema = readSchema(file);
+            if (schema == null) {
+                schema = readSchema(file);
+            }
             int nextPos = schema.getOffset() + recNo * (schema.getLengthAllFields() + 2);
             while (nextPos < file.length()) {
                 file.seek(nextPos);
@@ -274,15 +286,53 @@ public class Data implements DB {
     }
 
     public long lock(int recNo) throws RecordNotFoundException {
+        int cookie = 0;
+        RandomAccessFile file = null;
         try {
-            RandomAccessFile file = readOpen();
+            file = new RandomAccessFile(filename, "r");
+            if (schema == null) {
+                schema = readSchema(file);
+            }
+            file.seek(schema.getOffset() + recNo * (schema.getLengthAllFields() + 2));
+            short flag = file.readShort();
+            if (flag == 0) {
+
+                Long key = new Long(recNo);
+                cookie = key.hashCode();
+                Long value = new Long(cookie);
+                cookies.put(key, value);
+
+            } else {
+                throw new RecordNotFoundException("Record " + recNo + " was not found");
+            }
+
         } catch(Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("Error" + e.toString());
+            throw new RecordNotFoundException(e.getMessage());
+        } finally {
+            if (file != null) {
+                try {
+                    file.close();
+                } catch (Exception e) {
+                    System.out.println("Error" + e.toString());
+                }
+            }
         }
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+
+        return cookie;
     }
 
     public void unlock(int recNo, long cookie) throws RecordNotFoundException, SecurityException {
-        //To change body of implemented methods use File | Settings | File Templates.
+        try {
+            Long key = new Long(recNo);
+            Long value = (Long)cookies.remove(key);
+            if (value.longValue() != cookie) {
+                throw new SecurityException("Record " + recNo + " cookie invalid");
+            }
+
+        } catch(Exception e) {
+            System.out.println("Error" + e.toString());
+            throw new RecordNotFoundException(e.getMessage());
+        }
     }
 }
