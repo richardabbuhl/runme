@@ -1,4 +1,4 @@
-package suncertify;
+package suncertify.app;
 
 import suncertify.network.RemoteDataAdapter;
 
