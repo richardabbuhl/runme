@@ -78,6 +78,8 @@ public class Data implements DB {
                     }
                 }
             }
+
+            cookies.notify();
             return result;
         }
     }
@@ -132,6 +134,8 @@ public class Data implements DB {
                     }
                 }
             }
+
+            cookies.notify();
         }
     }
 
@@ -165,6 +169,8 @@ public class Data implements DB {
                     }
                 }
             }
+
+            cookies.notify();
         }
     }
 
@@ -224,6 +230,7 @@ public class Data implements DB {
                 }
             }
 
+            cookies.notify();
             return result;
         }
     }
@@ -299,8 +306,8 @@ public class Data implements DB {
             while (cookies.get(key) != null) {
                 try {
                     // Wait a while for the lock to be freed.
-                    System.out.println("Waiting for 10 miliseconds");
-                    Thread.sleep(10);
+                    System.out.println("Waiting for recNo = " + recNo);
+                    cookies.wait();
                 } catch (InterruptedException e) { }
             }
 
@@ -337,6 +344,7 @@ public class Data implements DB {
                 }
             }
 
+            cookies.notify();
             return cookie;
         }
     }
@@ -346,13 +354,15 @@ public class Data implements DB {
             try {
                 Long key = new Long(recNo);
                 Long value = (Long) cookies.remove(key);
-                if (value.longValue() != cookie) {
+                if (value == null || value.longValue() != cookie) {
                     throw new SecurityException("Record " + recNo + " cookie invalid");
                 }
 
             } catch (Exception e) {
                 throw new RecordNotFoundException(e.getMessage());
             }
+
+            cookies.notify();
         }
     }
 }
