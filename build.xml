@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="scjd" default="all">
+<project name="runme" default="all">
 
 
     <!-- Uncomment the following property if no tests compilation is needed -->
@@ -49,65 +49,65 @@
     <!-- Global Libraries -->
 
 
-    <dirname property="module.scjd.basedir" file="${ant.file}"/>
+    <dirname property="module.runme.basedir" file="${ant.file}"/>
 
 
-    <property name="module.jdk.home.scjd" value="${project.jdk.home}"/>
-    <property name="module.jdk.classpath.scjd" value="${project.jdk.classpath}"/>
+    <property name="module.jdk.home.runme" value="${project.jdk.home}"/>
+    <property name="module.jdk.classpath.runme" value="${project.jdk.classpath}"/>
 
-    <property name="compiler.args.scjd" value="${compiler.args}"/>
+    <property name="compiler.args.runme" value="${compiler.args}"/>
 
-    <property name="scjd.output.dir" value="${module.scjd.basedir}/classes"/>
-    <property name="scjd.testoutput.dir" value="${module.scjd.basedir}/classes"/>
+    <property name="runme.output.dir" value="${module.runme.basedir}/classes"/>
+    <property name="runme.testoutput.dir" value="${module.runme.basedir}/classes"/>
 
-    <path id="scjd.module.bootclasspath">
+    <path id="runme.module.bootclasspath">
         <!-- Paths to be included in compilation bootclasspath -->
     </path>
 
-    <path id="scjd.module.classpath">
-        <path refid="${module.jdk.classpath.scjd}"/>
+    <path id="runme.module.classpath">
+        <path refid="${module.jdk.classpath.runme}"/>
     </path>
 
 
-    <patternset id="excluded.from.module.scjd"/>
+    <patternset id="excluded.from.module.runme"/>
 
-    <patternset id="excluded.from.compilation.scjd">
-        <patternset refid="excluded.from.module.scjd"/>
+    <patternset id="excluded.from.compilation.runme">
+        <patternset refid="excluded.from.module.runme"/>
         <patternset refid="compiler.excluded"/>
     </patternset>
 
-    <path id="scjd.module.sourcepath">
-        <dirset dir="${module.scjd.basedir}">
+    <path id="runme.module.sourcepath">
+        <dirset dir="${module.runme.basedir}">
             <include name="code"/>
         </dirset>
     </path>
 
 
-    <target name="compile.module.scjd" depends="compile.module.scjd.production,compile.module.scjd.tests" description="compile module scjd"/>
+    <target name="compile.module.runme" depends="compile.module.runme.production,compile.module.runme.tests" description="compile module runme"/>
 
-    <target name="compile.module.scjd.production" description="compile module scjd production classes">
-        <mkdir dir="${scjd.output.dir}"/>
-        <javac destdir="${scjd.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memoryMaximumSize="${compiler.max.memory}" fork="true" executable="${module.jdk.home.scjd}/bin/javac">
-            <compilerarg line="${compiler.args.scjd}"/>
-            <bootclasspath refid="scjd.module.bootclasspath"/>
-            <classpath refid="scjd.module.classpath"/>
-            <src refid="scjd.module.sourcepath"/>
-            <patternset refid="excluded.from.compilation.scjd"/>
+    <target name="compile.module.runme.production" description="compile module runme production classes">
+        <mkdir dir="${runme.output.dir}"/>
+        <javac destdir="${runme.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memoryMaximumSize="${compiler.max.memory}" fork="true" executable="${module.jdk.home.runme}/bin/javac">
+            <compilerarg line="${compiler.args.runme}"/>
+            <bootclasspath refid="runme.module.bootclasspath"/>
+            <classpath refid="runme.module.classpath"/>
+            <src refid="runme.module.sourcepath"/>
+            <patternset refid="excluded.from.compilation.runme"/>
         </javac>
-        <copy todir="${scjd.output.dir}">
-            <fileset dir="${module.scjd.basedir}/code">
+        <copy todir="${runme.output.dir}">
+            <fileset dir="${module.runme.basedir}/code">
                 <patternset refid="compiler.resources"/>
                 <type type="file"/>
-                <patternset refid="excluded.from.compilation.scjd"/>
+                <patternset refid="excluded.from.compilation.runme"/>
             </fileset>
         </copy>
     </target>
 
-    <target name="compile.module.scjd.tests" depends="compile.module.scjd.production" description="compile module scjd test classes" unless="skip.tests"/>
+    <target name="compile.module.runme.tests" depends="compile.module.runme.production" description="compile module runme test classes" unless="skip.tests"/>
 
-    <target name="clean.module.scjd" description="cleanup module">
-        <delete dir="${scjd.output.dir}"/>
-        <delete dir="${scjd.testoutput.dir}"/>
+    <target name="clean.module.runme" description="cleanup module">
+        <delete dir="${runme.output.dir}"/>
+        <delete dir="${runme.testoutput.dir}"/>
         <delete file="runme.jar"/>
     </target>
 
@@ -115,7 +115,7 @@
         <!-- Perform any build initialization in this target -->
     </target>
 
-    <target name="clean" depends="clean.module.scjd" description="cleanup all"/>
+    <target name="clean" depends="clean.module.runme" description="cleanup all"/>
 
     <target name="jar">
         <jar jarfile="runme.jar">
@@ -126,6 +126,6 @@
         </jar>
     </target>
 
-    <target name="all" depends="init, clean, compile.module.scjd, jar" description="build all"/>
+    <target name="all" depends="init, clean, compile.module.runme, jar" description="build all"/>
 
 </project>

@@ -1,7 +1,7 @@
-JDK version:
-     java version "1.4.2_05"
+JDK Version:
+     Java Version "1.4.2_05"
      Java(TM) 2 Runtime Environment, Standard Edition (build 1.4.2_05-b04)
      Java HotSpot(TM) Client VM (build 1.4.2_05-b04, mixed mode)
 
-Host platform:
+Host Platform:
      Microsoft Windows XP [Version 5.1.2600]
