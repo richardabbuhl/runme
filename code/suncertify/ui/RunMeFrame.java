@@ -156,7 +156,12 @@ public class RunMeFrame extends JFrame {
     }
 
     private void addComponents() {
-        String[] columnNames = {"A", "B", "C", "D", "E", "F"};
+        String[] columnNames = {"Subcontractor Name",
+                                "City",
+                                "Types of work performed",
+                                "Number of staff in organization",
+                                "Hourly charge",
+                                "Customer holding this record"};
         Data d = new Data("db-2x2.db");
 
         Vector o = matchTest(d);
@@ -164,12 +169,12 @@ public class RunMeFrame extends JFrame {
         for (int i = 0; i < o.size(); i++) {
             String [] t = (String[])o.get(i);
             for (int j = 0; j < 6; j++) {
-                c[i][j] = t[j];
+                c[i][j] = t[j].trim();
             }
         }
 
         final JTable table = new JTable(c, columnNames);
-        table.setPreferredScrollableViewportSize(new Dimension(500, 70));
+        table.setPreferredScrollableViewportSize(new Dimension(800, 600));
 
         //Create the scroll pane and add the table to it.
         JScrollPane scrollPane = new JScrollPane(table);
