@@ -62,6 +62,16 @@ public class runme {
             }
         }
 
+/*
+        try {
+            String name = "//" + args[0] + "/RemoteData";
+            RemoteDataAdapter data = (RemoteDataAdapter) Naming.lookup(name);
+        } catch (Exception e) {
+            System.err.println("Exception: " + e.getMessage());
+            e.printStackTrace();
+        }
+*/
+
         try {
             UIManager.setLookAndFeel(
                 UIManager.getCrossPlatformLookAndFeelClassName());
@@ -69,13 +79,6 @@ public class runme {
 
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new RMISecurityManager());
-        }
-        try {
-            String name = "//" + args[0] + "/RemoteData";
-            RemoteDataAdapter data = (RemoteDataAdapter) Naming.lookup(name);
-        } catch (Exception e) {
-            System.err.println("Exception: " + e.getMessage());
-            e.printStackTrace();
         }
 
         //Create the top-level container and add contents to it.
