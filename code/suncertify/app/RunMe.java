@@ -1,3 +1,12 @@
+/*
+ * RunMe.java
+ * Copyright (c) 2005 Richard Abbuhl.
+ * Haarlem, The Netherlands.
+ * All rights reserved.
+ *
+ * This software is the confidential and proprietary information of Richard Abbuhl.
+ */
+
 package suncertify.app;
 
 import suncertify.network.RemoteDataAdapter;
@@ -13,11 +22,9 @@ import java.rmi.Naming;
 import java.rmi.RMISecurityManager;
 
 /**
- * Created by IntelliJ IDEA.
- * User: RichardAbbuhl
- * Date: Feb 21, 2005
- * Time: 5:11:59 PM
- * To change this template use File | Settings | File Templates.
+ * Class description goes here.
+ * @version 1.00
+ * @author Richard Abbuhl
  */
 public class RunMe {
 

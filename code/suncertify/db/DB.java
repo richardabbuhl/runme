@@ -1,3 +1,12 @@
+/*
+ * DB.java
+ * Copyright (c) 2005 Richard Abbuhl.
+ * Haarlem, The Netherlands.
+ * All rights reserved.
+ *
+ * This software is the confidential and proprietary information of Richard Abbuhl.
+ */
+
 package suncertify.db;
 
 /**
