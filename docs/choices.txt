@@ -1,13 +1,25 @@
-A file called choices.txt that containing pure ASCII (not a word processor format) text describing the significant design choices
-you made. Detail the problems you perceived, the issues surrounding them, your value judgments, and the decisions that you made.
-This document should also describe any uncertainties you had regarding the project, and the decisions you made when resolving them.
+Overview
 
-1.  Choose RandomAccessFile since seeks are necessary to read/write files.
+This files describes the significant design choices I made during development of this project. It details the problems
+I perceived, the issues surrounding them, my value judgments, and the decisions that I made to resolve these issues.
+This document should also describe any uncertainties I had regarding the project, and the decisions I made when
+resolving them.
 
-2.  Choose to cache the schema.
+Database Issues
 
-3.  Choose to use a HashMap for holding the lock.
+I was not sure how to access the records in the file.  By default, I choose the DataAccessStream but it does not allow
+seeking within the file.  Instead, I choose RandomAccessFile since seeks are necessary to read/write files.
 
-4.  For the GUI, a simple approach was chosen so that search, modify, and deletes were allowed.
+For performance reasons, I seemed necessary to cache the schema.  So, I created a Schema class and the schema is read
+and in saved so it can be used when future database accesses are requested.
 
-5.  Change:  However, sockets require the client and server to engage in applications-level protocols to encode and decode messages for exchange, and the design of such protocols is cumbersome and can be error-prone.
+To lock the database, I choose to use a HashMap for holding the locking information.
+
+GUI Issues
+
+For the GUI, a simple approach was chosen so that search, modify, and deletes were allowed.
+
+
+RMI Implementation
+
+Change:  However, sockets require the client and server to engage in applications-level protocols to encode and decode messages for exchange, and the design of such protocols is cumbersome and can be error-prone.
