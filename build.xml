@@ -19,7 +19,7 @@
         <mkdir dir="${classes.dir}"/>
         <mkdir dir="${out.dir}"/>
         <javac debug="on" srcdir="${src.dir}" destdir="${classes.dir}"/>
-        <rmic classname="suncertify.network.RemoteDataAdapter" base="${classes.dir}"/>
+        <rmic classname="suncertify.rmi.RemoteDataAdapter" base="${classes.dir}"/>
     </target>
 
     <target name="doc">
