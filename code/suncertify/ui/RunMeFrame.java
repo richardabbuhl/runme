@@ -88,7 +88,7 @@ public class RunMeFrame extends JFrame {
         Vector v = new Vector();
         try {
             String [] d = { "", "", "", "", "", "" };
-            d[0] = subcontractorName.getText().trim().length() > 0 ? subcontractorName.getText().trim() : "";
+            d[0] = subcontractorName.getText().trim().length() > 0 ? subcontractorName.getText().trim() : null;
             System.out.println("subcontractorName = " + subcontractorName.getText().trim());
             int[] matches = data.find(d);
             if (matches != null) {

@@ -208,7 +208,7 @@ public class Data implements DB {
                                 sb.append((char) file.readByte());
                             }
                             if (criteria[i] != null) {
-                                if ("*".equals(criteria[i]) || sb.toString().startsWith(criteria[i])) {
+                                if (criteria[i].length() > 0 && sb.toString().startsWith(criteria[i])) {
                                     match = true;
                                 }
                             } else {
