@@ -83,6 +83,14 @@ public class RunMeFrame extends JFrame {
         return data ;
     }
 
+    public boolean isDbRemote() {
+        return dbRemote;
+    }
+
+    public void setDbRemote(boolean dbRemote) {
+        this.dbRemote = dbRemote;
+    }
+
     private JMenuBar createMenuBar() {
         JMenuBar menuBar;
         JMenu menu;
