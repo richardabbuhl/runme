@@ -17,9 +17,6 @@ import java.util.Vector;
  */
 public class RunMeFrame extends JFrame {
 
-    private static String labelPrefix = "Number of button clicks: ";
-    private int numClicks = 0;
-
     public JMenuBar createMenuBar() {
         JMenuBar menuBar;
         JMenu menu, submenu;
@@ -71,18 +68,6 @@ public class RunMeFrame extends JFrame {
     }
 
     private void addSearchComponents() {
-        final JLabel label = new JLabel(labelPrefix + "0    ");
-
-        JButton button = new JButton("I'm a Swing button!");
-        button.setMnemonic('i');
-        button.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                numClicks++;
-                label.setText(labelPrefix + numClicks);
-            }
-        });
-        label.setLabelFor(button);
-
         /*
          * An easy way to put space between a top-level container
          * and its contents is to put the contents in a JPanel
@@ -95,8 +80,8 @@ public class RunMeFrame extends JFrame {
                 50) //right
         );
         pane.setLayout(new GridLayout(0, 1));
-        pane.add(button);
-        pane.add(label);
+        //pane.add(button);
+        //pane.add(label);
 
         // Add pane.
         getContentPane().add(pane);

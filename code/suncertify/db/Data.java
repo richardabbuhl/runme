@@ -50,7 +50,9 @@ public class Data implements DB {
                 try {
                     // Wait for notification to again check the lock.
                     cookies.wait();
-                } catch (InterruptedException e) { }
+                } catch (InterruptedException e) {
+                    System.out.println("Exception " + e.toString());
+                }
             }
 
             String[] result = null;
@@ -321,7 +323,9 @@ public class Data implements DB {
                 try {
                     // Wait for notification to again check the lock.
                     cookies.wait();
-                } catch (InterruptedException e) { }
+                } catch (InterruptedException e) {
+                    System.out.println("Exception " + e.toString());                
+                }
             }
 
             int cookie = 0;
