@@ -96,7 +96,7 @@ public class RunMeFrame extends JFrame {
         DB data = null;
         try {
             if (dbRemote) {
-                String remoteHost = getProperty("remote-host", "192.168.1.53");
+                String remoteHost = getProperty("remote-host", "localhost");
                 Registry remoteRegistry = LocateRegistry.getRegistry(remoteHost);
                 data = (DB)remoteRegistry.lookup(DB.SERVICENAME);
             } else {
