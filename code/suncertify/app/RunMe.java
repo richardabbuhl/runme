@@ -53,7 +53,7 @@ public class RunMe {
 
         try {
               System.out.println("Creating a local RMI registry on the default port.");
-              Registry localRegistry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
+              Registry localRegistry = LocateRegistry.createRegistry(1098);
 
               System.out.println("Creating local object and remote adapter.");
               Data adaptee = new Data("db-2x2.db");
