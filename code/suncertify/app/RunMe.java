@@ -60,6 +60,32 @@ public class runme {
         return pane;
     }
 
+    public static void createUI() {
+        try {
+            UIManager.setLookAndFeel(
+                UIManager.getCrossPlatformLookAndFeelClassName());
+        } catch (Exception e) { }
+
+        if (System.getSecurityManager() == null) {
+            System.setSecurityManager(new RMISecurityManager());
+        }
+
+        //Create the top-level container and add contents to it.
+        JFrame frame = new JFrame("SwingApplication");
+        runme app = new runme();
+        Component contents = app.createComponents();
+        frame.getContentPane().add(contents, BorderLayout.CENTER);
+
+        //Finish setting up the frame, and show it.
+        frame.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                System.exit(0);
+            }
+        });
+        frame.pack();
+        frame.setVisible(true);
+    }
+
     private static void showUsage() {
         System.out.println("Usage: java -jar runme.jar [server|alone]");
         System.out.println("  server - indicates server mode and that the server must run.");
@@ -86,11 +112,17 @@ public class runme {
             displayUsage = true;
         }
 
+        /**
+         * Show the usage if the user did not follow the command-line conventions.
+         */
         if (displayUsage) {
             showUsage();
             return;
         }
 
+        /**
+         *
+         */
         if (mode == SERVER_MODE) {
 
             try {
@@ -103,29 +135,7 @@ public class runme {
 
         } else if (mode == CLIENT_MODE) {
 
-            try {
-                UIManager.setLookAndFeel(
-                    UIManager.getCrossPlatformLookAndFeelClassName());
-            } catch (Exception e) { }
-
-            if (System.getSecurityManager() == null) {
-                System.setSecurityManager(new RMISecurityManager());
-            }
-
-            //Create the top-level container and add contents to it.
-            JFrame frame = new JFrame("SwingApplication");
-            runme app = new runme();
-            Component contents = app.createComponents();
-            frame.getContentPane().add(contents, BorderLayout.CENTER);
-
-            //Finish setting up the frame, and show it.
-            frame.addWindowListener(new WindowAdapter() {
-                public void windowClosing(WindowEvent e) {
-                    System.exit(0);
-                }
-            });
-            frame.pack();
-            frame.setVisible(true);
+            createUI();
         }
     }
 }
