@@ -15,10 +15,24 @@ import java.awt.event.ActionEvent;
  * Time: 4:44:40 PM
  * To change this template use File | Settings | File Templates.
  */
-public class RunMeFrame {
+public class RunMeFrame extends JFrame {
 
     private static String labelPrefix = "Number of button clicks: ";
     private int numClicks = 0;
+
+    public JMenuBar createMenu() {
+        JMenuBar mb = new JMenuBar();
+        JMenu fileMenu = new JMenu();
+        JMenuItem exitItem = new JMenuItem();
+
+        fileMenu.add("New...");
+        fileMenu.addSeparator();
+        fileMenu.add(exitItem);
+
+        mb.add(fileMenu);
+
+        return mb;
+    }
 
     public Component createComponents() {
         final JLabel label = new JLabel(labelPrefix + "0    ");
@@ -57,23 +71,19 @@ public class RunMeFrame {
         } catch (Exception e) {
         }
 
-        if (System.getSecurityManager() == null) {
-            System.setSecurityManager(new RMISecurityManager());
-        }
-
-        //Create the top-level container and add contents to it.
-        JFrame frame = new JFrame("SwingApplication");
+        // Create the top-level container and add contents to it.
+        setTitle("SwingApplication");
         Component contents = createComponents();
-        frame.getContentPane().add(contents, BorderLayout.CENTER);
+        getContentPane().add(contents, BorderLayout.CENTER);
 
         //Finish setting up the frame, and show it.
-        frame.addWindowListener(new WindowAdapter() {
+        addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 System.exit(0);
             }
         });
-        frame.pack();
-        frame.setVisible(true);
+        pack();
+        setVisible(true);
     }
 
 

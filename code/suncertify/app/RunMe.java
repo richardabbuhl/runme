@@ -26,6 +26,10 @@ public class RunMe {
     private static final int CLIENT_MODE = 3;
 
     public void createServer(String hostName) {
+        if (System.getSecurityManager() == null) {
+            System.setSecurityManager(new RMISecurityManager());
+        }
+
         try {
             String name = "//" + hostName + "/RemoteData";
             RemoteDataAdapter data = (RemoteDataAdapter) Naming.lookup(name);
