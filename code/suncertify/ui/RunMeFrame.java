@@ -17,8 +17,12 @@ import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
+import java.util.Properties;
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.FileOutputStream;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,6 +33,7 @@ import java.rmi.registry.LocateRegistry;
  */
 public class RunMeFrame extends JFrame {
 
+    private static final String PROPERTIES_FILE = "suncertify.properties";
     private JTextField subcontractorName = new JTextField();
     private JTextField subcontractorCity = new JTextField();
     private Button searchButton = new Button("Search");
@@ -66,11 +71,33 @@ public class RunMeFrame extends JFrame {
         }
     }
 
+    private String getProperty(String key, String defaultValue) {
+        Properties properties = new Properties();
+        String value = defaultValue;
+        try {
+            properties.load(new FileInputStream(PROPERTIES_FILE));
+            value = properties.getProperty(key, defaultValue);
+        } catch (IOException e) {
+        }
+        return value;
+    }
+
+    private void setProperty(String key, String value) {
+        Properties properties = new Properties();
+        try {
+            properties.load(new FileInputStream(PROPERTIES_FILE));
+            properties.setProperty(key, value);
+            properties.store(new FileOutputStream(PROPERTIES_FILE), null);
+        } catch (IOException e) {
+        }
+    }
+
     private DB getDB() {
         DB data = null;
         try {
             if (dbRemote) {
-                Registry remoteRegistry = LocateRegistry.getRegistry("192.168.1.53");
+                String remoteHost = getProperty("remote-host", "192.168.1.53");
+                Registry remoteRegistry = LocateRegistry.getRegistry(remoteHost);
                 data = (DB)remoteRegistry.lookup(DB.SERVICENAME);
             } else {
                 data = new Data("db-2x2.db");
