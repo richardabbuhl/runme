@@ -17,8 +17,9 @@ To lock the database, I choose to use a HashMap for holding the locking informat
 
 GUI Issues
 
-For the GUI, a simple approach was chosen so that search, modify, and deletes were allowed.
-
+The user interface was designed to provide only limited functionality.  It allows the user to view all records, to view
+records matching the first letters of the subcontractor name or city, and allows the user the user to modify a record.
+It was chosen not to allow the user to delete a record. 
 
 RMI Implementation
 
