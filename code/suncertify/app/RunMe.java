@@ -1,4 +1,4 @@
-package suncertify.driver;
+package suncertify;
 
 /**
  * Created by IntelliJ IDEA.
