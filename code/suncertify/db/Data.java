@@ -34,8 +34,8 @@ public class Data implements DB {
         for (int i = 0; i < schema.getNumFields(); i++) {
             short nameLength = file.readShort();
             StringBuffer name = new StringBuffer();
-            for (int k = 0; k < nameLength ; k++){
-                name.append((char)file.readByte());
+            for (int k = 0; k < nameLength; k++) {
+                name.append((char) file.readByte());
             }
             fields[i] = new Field();
             fields[i].setName(name.toString());
@@ -61,7 +61,7 @@ public class Data implements DB {
                 for (int i = 0; i < schema.getNumFields(); i++) {
                     StringBuffer sb = new StringBuffer();
                     for (int k = 0; k < schema.getFields()[i].getLength(); k++) {
-                        sb.append((char)file.readByte());
+                        sb.append((char) file.readByte());
                     }
                     result[i] = sb.toString();
                 }
@@ -75,7 +75,8 @@ public class Data implements DB {
             if (file != null) {
                 try {
                     file.close();
-                } catch (IOException e) { }
+                } catch (IOException e) {
+                }
             }
         }
         return result;
@@ -83,7 +84,7 @@ public class Data implements DB {
 
     private void lockCheck(int recNo, long lockCookie) throws SecurityException {
         Long key = new Long(recNo);
-        Long value = (Long)cookies.get(key);
+        Long value = (Long) cookies.get(key);
         if (value == null || value.longValue() != lockCookie) {
             throw new SecurityException("Record " + recNo + " was not locked");
         }
@@ -109,7 +110,7 @@ public class Data implements DB {
                     } else {
                         StringBuffer sb = new StringBuffer();
                         for (int k = 0; k < schema.getFields()[i].getLength(); k++) {
-                            sb.append((char)file.readByte());
+                            sb.append((char) file.readByte());
                         }
                     }
                 }
@@ -182,7 +183,7 @@ public class Data implements DB {
                     for (int i = 0; i < schema.getNumFields(); i++) {
                         StringBuffer sb = new StringBuffer();
                         for (int k = 0; k < schema.getFields()[i].getLength(); k++) {
-                            sb.append((char)file.readByte());
+                            sb.append((char) file.readByte());
                         }
                         if (criteria[i] != null) {
                             if ("*".equals(criteria[i]) || sb.toString().startsWith(criteria[i])) {
@@ -201,7 +202,7 @@ public class Data implements DB {
             if (resultList.size() > 0) {
                 result = new int[resultList.size()];
                 for (int i = 0; i < resultList.size(); i++) {
-                    Integer a = (Integer)resultList.get(i);
+                    Integer a = (Integer) resultList.get(i);
                     result[i] = a.intValue();
                 }
             }
@@ -325,7 +326,7 @@ public class Data implements DB {
     public void unlock(int recNo, long cookie) throws RecordNotFoundException, SecurityException {
         try {
             Long key = new Long(recNo);
-            Long value = (Long)cookies.remove(key);
+            Long value = (Long) cookies.remove(key);
             if (value.longValue() != cookie) {
                 throw new SecurityException("Record " + recNo + " cookie invalid");
             }

@@ -47,12 +47,11 @@ public class runme {
          * that has an "empty" border.
          */
         JPanel pane = new JPanel();
-        pane.setBorder(BorderFactory.createEmptyBorder(
-                                        30, //top
-                                        30, //left
-                                        10, //bottom
-                                        30) //right
-                                        );
+        pane.setBorder(BorderFactory.createEmptyBorder(30, //top
+                30, //left
+                10, //bottom
+                30) //right
+        );
         pane.setLayout(new GridLayout(0, 1));
         pane.add(button);
         pane.add(label);
@@ -73,9 +72,9 @@ public class runme {
 
     public void createUI() {
         try {
-            UIManager.setLookAndFeel(
-                UIManager.getCrossPlatformLookAndFeelClassName());
-        } catch (Exception e) { }
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        } catch (Exception e) {
+        }
 
         if (System.getSecurityManager() == null) {
             System.setSecurityManager(new RMISecurityManager());
