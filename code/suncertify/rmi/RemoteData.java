@@ -7,11 +7,12 @@
  * This software is the confidential and proprietary information of Richard Abbuhl.
  */
 
-package suncertify.network;
+package suncertify.rmi;
 
 import suncertify.db.Data;
 import suncertify.db.RecordNotFoundException;
 import suncertify.db.DuplicateKeyException;
+import suncertify.db.DB;
 
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.RemoteException;
@@ -23,7 +24,7 @@ import java.rmi.RemoteException;
  * Time: 1:58:17 PM
  * To change this template use File | Settings | File Templates.
  */
-public class RemoteDataAdapter extends UnicastRemoteObject implements RemoteDB {
+public class RemoteDataAdapter extends UnicastRemoteObject implements DB {
 
     protected Data adaptee;
 

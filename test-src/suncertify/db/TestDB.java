@@ -1,7 +1,5 @@
 package suncertify.db;
 
-import suncertify.network.RemoteDB;
-
 import java.util.Random;
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
@@ -20,10 +18,10 @@ public class RemoteTestData {
 
     static class testDataThread implements Runnable {
 
-        private RemoteDB data;
+        private DB data;
         private Random random = new Random();
 
-        public testDataThread(RemoteDB data) {
+        public testDataThread(DB data) {
             this.data = data;
         }
 
@@ -39,7 +37,7 @@ public class RemoteTestData {
             }
         }
 
-        private void readTest(RemoteDB data, int recNo) {
+        private void readTest(DB data, int recNo) {
             try {
                 dump(data.read(recNo));
             } catch (RecordNotFoundException e) {
@@ -47,7 +45,7 @@ public class RemoteTestData {
             }
         }
 
-        private void updateTest(RemoteDB data, int recNo) {
+        private void updateTest(DB data, int recNo) {
             long cookie = -1;
             try {
                 String [] d = new String[6];
@@ -71,7 +69,7 @@ public class RemoteTestData {
             }
         }
 
-        private void addTest(RemoteDB data) {
+        private void addTest(DB data) {
             try {
                 String [] d = new String[6];
 
@@ -91,7 +89,7 @@ public class RemoteTestData {
             }
         }
 
-        private void deleteTest(RemoteDB data, int recNo) {
+        private void deleteTest(DB data, int recNo) {
             long cookie = -1;
             try {
                 cookie = data.lock(recNo);
@@ -112,7 +110,7 @@ public class RemoteTestData {
             }
         }
 
-        private void matchTest(RemoteDB data) {
+        private void matchTest(DB data) {
             try {
                 String [] d = new String[6];
 
@@ -160,10 +158,15 @@ public class RemoteTestData {
 
     public static void main(String args[]) {
         try {
-            System.out.println("Locating RMI registry on remote host \"" + args[0] + "\"." );
-            Registry remoteRegistry = LocateRegistry.getRegistry(args[0]);
-            System.out.println( "RemoteMapClient looking up service \"" + RemoteDB.SERVICENAME + "\"." );
-            RemoteDB data = (RemoteDB)remoteRegistry.lookup(RemoteDB.SERVICENAME);
+            DB data = null;
+            if (args.length > 0) {
+                System.out.println("Locating RMI registry on remote host \"" + args[0] + "\"." );
+                Registry remoteRegistry = LocateRegistry.getRegistry(args[0]);
+                System.out.println( "RemoteMapClient looking up service \"" + DB.SERVICENAME + "\"." );
+                data = (DB)remoteRegistry.lookup(DB.SERVICENAME);
+            } else {
+                data = new Data("db-2x2.db");
+            }
 
             for (int i = 0; i < 20; i++) {
                 Thread foo = new Thread(new RemoteTestData.testDataThread(data));
