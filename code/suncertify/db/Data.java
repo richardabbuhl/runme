@@ -77,9 +77,10 @@ public class Data implements DB {
                     } catch (IOException e) {
                     }
                 }
+
+                cookies.notify();
             }
 
-            cookies.notify();
             return result;
         }
     }
@@ -133,9 +134,9 @@ public class Data implements DB {
                         System.out.println("Error" + e.toString());
                     }
                 }
-            }
 
-            cookies.notify();
+                cookies.notify();
+            }
         }
     }
 
@@ -168,9 +169,9 @@ public class Data implements DB {
                         System.out.println("Error" + e.toString());
                     }
                 }
-            }
 
-            cookies.notify();
+                cookies.notify();
+            }
         }
     }
 
@@ -228,9 +229,10 @@ public class Data implements DB {
                         System.out.println("Error" + e.toString());
                     }
                 }
+
+                cookies.notify();
             }
 
-            cookies.notify();
             return result;
         }
     }
@@ -294,6 +296,8 @@ public class Data implements DB {
                         System.out.println("Error" + e.toString());
                     }
                 }
+
+                cookies.notify();
             }
 
             return recNo;
@@ -341,9 +345,10 @@ public class Data implements DB {
                         System.out.println("Error" + e.toString());
                     }
                 }
+
+                cookies.notify();
             }
 
-            cookies.notify();
             return cookie;
         }
     }
@@ -359,9 +364,9 @@ public class Data implements DB {
 
             } catch (Exception e) {
                 throw new RecordNotFoundException(e.getMessage());
+            } finally {
+                cookies.notify();
             }
-
-            cookies.notify();
         }
     }
 }
