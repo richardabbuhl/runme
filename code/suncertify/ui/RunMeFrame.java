@@ -51,10 +51,10 @@ public class RunMeFrame extends JFrame {
          * that has an "empty" border.
          */
         JPanel pane = new JPanel();
-        pane.setBorder(BorderFactory.createEmptyBorder(30, //top
-                30, //left
+        pane.setBorder(BorderFactory.createEmptyBorder(50, //top
+                50, //left
                 10, //bottom
-                30) //right
+                50) //right
         );
         pane.setLayout(new GridLayout(0, 1));
         pane.add(button);
