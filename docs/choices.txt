@@ -7,3 +7,7 @@ This document should also describe any uncertainties you had regarding the proje
 2.  Choose to cache the schema.
 
 3.  Choose to use a HashMap for holding the lock.
+
+4.  For the GUI, a simple approach was chosen so that search, modify, and deletes were allowed.
+
+5.  Change:  However, sockets require the client and server to engage in applications-level protocols to encode and decode messages for exchange, and the design of such protocols is cumbersome and can be error-prone.
