@@ -17,23 +17,23 @@ import java.util.Vector;
  */
 public class RunMeFrame extends JFrame {
 
+    private JTextField subcontractorName = new JTextField();
+
     public JMenuBar createMenuBar() {
         JMenuBar menuBar;
-        JMenu menu, submenu;
+        JMenu menu;
         JMenuItem menuItem;
-        JRadioButtonMenuItem rbMenuItem;
-        JCheckBoxMenuItem cbMenuItem;
 
-        //Create the menu bar.
+        // Create the menu bar.
         menuBar = new JMenuBar();
 
-        //Build the first menu.
+        // Build the first menu.
         menu = new JMenu("File");
         menu.setMnemonic(KeyEvent.VK_F);
         menu.getAccessibleContext().setAccessibleDescription("The only menu in this program that has menu items");
         menuBar.add(menu);
 
-        //a group of JMenuItems
+        // a group of JMenuItems
         menuItem = new JMenuItem("Exit", KeyEvent.VK_E);
         menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.ALT_MASK));
         menuItem.getAccessibleContext().setAccessibleDescription("Exit");
@@ -74,13 +74,14 @@ public class RunMeFrame extends JFrame {
          * that has an "empty" border.
          */
         JPanel pane = new JPanel();
-        //pane.setBorder(BorderFactory.createEmptyBorder(50, //top
-        //        50, //left
-        //        10, //bottom
-        //        50) //right
-        //);
-        //pane.setLayout(new GridLayout(0, 1));
-        pane.add(new Button("Hello"));
+        pane.setBorder(BorderFactory.createEmptyBorder(50, //top
+                50, //left
+                10, //bottom
+                50) //right
+        );
+        pane.setLayout(new GridLayout());
+        pane.add(new Button("Search"));
+        pane.add(subcontractorName);
         //pane.add(label);
 
         return pane;
