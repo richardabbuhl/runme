@@ -140,13 +140,6 @@ public class RunMeFrame extends JFrame {
         Vector v = new Vector();
         try {
             String [] d = new String[6];
-
-            d[0] = "*";
-            d[1] = null;
-            d[2] = null;
-            d[3] = null;
-            d[4] = null;
-            d[5] = null;
             int[] matches = data.find(d);
             if (matches != null) {
                 for (int i = 0; i < matches.length; i++) {

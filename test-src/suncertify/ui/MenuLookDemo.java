@@ -67,7 +67,7 @@ public class MenuLookDemo {
 
         //Create and set up the content pane.
         MenuLookDemo demo = new MenuLookDemo();
-        frame.setJMenuBar(demo.createMenuBar());
+        //frame.setJMenuBar(demo.createMenuBar());
         frame.setContentPane(demo.createContentPane());
 
         //Display the window.

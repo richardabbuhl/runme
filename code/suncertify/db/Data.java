@@ -208,6 +208,8 @@ public class Data implements DB {
                                 if ("*".equals(criteria[i]) || sb.toString().startsWith(criteria[i])) {
                                     match = true;
                                 }
+                            } else {
+                                match = true;
                             }
                         }
                     }
