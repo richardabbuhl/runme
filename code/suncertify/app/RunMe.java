@@ -19,6 +19,12 @@ import java.rmi.RMISecurityManager;
  * To change this template use File | Settings | File Templates.
  */
 public class runme {
+
+    private static final int SERVER_MODE = 1;
+    private static final int STANDALONE_MODE = 2;
+    private static final int CLIENT_MODE = 3;
+
+
     private static String labelPrefix = "Number of button clicks: ";
     private int numClicks = 0;
 
@@ -54,46 +60,69 @@ public class runme {
         return pane;
     }
 
+    private static void showUsage() {
+        System.out.println("Usage: java -jar runme.jar [server|alone]");
+        System.out.println("  server - indicates server mode and that the server must run.");
+        System.out.println("  alone - indicates standalone mode and that both the client and server must run.");
+        System.out.println("  default mode indicates client mode and that the client must run.");
+    }
+
     public static void main(String[] args) {
-        String mode = null;
-        if (args.length > 1) {
-            if (args.length == 1) {
-                mode = args[0];
+        int mode = CLIENT_MODE;
+        boolean displayUsage = false;
+
+        if (args.length == 1) {
+            if ("server".equals(args[0])) {
+                mode = SERVER_MODE;
+            } else if ("alone".equals(args[0])) {
+                mode = STANDALONE_MODE;
+            } else {
+                displayUsage = true;
             }
+        } else if (args.length > 1) {
+            displayUsage = true;
         }
 
-/*
-        try {
-            String name = "//" + args[0] + "/RemoteData";
-            RemoteDataAdapter data = (RemoteDataAdapter) Naming.lookup(name);
-        } catch (Exception e) {
-            System.err.println("Exception: " + e.getMessage());
-            e.printStackTrace();
-        }
-*/
-
-        try {
-            UIManager.setLookAndFeel(
-                UIManager.getCrossPlatformLookAndFeelClassName());
-        } catch (Exception e) { }
-
-        if (System.getSecurityManager() == null) {
-            System.setSecurityManager(new RMISecurityManager());
+        if (displayUsage) {
+            showUsage();
+            return;
         }
 
-        //Create the top-level container and add contents to it.
-        JFrame frame = new JFrame("SwingApplication");
-        runme app = new runme();
-        Component contents = app.createComponents();
-        frame.getContentPane().add(contents, BorderLayout.CENTER);
+        if (mode == SERVER_MODE) {
 
-        //Finish setting up the frame, and show it.
-        frame.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                System.exit(0);
+            try {
+                String name = "//" + args[0] + "/RemoteData";
+                RemoteDataAdapter data = (RemoteDataAdapter) Naming.lookup(name);
+            } catch (Exception e) {
+                System.err.println("Exception: " + e.getMessage());
+                e.printStackTrace();
             }
-        });
-        frame.pack();
-        frame.setVisible(true);
+
+        } else if (mode == CLIENT_MODE) {
+
+            try {
+                UIManager.setLookAndFeel(
+                    UIManager.getCrossPlatformLookAndFeelClassName());
+            } catch (Exception e) { }
+
+            if (System.getSecurityManager() == null) {
+                System.setSecurityManager(new RMISecurityManager());
+            }
+
+            //Create the top-level container and add contents to it.
+            JFrame frame = new JFrame("SwingApplication");
+            runme app = new runme();
+            Component contents = app.createComponents();
+            frame.getContentPane().add(contents, BorderLayout.CENTER);
+
+            //Finish setting up the frame, and show it.
+            frame.addWindowListener(new WindowAdapter() {
+                public void windowClosing(WindowEvent e) {
+                    System.exit(0);
+                }
+            });
+            frame.pack();
+            frame.setVisible(true);
+        }
     }
 }
