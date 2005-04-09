@@ -100,8 +100,6 @@ public class RunMeFrame extends JFrame {
             value = properties.getProperty(key, defaultValue);
         } catch (IOException e) {
             System.out.println("Exception " + e.toString());
-            JOptionPane.showMessageDialog(null, "Error reading " + PROPERTIES_FILE + " " + e.toString(),
-                    "alert", JOptionPane.ERROR_MESSAGE);
         }
         return value;
     }
@@ -264,56 +262,51 @@ public class RunMeFrame extends JFrame {
     private JPanel addConfigurationComponents() {
         JPanel pane = new JPanel();
         pane.setLayout(new GridLayout(0, 1));
-        try {
-            if (dbRemote) {
-                Button remoteHostApplyButton = new Button("Apply");
-                Button remoteHostDefaultButton = new Button("Default");
-                pane.add(new JLabel("Remote-host:"));
-                remoteHost.setText(getProperty("remote-host", "localhost"));
-                pane.add(remoteHost);
-                pane.add(remoteHostApplyButton);
-                pane.add(remoteHostDefaultButton);
+        if (dbRemote) {
+            Button remoteHostApplyButton = new Button("Apply");
+            Button remoteHostDefaultButton = new Button("Default");
+            pane.add(new JLabel("Remote-host:"));
+            remoteHost.setText(getProperty("remote-host", "localhost"));
+            pane.add(remoteHost);
+            pane.add(remoteHostApplyButton);
+            pane.add(remoteHostDefaultButton);
 
-                remoteHostApplyButton.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        setProperty("remote-host", remoteHost.getText());
-                        JOptionPane.showMessageDialog(null, "Remote host updated to " + remoteHost.getText(),
-                                "alert", JOptionPane.INFORMATION_MESSAGE);
-                    }
-                });
+            remoteHostApplyButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    setProperty("remote-host", remoteHost.getText());
+                    JOptionPane.showMessageDialog(null, "Remote host updated to " + remoteHost.getText(),
+                            "alert", JOptionPane.INFORMATION_MESSAGE);
+                }
+            });
 
-                remoteHostDefaultButton.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        remoteHost.setText("localhost");
-                    }
-                });
+            remoteHostDefaultButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    remoteHost.setText("localhost");
+                }
+            });
 
-            } else {
-                Button localDBPathApplyButton = new Button("Apply");
-                Button localDBPathDefaultButton = new Button("Default");
-                pane.add(new JLabel("Local DB Path:"));
-                localDBPath.setText(getProperty("localdb-path", "db-2x2.db"));
-                pane.add(localDBPath);
-                pane.add(localDBPathApplyButton);
-                pane.add(localDBPathDefaultButton);
+        } else {
+            Button localDBPathApplyButton = new Button("Apply");
+            Button localDBPathDefaultButton = new Button("Default");
+            pane.add(new JLabel("Local DB Path:"));
+            localDBPath.setText(getProperty("localdb-path", "db-2x2.db"));
+            pane.add(localDBPath);
+            pane.add(localDBPathApplyButton);
+            pane.add(localDBPathDefaultButton);
 
-                localDBPathApplyButton.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        setProperty("localdb-path", localDBPath.getText());
-                        JOptionPane.showMessageDialog(null, "Local DB Path updated to " + localDBPath.getText(),
-                                "alert", JOptionPane.INFORMATION_MESSAGE);
-                    }
-                });
+            localDBPathApplyButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    setProperty("localdb-path", localDBPath.getText());
+                    JOptionPane.showMessageDialog(null, "Local DB Path updated to " + localDBPath.getText(),
+                            "alert", JOptionPane.INFORMATION_MESSAGE);
+                }
+            });
 
-                localDBPathDefaultButton.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        localDBPath.setText("db-2x2.db");
-                    }
-                });
-            }
-
-        } catch (Exception e) {
-            System.out.println("Exception " + e.toString());
+            localDBPathDefaultButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    localDBPath.setText("db-2x2.db");
+                }
+            });
         }
 
         return pane;
