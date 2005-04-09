@@ -28,7 +28,9 @@ GUI Issues
 
 The user interface was designed to provide only limited functionality.  It allows the user to view all records, to view
 records matching the first letters of the subcontractor name or city, and allows the user the user to modify a record.
-It was chosen not to allow the user to delete a record. 
+It was chosen not to allow the user to delete a record.  It was difficult to decide how to allow editing and after some
+research it seemed the best way to accomplish this was editing using a JTable.  For DB configurtion, a menu item was
+added so that a dialog could be used to update the DB configuration information.
 
 RMI Implementation
 
