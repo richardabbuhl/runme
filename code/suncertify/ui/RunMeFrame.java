@@ -13,7 +13,10 @@ import suncertify.db.Data;
 import suncertify.db.DB;
 
 import javax.swing.*;
+import javax.swing.event.TableModelListener;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
@@ -37,7 +40,8 @@ public class RunMeFrame extends JFrame {
     private JTextField subcontractorName = new JTextField();
     private JTextField subcontractorCity = new JTextField();
     private Button searchButton = new Button("Search");
-    private String[] columnNames = {"Subcontractor Name",
+    private String[] columnNames = {"#",
+                                    "Subcontractor Name",
                                     "City",
                                     "Types of work performed",
                                     "Number of staff in organization",
@@ -68,6 +72,18 @@ public class RunMeFrame extends JFrame {
 
         public Object getValueAt(int rowIndex, int colIndex) {
             return ((String[])v.get(rowIndex + 1))[colIndex];
+        }
+
+        public Class getColumnClass(int c) {
+            return getValueAt(0, c).getClass();
+        }
+
+        public boolean isCellEditable(int row, int col) {
+            if (col == 6) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 
@@ -174,10 +190,12 @@ public class RunMeFrame extends JFrame {
             if (matches != null) {
                 for (int i = 0; i < matches.length; i++) {
                     String [] result = data.read(matches[i]);
+                    String [] fullResults = new String[result.length + 1];
+                    fullResults[0] = String.valueOf(matches[i]);
                     for (int j = 0; j < result.length; j++) {
-                        result[j] = result[j].trim();
+                        fullResults[j + 1] = result[j].trim();
                     }
-                    v.add(result);
+                    v.add(fullResults);
                 }
             }
 
@@ -189,21 +207,13 @@ public class RunMeFrame extends JFrame {
     }
 
     private JPanel addSearchComponents() {
-        /*
-         * An easy way to put space between a top-level container
-         * and its contents is to put the contents in a JPanel
-         * that has an "empty" border.
-         */
         JPanel pane = new JPanel();
-        pane.setBorder(BorderFactory.createEmptyBorder(50, //top
-                50, //left
-                10, //bottom
-                50) //right
-        );
-        pane.setLayout(new GridLayout());
-        pane.add(searchButton);
+        pane.setLayout(new GridLayout(0, 1));
+        pane.add(new JLabel("Subcontractor Name:"));
         pane.add(subcontractorName);
+        pane.add(new JLabel("Subcontractor City:"));
         pane.add(subcontractorCity);
+        pane.add(searchButton);
 
         searchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -215,11 +225,22 @@ public class RunMeFrame extends JFrame {
         return pane;
     }
 
-    private JScrollPane addComponents() {
+    private JScrollPane addTableComponents() {
         // Create the scroll pane and add the table to it.
+        resultsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         resultsTable.setModel(resultsModel);
-        resultsTable.setPreferredScrollableViewportSize(new Dimension(800, 600));
+        resultsTable.setPreferredScrollableViewportSize(new Dimension(800, 700));
         JScrollPane scrollPane = new JScrollPane(resultsTable);
+
+        resultsModel.addTableModelListener(new TableModelListener() {
+            public void tableChanged(TableModelEvent e) {
+                    int row = e.getFirstRow();
+                    int column = e.getColumn();
+                    TableModel model = (TableModel)e.getSource();
+                    String columnName = model.getColumnName(column);
+                    Object data = model.getValueAt(row, column);
+            }
+        });
 
         // Return the scroll pane.
         return scrollPane;
@@ -227,13 +248,13 @@ public class RunMeFrame extends JFrame {
 
     public void createUI() {
         // Create the top-level container and add contents to it.
-        setTitle("SwingApplication");
+        setTitle("Sun Certified Developer for the Java 2 Platform: Application Submission");
         JFrame.setDefaultLookAndFeelDecorated(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setJMenuBar(createMenuBar());
         getContentPane().setLayout(new FlowLayout());
         getContentPane().add(addSearchComponents());
-        getContentPane().add(addComponents());
+        getContentPane().add(addTableComponents());
 
         pack();
         setVisible(true);
