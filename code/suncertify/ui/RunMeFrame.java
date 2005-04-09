@@ -240,11 +240,12 @@ public class RunMeFrame extends JFrame {
 
         resultsModel.addTableModelListener(new TableModelListener() {
             public void tableChanged(TableModelEvent e) {
-                    int row = e.getFirstRow();
-                    int column = e.getColumn();
-                    TableModel model = (TableModel)e.getSource();
-                    String columnName = model.getColumnName(column);
-                    Object data = model.getValueAt(row, column);
+                int row = e.getFirstRow();
+                int column = e.getColumn();
+                TableModel model = (TableModel)e.getSource();
+                String columnName = model.getColumnName(column);
+                Object data = model.getValueAt(row, column);
+                JOptionPane.showMessageDialog(null, "alert", "alert", JOptionPane.ERROR_MESSAGE);
             }
         });
 
@@ -268,6 +269,8 @@ public class RunMeFrame extends JFrame {
                 remoteHostApplyButton.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         setProperty("remote-host", remoteHost.getText());
+                        JOptionPane.showMessageDialog(null, "Remote host updated to " + remoteHost.getText(),
+                                "alert", JOptionPane.INFORMATION_MESSAGE);                        
                     }
                 });
 
@@ -289,6 +292,8 @@ public class RunMeFrame extends JFrame {
                 localDBPathApplyButton.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         setProperty("localdb-path", localDBPath.getText());
+                        JOptionPane.showMessageDialog(null, "Local DB Path updated to " + localDBPath.getText(),
+                                "alert", JOptionPane.INFORMATION_MESSAGE);
                     }
                 });
 
