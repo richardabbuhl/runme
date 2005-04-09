@@ -40,8 +40,6 @@ public class RunMeFrame extends JFrame {
     private JTextField subcontractorName = new JTextField();
     private JTextField subcontractorCity = new JTextField();
     private Button searchButton = new Button("Search");
-    private JTextField remoteHost = new JTextField();
-    private JTextField localDBPath = new JTextField();
     private String[] columnNames = {"#",
                                     "Subcontractor Name",
                                     "City",
