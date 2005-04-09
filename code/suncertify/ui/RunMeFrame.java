@@ -43,6 +43,8 @@ public class RunMeFrame extends JFrame {
     private JTextField subcontractorName = new JTextField();
     private JTextField subcontractorCity = new JTextField();
     private Button searchButton = new Button("Search");
+    private JTextField remoteHost = new JTextField();
+    private JTextField localDBPath = new JTextField();
     private String[] columnNames = {"#",
                                     "Subcontractor Name",
                                     "City",
@@ -125,7 +127,8 @@ public class RunMeFrame extends JFrame {
                 Registry remoteRegistry = LocateRegistry.getRegistry(remoteHost);
                 data = (DB)remoteRegistry.lookup(DB.SERVICENAME);
             } else {
-                data = new Data("db-2x2.db");
+                String localDBPath = getProperty("localdb-path", "db-2x2.db");
+                data = new Data(localDBPath);
             }
         } catch (Exception e) {
             System.out.println("Exception " + e.toString());                        
@@ -252,18 +255,53 @@ public class RunMeFrame extends JFrame {
     private JPanel addConfigurationComponents() {
         JPanel pane = new JPanel();
         pane.setLayout(new GridLayout(0, 1));
-//        pane.add(new JLabel("Subcontractor Name:"));
-//        pane.add(subcontractorName);
-//        pane.add(new JLabel("Subcontractor City:"));
-//        pane.add(subcontractorCity);
-//        pane.add(searchButton);
+        try {
+            if (dbRemote) {
+                Button remoteHostApplyButton = new Button("Apply");
+                Button remoteHostDefaultButton = new Button("Default");
+                pane.add(new JLabel("Remote-host:"));
+                remoteHost.setText(getProperty("remote-host", "localhost"));
+                pane.add(remoteHost);
+                pane.add(remoteHostApplyButton);
+                pane.add(remoteHostDefaultButton);
 
-        searchButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                Vector o = matchTest();
-                resultsTable.setModel(new MyTableModel(o));
+                remoteHostApplyButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        setProperty("remote-host", remoteHost.getText());
+                    }
+                });
+
+                remoteHostDefaultButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        remoteHost.setText("localhost");
+                    }
+                });
+
+            } else {
+                Button localDBPathApplyButton = new Button("Apply");
+                Button localDBPathDefaultButton = new Button("Default");
+                pane.add(new JLabel("Local DB Path:"));
+                localDBPath.setText(getProperty("localdb-path", "db-2x2.db"));
+                pane.add(localDBPath);
+                pane.add(localDBPathApplyButton);
+                pane.add(localDBPathDefaultButton);
+
+                localDBPathApplyButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        setProperty("localdb-path", localDBPath.getText());
+                    }
+                });
+
+                localDBPathDefaultButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        localDBPath.setText("db-2x2.db");
+                    }
+                });
             }
-        });
+
+        } catch (Exception e) {
+            System.out.println("Exception " + e.toString());
+        }
 
         return pane;
     }
@@ -278,7 +316,7 @@ public class RunMeFrame extends JFrame {
         panelOne.add(addTableComponents());
         tabbedPane.add(panelOne, "Customer Information");
         panelTwo.add(addConfigurationComponents());
-        tabbedPane.add(panelTwo, "Configuration");
+        tabbedPane.add(panelTwo, "Options");
         getContentPane().add(tabbedPane);
 
         pack();
