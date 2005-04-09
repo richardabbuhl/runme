@@ -278,7 +278,7 @@ public class RunMeFrame extends JFrame {
         // Create the scroll pane and add the table to it.
         resultsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         resultsTable.setModel(resultsModel);
-        resultsTable.setPreferredScrollableViewportSize(new Dimension(800, 700));
+        resultsTable.setPreferredScrollableViewportSize(new Dimension(800, 500));
         JScrollPane scrollPane = new JScrollPane(resultsTable);
 
         resultsModel.addTableModelListener(new TableModelListener() {
