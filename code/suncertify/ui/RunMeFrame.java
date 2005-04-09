@@ -163,6 +163,48 @@ public class RunMeFrame extends JFrame {
         menuBar.add(menu);
 
         // a group of JMenuItems
+        menuItem = new JMenuItem("Options", KeyEvent.VK_O);
+        menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.ALT_MASK));
+        menuItem.getAccessibleContext().setAccessibleDescription("Options");
+        menu.add(menuItem);
+
+        menuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (dbRemote) {
+                    String remoteHost = getProperty("remote-host", "localhost");
+                    String s = (String)JOptionPane.showInputDialog(
+                                        null,
+                                        "Local DB Path:",
+                                        "Options",
+                                        JOptionPane.PLAIN_MESSAGE,
+                                        null,
+                                        null,
+                                        remoteHost);
+
+                    setProperty("remote-host", s);
+                    JOptionPane.showMessageDialog(null, "Remote host updated to " + s,
+                            "alert", JOptionPane.INFORMATION_MESSAGE);
+
+                } else {
+
+                    String localDBPath = getProperty("localdb-path", "db-2x2.db");
+                    String s = (String)JOptionPane.showInputDialog(
+                                        null,
+                                        "Local DB Path:",
+                                        "Options",
+                                        JOptionPane.PLAIN_MESSAGE,
+                                        null,
+                                        null,
+                                        localDBPath);
+
+                    setProperty("localdb-path", s);
+                    JOptionPane.showMessageDialog(null, "Local DB Path updated to " + s,
+                                "alert", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        });
+
+        // a group of JMenuItems
         menuItem = new JMenuItem("Exit", KeyEvent.VK_E);
         menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.ALT_MASK));
         menuItem.getAccessibleContext().setAccessibleDescription("Exit");
