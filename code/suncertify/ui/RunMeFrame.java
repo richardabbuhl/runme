@@ -100,6 +100,8 @@ public class RunMeFrame extends JFrame {
             value = properties.getProperty(key, defaultValue);
         } catch (IOException e) {
             System.out.println("Exception " + e.toString());
+            JOptionPane.showMessageDialog(null, "Error reading " + PROPERTIES_FILE + " " + e.toString(),
+                    "alert", JOptionPane.ERROR_MESSAGE);
         }
         return value;
     }
@@ -116,6 +118,8 @@ public class RunMeFrame extends JFrame {
             properties.store(new FileOutputStream(PROPERTIES_FILE), null);
         } catch (IOException e) {
             System.out.println("Exception " + e.toString());
+            JOptionPane.showMessageDialog(null, "Error writing " + PROPERTIES_FILE + " " + e.toString(),
+                    "alert", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -131,7 +135,9 @@ public class RunMeFrame extends JFrame {
                 data = new Data(localDBPath);
             }
         } catch (Exception e) {
-            System.out.println("Exception " + e.toString());                        
+            System.out.println("Exception " + e.toString());
+            JOptionPane.showMessageDialog(null, "Error reading " + PROPERTIES_FILE + " " + e.toString(),
+                    "alert", JOptionPane.ERROR_MESSAGE);
         }
         return data ;
     }
@@ -207,6 +213,8 @@ public class RunMeFrame extends JFrame {
 
         } catch (Exception e) {
             System.out.println("Exception " + e.toString());
+            JOptionPane.showMessageDialog(null, "Error reading DB " + e.toString(),
+                    "alert", JOptionPane.ERROR_MESSAGE);
         }
 
         return v;
@@ -270,7 +278,7 @@ public class RunMeFrame extends JFrame {
                     public void actionPerformed(ActionEvent e) {
                         setProperty("remote-host", remoteHost.getText());
                         JOptionPane.showMessageDialog(null, "Remote host updated to " + remoteHost.getText(),
-                                "alert", JOptionPane.INFORMATION_MESSAGE);                        
+                                "alert", JOptionPane.INFORMATION_MESSAGE);
                     }
                 });
 
