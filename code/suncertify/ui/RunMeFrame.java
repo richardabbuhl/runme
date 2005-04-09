@@ -42,7 +42,7 @@ public class RunMeFrame extends JFrame {
     private JTextField subcontractorCity = new JTextField();
     private Button searchButton = new Button("Search");
     private Button updateButton = new Button("Update");
-    private String[] columnNames = {"#",
+    private String[] columnNames = {"Record Num",
                                     "Subcontractor Name",
                                     "City",
                                     "Types of work performed",
@@ -294,18 +294,18 @@ public class RunMeFrame extends JFrame {
                     try {
                         DB data = getDB();
                         String recNo = (String)resultsTable.getModel().getValueAt(rowIndex, 0);
-                        System.out.println("Update started recNo " + recNo + " customer " + customerHold);
+                        System.out.println("Update started recNo " + recNo + " customer to " + customerHold);
                         long cookie = data.lock(Integer.parseInt(recNo));
                         String [] d = { null, null, null, null, null, customerHold };
                         data.update(Integer.parseInt(recNo), d, cookie);
                         data.unlock(Integer.parseInt(recNo), cookie);
-                        System.out.println("Update commited recNo " + recNo + " customer " + customerHold);
+                        System.out.println("Update commited recNo " + recNo + " customer to " + customerHold);
 
                         resultsTable.getModel().setValueAt(customerHold, rowIndex, colIndex);
                         resultsModel.fireTableCellUpdated(rowIndex, colIndex);
 
-                        JOptionPane.showMessageDialog(null, "Updated recNo " + recNo + " customer " + customerHold,
-                                "alert", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Updated Record Num " + recNo + " customer to " +
+                                customerHold, "alert", JOptionPane.INFORMATION_MESSAGE);
 
                     } catch (Exception ex) {
                         System.out.println("Exception " + e.toString());
@@ -315,7 +315,8 @@ public class RunMeFrame extends JFrame {
 
                 } else {
                     JOptionPane.showMessageDialog(null,
-                            "No customer data is being edited. Edit a customer record then press update again ",
+                            "No customer data is being edited. Double-click on a customer holding, " +
+                            "changes the customer holding and then press then update button to update the record.",
                             "alert", JOptionPane.ERROR_MESSAGE);
                 }
             }
