@@ -37,9 +37,6 @@ import java.io.FileOutputStream;
 public class RunMeFrame extends JFrame {
 
     private static final String PROPERTIES_FILE = "suncertify.properties";
-    private JTabbedPane tabbedPane = new JTabbedPane();
-    private JPanel panelOne = new JPanel();
-    private JPanel panelTwo = new JPanel();
     private JTextField subcontractorName = new JTextField();
     private JTextField subcontractorCity = new JTextField();
     private Button searchButton = new Button("Search");
@@ -301,71 +298,15 @@ public class RunMeFrame extends JFrame {
         return scrollPane;
     }
 
-    private JPanel addConfigurationComponents() {
-        JPanel pane = new JPanel();
-        pane.setLayout(new GridLayout(0, 1));
-        if (dbRemote) {
-            Button remoteHostApplyButton = new Button("Apply");
-            Button remoteHostDefaultButton = new Button("Default");
-            pane.add(new JLabel("Remote-host:"));
-            remoteHost.setText(getProperty("remote-host", "localhost"));
-            pane.add(remoteHost);
-            pane.add(remoteHostApplyButton);
-            pane.add(remoteHostDefaultButton);
-
-            remoteHostApplyButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    setProperty("remote-host", remoteHost.getText());
-                    JOptionPane.showMessageDialog(null, "Remote host updated to " + remoteHost.getText(),
-                            "alert", JOptionPane.INFORMATION_MESSAGE);
-                }
-            });
-
-            remoteHostDefaultButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    remoteHost.setText("localhost");
-                }
-            });
-
-        } else {
-            Button localDBPathApplyButton = new Button("Apply");
-            Button localDBPathDefaultButton = new Button("Default");
-            pane.add(new JLabel("Local DB Path:"));
-            localDBPath.setText(getProperty("localdb-path", "db-2x2.db"));
-            pane.add(localDBPath);
-            pane.add(localDBPathApplyButton);
-            pane.add(localDBPathDefaultButton);
-
-            localDBPathApplyButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    setProperty("localdb-path", localDBPath.getText());
-                    JOptionPane.showMessageDialog(null, "Local DB Path updated to " + localDBPath.getText(),
-                            "alert", JOptionPane.INFORMATION_MESSAGE);
-                }
-            });
-
-            localDBPathDefaultButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    localDBPath.setText("db-2x2.db");
-                }
-            });
-        }
-
-        return pane;
-    }
-
     public void createUI() {
         // Create the top-level container and add contents to it.
         setTitle("Sun Certified Developer for the Java 2 Platform: Application Submission");
         JFrame.setDefaultLookAndFeelDecorated(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setJMenuBar(createMenuBar());
-        panelOne.add(addSearchComponents());
-        panelOne.add(addTableComponents());
-        tabbedPane.add(panelOne, "Customer Information");
-        panelTwo.add(addConfigurationComponents());
-        tabbedPane.add(panelTwo, "Options");
-        getContentPane().add(tabbedPane);
+        getContentPane().setLayout(new FlowLayout());
+        getContentPane().add(addSearchComponents());
+        getContentPane().add(addTableComponents());
 
         pack();
         setVisible(true);
