@@ -13,6 +13,7 @@ import suncertify.db.Data;
 import suncertify.db.DB;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import javax.swing.event.TableModelListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.table.AbstractTableModel;
@@ -40,6 +41,7 @@ public class RunMeFrame extends JFrame {
     private JTextField subcontractorName = new JTextField();
     private JTextField subcontractorCity = new JTextField();
     private Button searchButton = new Button("Search");
+    private Button updateButton = new Button("Update");
     private String[] columnNames = {"#",
                                     "Subcontractor Name",
                                     "City",
@@ -55,6 +57,7 @@ public class RunMeFrame extends JFrame {
         private Vector v = new Vector();
 
         MyTableModel(Vector v){
+            super();
             this.v = v;
         }
 
@@ -67,11 +70,15 @@ public class RunMeFrame extends JFrame {
         }
 
         public int getRowCount() {
-            return (v.size() - 1);
+            return v.size();
         }
 
         public Object getValueAt(int rowIndex, int colIndex) {
-            return ((String[])v.get(rowIndex + 1))[colIndex];
+            return ((String[])v.get(rowIndex))[colIndex];
+        }
+
+        public void setValueAt(Object aValue, int rowIndex, int colIndex) {
+            ((String[])v.get(rowIndex))[colIndex] = (String)aValue;
         }
 
         public Class getColumnClass(int c) {
@@ -167,34 +174,38 @@ public class RunMeFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if (dbRemote) {
                     String remoteHost = getProperty("remote-host", "localhost");
-                    String s = (String)JOptionPane.showInputDialog(
-                                        null,
-                                        "Local DB Path:",
-                                        "Options",
-                                        JOptionPane.PLAIN_MESSAGE,
-                                        null,
-                                        null,
-                                        remoteHost);
+                    String result = (String)JOptionPane.showInputDialog(
+                                                null,
+                                                "Local DB Path:",
+                                                "Options",
+                                                JOptionPane.PLAIN_MESSAGE,
+                                                null,
+                                                null,
+                                                remoteHost);
 
-                    setProperty("remote-host", s);
-                    JOptionPane.showMessageDialog(null, "Remote host updated to " + s,
-                            "alert", JOptionPane.INFORMATION_MESSAGE);
+                    if (result != null && !"".equals(result)) {
+                        setProperty("remote-host", result);
+                        JOptionPane.showMessageDialog(null, "Remote host updated to " + result,
+                                "alert", JOptionPane.INFORMATION_MESSAGE);
+                    }
 
                 } else {
 
                     String localDBPath = getProperty("localdb-path", "db-2x2.db");
-                    String s = (String)JOptionPane.showInputDialog(
-                                        null,
-                                        "Local DB Path:",
-                                        "Options",
-                                        JOptionPane.PLAIN_MESSAGE,
-                                        null,
-                                        null,
-                                        localDBPath);
+                    String result = (String)JOptionPane.showInputDialog(
+                                                null,
+                                                "Local DB Path:",
+                                                "Options",
+                                                JOptionPane.PLAIN_MESSAGE,
+                                                null,
+                                                null,
+                                                localDBPath);
 
-                    setProperty("localdb-path", s);
-                    JOptionPane.showMessageDialog(null, "Local DB Path updated to " + s,
-                                "alert", JOptionPane.INFORMATION_MESSAGE);
+                    if (result != null && !"".equals(result)) {
+                        setProperty("localdb-path", result);
+                        JOptionPane.showMessageDialog(null, "Local DB Path updated to " + result,
+                                    "alert", JOptionPane.INFORMATION_MESSAGE);
+                    }
                 }
             }
         });
@@ -263,11 +274,50 @@ public class RunMeFrame extends JFrame {
         pane.add(new JLabel("Subcontractor City:"));
         pane.add(subcontractorCity);
         pane.add(searchButton);
+        pane.add(updateButton);
 
         searchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 Vector o = matchTest();
                 resultsTable.setModel(new MyTableModel(o));
+            }
+        });
+
+        updateButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (resultsTable.isEditing()) {
+                    String customerHold = ((JTextComponent)resultsTable.getEditorComponent()).getText();
+                    int rowIndex = resultsTable.getSelectedRow();
+                    int colIndex = resultsTable.getSelectedColumn();
+                    resultsTable.getCellEditor().cancelCellEditing();
+
+                    try {
+                        DB data = getDB();
+                        String recNo = (String)resultsTable.getModel().getValueAt(rowIndex, 0);
+                        System.out.println("Update started recNo " + recNo + " customer " + customerHold);
+                        long cookie = data.lock(Integer.parseInt(recNo));
+                        String [] d = { null, null, null, null, null, customerHold };
+                        data.update(Integer.parseInt(recNo), d, cookie);
+                        data.unlock(Integer.parseInt(recNo), cookie);
+                        System.out.println("Update commited recNo " + recNo + " customer " + customerHold);
+
+                        resultsTable.getModel().setValueAt(customerHold, rowIndex, colIndex);
+                        resultsModel.fireTableCellUpdated(rowIndex, colIndex);
+
+                        JOptionPane.showMessageDialog(null, "Updated recNo " + recNo + " customer " + customerHold,
+                                "alert", JOptionPane.INFORMATION_MESSAGE);
+
+                    } catch (Exception ex) {
+                        System.out.println("Exception " + e.toString());
+                        JOptionPane.showMessageDialog(null, "Error writing DB " + ex.toString(),
+                                "alert", JOptionPane.ERROR_MESSAGE);
+                    }
+
+                } else {
+                    JOptionPane.showMessageDialog(null,
+                            "No customer data is being edited. Edit a customer record then press update again ",
+                            "alert", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
 
@@ -280,17 +330,6 @@ public class RunMeFrame extends JFrame {
         resultsTable.setModel(resultsModel);
         resultsTable.setPreferredScrollableViewportSize(new Dimension(800, 500));
         JScrollPane scrollPane = new JScrollPane(resultsTable);
-
-        resultsModel.addTableModelListener(new TableModelListener() {
-            public void tableChanged(TableModelEvent e) {
-                int row = e.getFirstRow();
-                int column = e.getColumn();
-                TableModel model = (TableModel)e.getSource();
-                String columnName = model.getColumnName(column);
-                Object data = model.getValueAt(row, column);
-                JOptionPane.showMessageDialog(null, "alert", "alert", JOptionPane.ERROR_MESSAGE);
-            }
-        });
 
         // Return the scroll pane.
         return scrollPane;
