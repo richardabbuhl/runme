@@ -37,6 +37,9 @@ import java.io.FileOutputStream;
 public class RunMeFrame extends JFrame {
 
     private static final String PROPERTIES_FILE = "suncertify.properties";
+    private JTabbedPane tabbedPane = new JTabbedPane();
+    private JPanel panelOne = new JPanel();
+    private JPanel panelTwo = new JPanel();
     private JTextField subcontractorName = new JTextField();
     private JTextField subcontractorCity = new JTextField();
     private Button searchButton = new Button("Search");
@@ -246,15 +249,37 @@ public class RunMeFrame extends JFrame {
         return scrollPane;
     }
 
+    private JPanel addConfigurationComponents() {
+        JPanel pane = new JPanel();
+        pane.setLayout(new GridLayout(0, 1));
+//        pane.add(new JLabel("Subcontractor Name:"));
+//        pane.add(subcontractorName);
+//        pane.add(new JLabel("Subcontractor City:"));
+//        pane.add(subcontractorCity);
+//        pane.add(searchButton);
+
+        searchButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Vector o = matchTest();
+                resultsTable.setModel(new MyTableModel(o));
+            }
+        });
+
+        return pane;
+    }
+
     public void createUI() {
         // Create the top-level container and add contents to it.
         setTitle("Sun Certified Developer for the Java 2 Platform: Application Submission");
         JFrame.setDefaultLookAndFeelDecorated(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setJMenuBar(createMenuBar());
-        getContentPane().setLayout(new FlowLayout());
-        getContentPane().add(addSearchComponents());
-        getContentPane().add(addTableComponents());
+        panelOne.add(addSearchComponents());
+        panelOne.add(addTableComponents());
+        tabbedPane.add(panelOne, "Customer Information");
+        panelTwo.add(addConfigurationComponents());
+        tabbedPane.add(panelTwo, "Configuration");
+        getContentPane().add(tabbedPane);
 
         pack();
         setVisible(true);
