@@ -286,26 +286,48 @@ public class RunMeFrame extends JFrame {
         updateButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (resultsTable.isEditing()) {
-                    String customerHold = ((JTextComponent)resultsTable.getEditorComponent()).getText();
+                    String newCustomerHold = ((JTextComponent)resultsTable.getEditorComponent()).getText();
                     int rowIndex = resultsTable.getSelectedRow();
                     int colIndex = resultsTable.getSelectedColumn();
                     resultsTable.getCellEditor().cancelCellEditing();
 
                     try {
                         DB data = getDB();
-                        String recNo = (String)resultsTable.getModel().getValueAt(rowIndex, 0);
-                        System.out.println("Update started recNo " + recNo + " customer to " + customerHold);
-                        long cookie = data.lock(Integer.parseInt(recNo));
-                        String [] d = { null, null, null, null, null, customerHold };
-                        data.update(Integer.parseInt(recNo), d, cookie);
-                        data.unlock(Integer.parseInt(recNo), cookie);
-                        System.out.println("Update commited recNo " + recNo + " customer to " + customerHold);
+                        int recNo = Integer.parseInt((String)resultsTable.getModel().getValueAt(rowIndex, 0));
+                        String currentCustomerHold = (String)resultsTable.getModel().getValueAt(rowIndex, 6);
+                        System.out.println("Update started recNo " + recNo + " customer to " + newCustomerHold);
+                        boolean doUpdate = true;
+                        String [] currentValues = data.read(recNo);
+                        if (!currentValues[5].trim().equals(currentCustomerHold)) {
 
-                        resultsTable.getModel().setValueAt(customerHold, rowIndex, colIndex);
-                        resultsModel.fireTableCellUpdated(rowIndex, colIndex);
+                            int result = JOptionPane.showConfirmDialog(null,
+                                "Customer hold was recently updated by another CSR to " + currentValues[5].trim() +
+                                ". Click YES to update customer hold to " +  newCustomerHold, 
+                                "alert", JOptionPane.YES_NO_OPTION);
 
-                        JOptionPane.showMessageDialog(null, "Updated Record Num " + recNo + " customer to " +
-                                customerHold, "alert", JOptionPane.INFORMATION_MESSAGE);
+                            if (result == JOptionPane.NO_OPTION) {
+                                System.out.println("Rollback recNo " + recNo + " customer to " + currentCustomerHold);
+
+                                resultsTable.getModel().setValueAt(currentCustomerHold, rowIndex, colIndex);
+                                resultsModel.fireTableCellUpdated(rowIndex, colIndex);
+
+                                doUpdate = false;
+                            }
+                        }
+
+                        if (doUpdate) {
+                            String [] d = { null, null, null, null, null, newCustomerHold };
+                            long cookie = data.lock(recNo);
+                            data.update(recNo, d, cookie);
+                            data.unlock(recNo, cookie);
+                            System.out.println("Update commited recNo " + recNo + " customer to " + newCustomerHold);
+
+                            resultsTable.getModel().setValueAt(newCustomerHold, rowIndex, colIndex);
+                            resultsModel.fireTableCellUpdated(rowIndex, colIndex);
+
+                            JOptionPane.showMessageDialog(null, "Updated Record Num " + recNo + " customer to " +
+                                    newCustomerHold, "alert", JOptionPane.INFORMATION_MESSAGE);
+                        }
 
                     } catch (Exception ex) {
                         System.out.println("Exception " + e.toString());
@@ -315,8 +337,8 @@ public class RunMeFrame extends JFrame {
 
                 } else {
                     JOptionPane.showMessageDialog(null,
-                            "No customer data is being edited. Double-click on a customer holding, " +
-                            "changes the customer holding and then press then update button to update the record.",
+                            "No customer data is being edited. Double-click on a customer holding,\n" +
+                            "change the value and then press then update button.",
                             "alert", JOptionPane.ERROR_MESSAGE);
                 }
             }
