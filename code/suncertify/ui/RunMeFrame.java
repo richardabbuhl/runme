@@ -176,7 +176,7 @@ public class RunMeFrame extends JFrame {
                     String remoteHost = getProperty("remote-host", "localhost");
                     String result = (String)JOptionPane.showInputDialog(
                                                 null,
-                                                "Local DB Path:",
+                                                "Remote host:",
                                                 "Options",
                                                 JOptionPane.PLAIN_MESSAGE,
                                                 null,
