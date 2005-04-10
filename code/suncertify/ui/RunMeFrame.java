@@ -50,7 +50,6 @@ public class RunMeFrame extends JFrame {
                                     "Hourly charge",
                                     "Customer holding this record"};
     private JTable resultsTable = new JTable();
-    private MyTableModel resultsModel = new MyTableModel(new Vector());
     private boolean dbRemote = false;
 
     private class MyTableModel extends AbstractTableModel {
@@ -308,10 +307,13 @@ public class RunMeFrame extends JFrame {
                             if (result == JOptionPane.NO_OPTION) {
                                 System.out.println("Rollback recNo " + recNo + " customer to " + currentCustomerHold);
 
-                                resultsTable.getModel().setValueAt(currentCustomerHold, rowIndex, colIndex);
-                                resultsModel.fireTableCellUpdated(rowIndex, colIndex);
-
                                 doUpdate = false;
+
+                                Vector o = matchTest();
+                                resultsTable.setModel(new MyTableModel(o));
+
+                                JOptionPane.showMessageDialog(null, "Refreshed all DB records.",
+                                        "alert", JOptionPane.INFORMATION_MESSAGE);
                             }
                         }
 
@@ -322,7 +324,8 @@ public class RunMeFrame extends JFrame {
                             data.unlock(recNo, cookie);
                             System.out.println("Update commited recNo " + recNo + " customer to " + newCustomerHold);
 
-                            resultsTable.getModel().setValueAt(newCustomerHold, rowIndex, colIndex);
+                            MyTableModel resultsModel = (MyTableModel)resultsTable.getModel();
+                            resultsModel.setValueAt(newCustomerHold, rowIndex, colIndex);
                             resultsModel.fireTableCellUpdated(rowIndex, colIndex);
 
                             JOptionPane.showMessageDialog(null, "Updated Record Num " + recNo + " customer to " +
@@ -350,7 +353,7 @@ public class RunMeFrame extends JFrame {
     private JScrollPane addTableComponents() {
         // Create the scroll pane and add the table to it.
         resultsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        resultsTable.setModel(resultsModel);
+        resultsTable.setModel(new MyTableModel(new Vector()));
         resultsTable.setPreferredScrollableViewportSize(new Dimension(800, 500));
         JScrollPane scrollPane = new JScrollPane(resultsTable);
 
