@@ -305,15 +305,13 @@ public class RunMeFrame extends JFrame {
                                 "alert", JOptionPane.YES_NO_OPTION);
 
                             if (result == JOptionPane.NO_OPTION) {
-                                System.out.println("Rollback recNo " + recNo + " customer to " + currentCustomerHold);
+                                System.out.println("Rollback recNo " + recNo + " customer to " + currentValues[5].trim());
+
+                                MyTableModel resultsModel = (MyTableModel)resultsTable.getModel();
+                                resultsModel.setValueAt(currentValues[5].trim(), rowIndex, colIndex);
+                                resultsModel.fireTableCellUpdated(rowIndex, colIndex);
 
                                 doUpdate = false;
-
-                                Vector o = matchTest();
-                                resultsTable.setModel(new MyTableModel(o));
-
-                                JOptionPane.showMessageDialog(null, "Refreshed all DB records.",
-                                        "alert", JOptionPane.INFORMATION_MESSAGE);
                             }
                         }
 
