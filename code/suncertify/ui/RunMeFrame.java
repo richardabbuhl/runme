@@ -41,6 +41,7 @@ public class RunMeFrame extends JFrame {
     private JTextField subcontractorName = new JTextField();
     private JTextField subcontractorCity = new JTextField();
     private Button searchButton = new Button("Search");
+    private JTextField bookCity = new JTextField();
     private Button bookButton = new Button("Book");
     private String[] columnNames = {"Record Num",
                                     "Subcontractor Name",
@@ -273,7 +274,6 @@ public class RunMeFrame extends JFrame {
         pane.add(new JLabel("Subcontractor City:"));
         pane.add(subcontractorCity);
         pane.add(searchButton);
-        pane.add(bookButton);
 
         searchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -282,13 +282,21 @@ public class RunMeFrame extends JFrame {
             }
         });
 
+        return pane;
+    }
+
+    private JPanel addBookComponents() {
+        JPanel pane = new JPanel();
+        pane.setLayout(new GridLayout(0, 1));
+        pane.add(new JLabel("Customer holding this record:"));
+        pane.add(bookCity);
+        pane.add(bookButton);
+
         bookButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (resultsTable.isEditing()) {
-                    String newCustomerHold = ((JTextComponent)resultsTable.getEditorComponent()).getText();
-                    int rowIndex = resultsTable.getSelectedRow();
-                    int colIndex = resultsTable.getSelectedColumn();
-                    resultsTable.getCellEditor().cancelCellEditing();
+                int rowIndex = resultsTable.getSelectedRow();
+                if (rowIndex != -1) {
+                    String newCustomerHold = bookCity.getText();
 
                     try {
                         DB data = getDB();
@@ -300,16 +308,16 @@ public class RunMeFrame extends JFrame {
                         if (!currentValues[5].trim().equals(currentCustomerHold)) {
 
                             int result = JOptionPane.showConfirmDialog(null,
-                                "Customer hold was recently updated by another CSR to " + currentValues[5].trim() +
-                                ". Click YES to update customer hold to " +  newCustomerHold, 
+                                "Customer hold was recently booked by another CSR to " + currentValues[5].trim() +
+                                ". Click YES to book customer hold to " +  newCustomerHold,
                                 "alert", JOptionPane.YES_NO_OPTION);
 
                             if (result == JOptionPane.NO_OPTION) {
                                 System.out.println("Rollback recNo " + recNo + " customer to " + currentValues[5].trim());
 
                                 MyTableModel resultsModel = (MyTableModel)resultsTable.getModel();
-                                resultsModel.setValueAt(currentValues[5].trim(), rowIndex, colIndex);
-                                resultsModel.fireTableCellUpdated(rowIndex, colIndex);
+                                resultsModel.setValueAt(currentValues[5].trim(), rowIndex, 6);
+                                resultsModel.fireTableCellUpdated(rowIndex, 6);
 
                                 doUpdate = false;
                             }
@@ -323,10 +331,10 @@ public class RunMeFrame extends JFrame {
                             System.out.println("Update commited recNo " + recNo + " customer to " + newCustomerHold);
 
                             MyTableModel resultsModel = (MyTableModel)resultsTable.getModel();
-                            resultsModel.setValueAt(newCustomerHold, rowIndex, colIndex);
-                            resultsModel.fireTableCellUpdated(rowIndex, colIndex);
+                            resultsModel.setValueAt(newCustomerHold, rowIndex, 6);
+                            resultsModel.fireTableCellUpdated(rowIndex, 6);
 
-                            JOptionPane.showMessageDialog(null, "Updated Record Num " + recNo + " customer to " +
+                            JOptionPane.showMessageDialog(null, "Booked Record Num " + recNo + " customer to " +
                                     newCustomerHold, "alert", JOptionPane.INFORMATION_MESSAGE);
                         }
 
@@ -357,7 +365,10 @@ public class RunMeFrame extends JFrame {
 
         resultsTable.addMouseListener(new MouseListener() {
             public void mouseClicked(MouseEvent e) {
-                JOptionPane.showMessageDialog(null, "Clicked", "alert", JOptionPane.INFORMATION_MESSAGE);
+                int rowIndex = resultsTable.getSelectedRow();
+                if (rowIndex != -1) {
+                    bookCity.setText((String)resultsTable.getModel().getValueAt(rowIndex, 6));
+                }
             }
 
             public void mousePressed(MouseEvent e) {
@@ -385,6 +396,7 @@ public class RunMeFrame extends JFrame {
         setJMenuBar(createMenuBar());
         getContentPane().setLayout(new FlowLayout());
         getContentPane().add(addSearchComponents());
+        getContentPane().add(addBookComponents());
         getContentPane().add(addTableComponents());
 
         pack();
