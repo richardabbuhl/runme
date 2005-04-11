@@ -86,11 +86,7 @@ public class RunMeFrame extends JFrame {
         }
 
         public boolean isCellEditable(int row, int col) {
-            if (col == 6) {
-                return true;
-            } else {
-                return false;
-            }
+            return false;
         }
     }
 
