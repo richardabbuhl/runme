@@ -308,8 +308,8 @@ public class RunMeFrame extends JFrame {
                         if (!currentValues[5].trim().equals(currentCustomerHold)) {
 
                             int result = JOptionPane.showConfirmDialog(null,
-                                "Customer hold was recently booked by another CSR to " + currentValues[5].trim() +
-                                ". Click YES to book customer hold to " +  newCustomerHold,
+                                "Customer holding was recently booked by another CSR to " + currentValues[5].trim() +
+                                ". Click YES to book customer holding to " +  newCustomerHold,
                                 "alert", JOptionPane.YES_NO_OPTION);
 
                             if (result == JOptionPane.NO_OPTION) {
