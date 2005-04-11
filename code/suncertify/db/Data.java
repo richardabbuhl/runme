@@ -72,25 +72,14 @@ public class Data implements DB {
     }
 
     /**
-     * Reads a record from the file and returns an array where each element is a record value.  If the record
-     * is locked then read waits until the record is unlocked before proceeding.  This prevents a dirty read
-     * of the record.
+     * Reads a record from the file and returns an array where each element is a record value.  The record
+     * should be locked to prevent a dirty read of the record but this is not enforced to reads to occur
+     * once a lock is obtained.
      * @param recNo record from the file to be read.
      * @return an array where each element is a record value.
      * @throws RecordNotFoundException thrown if there are problems reading the record.
      */
     public String[] read(int recNo) throws RecordNotFoundException {
-        synchronized (cookies) {
-            Long key = new Long(recNo);
-            while (cookies.get(key) != null) {
-                try {
-                    // Wait for notification to again check the lock.
-                    cookies.wait();
-                } catch (InterruptedException e) {
-                    System.out.println("Exception " + e.toString());
-                }
-            }
-
             String[] result = null;
             RandomAccessFile file = null;
             try {
