@@ -38,6 +38,9 @@ import java.io.FileOutputStream;
 public class RunMeFrame extends JFrame {
 
     private static final String PROPERTIES_FILE = "suncertify.properties";
+    private static final int COL_REC_NUM = 0;
+    private static final int COL_CUST_HOLD = 6;
+
     private JTextField subcontractorName = new JTextField();
     private JTextField subcontractorCity = new JTextField();
     private Button searchButton = new Button("Search");
@@ -79,10 +82,6 @@ public class RunMeFrame extends JFrame {
 
         public void setValueAt(Object aValue, int rowIndex, int colIndex) {
             ((String[])v.get(rowIndex))[colIndex] = (String)aValue;
-        }
-
-        public Class getColumnClass(int c) {
-            return getValueAt(0, c).getClass();
         }
 
         public boolean isCellEditable(int row, int col) {
@@ -277,7 +276,7 @@ public class RunMeFrame extends JFrame {
                 resultsTable.setModel(new MyTableModel(o));
                 if (o.size() > 0) {
                     ListSelectionModel selectionModel = resultsTable.getSelectionModel();
-                    selectionModel.setSelectionInterval( 0, 0 );
+                    selectionModel.setSelectionInterval(0, 0);
                 }
             }
         });
@@ -300,8 +299,8 @@ public class RunMeFrame extends JFrame {
 
                     try {
                         DB data = getDB();
-                        int recNo = Integer.parseInt((String)resultsTable.getModel().getValueAt(rowIndex, 0));
-                        String currentCustomerHold = (String)resultsTable.getModel().getValueAt(rowIndex, 6);
+                        int recNo = Integer.parseInt((String)resultsTable.getModel().getValueAt(rowIndex, COL_REC_NUM));
+                        String currentCustomerHold = (String)resultsTable.getModel().getValueAt(rowIndex, COL_CUST_HOLD);
                         System.out.println("Update started recNo " + recNo + " customer to " + newCustomerHold);
                         boolean doUpdate = true;
                         String [] currentValues = data.read(recNo);
@@ -316,8 +315,8 @@ public class RunMeFrame extends JFrame {
                                 System.out.println("Rollback recNo " + recNo + " customer to " + currentValues[5].trim());
 
                                 MyTableModel resultsModel = (MyTableModel)resultsTable.getModel();
-                                resultsModel.setValueAt(currentValues[5].trim(), rowIndex, 6);
-                                resultsModel.fireTableCellUpdated(rowIndex, 6);
+                                resultsModel.setValueAt(currentValues[5].trim(), rowIndex, COL_CUST_HOLD);
+                                resultsModel.fireTableCellUpdated(rowIndex, COL_CUST_HOLD);
 
                                 doUpdate = false;
                             }
@@ -331,8 +330,8 @@ public class RunMeFrame extends JFrame {
                             System.out.println("Update commited recNo " + recNo + " customer to " + newCustomerHold);
 
                             MyTableModel resultsModel = (MyTableModel)resultsTable.getModel();
-                            resultsModel.setValueAt(newCustomerHold, rowIndex, 6);
-                            resultsModel.fireTableCellUpdated(rowIndex, 6);
+                            resultsModel.setValueAt(newCustomerHold, rowIndex, COL_CUST_HOLD);
+                            resultsModel.fireTableCellUpdated(rowIndex, COL_CUST_HOLD);
 
                             JOptionPane.showMessageDialog(null, "Booked Record Num " + recNo + " customer to " +
                                     newCustomerHold, "alert", JOptionPane.INFORMATION_MESSAGE);
