@@ -296,7 +296,7 @@ public class RunMeFrame extends JFrame {
     private JPanel addBookComponents() {
         JPanel pane = new JPanel();
         pane.setLayout(new GridLayout(0, 1));
-        pane.add(new JLabel("Customer holding:"));
+        pane.add(new JLabel("Customer Holding:"));
         pane.add(bookCity);
         pane.add(bookButton);
 
