@@ -80,6 +80,7 @@ public class Data implements DB {
      * @throws RecordNotFoundException thrown if there are problems reading the record.
      */
     public String[] read(int recNo) throws RecordNotFoundException {
+        synchronized (cookies) {
             String[] result = null;
             RandomAccessFile file = null;
             try {

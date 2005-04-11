@@ -38,10 +38,22 @@ public class TestDB {
         }
 
         private void readTest(DB data, int recNo) {
+            long cookie = -1;
             try {
+                cookie = data.lock(recNo);
                 dump(data.read(recNo));
+
             } catch (RecordNotFoundException e) {
             } catch (RemoteException e) {
+            } finally {
+                if (cookie != -1) {
+                    try {
+                        data.unlock(recNo, cookie);
+                    } catch (RecordNotFoundException f) {
+                    } catch (RemoteException e) {
+                        System.out.println("Exception " + e.toString());
+                    }
+                }
             }
         }
 
