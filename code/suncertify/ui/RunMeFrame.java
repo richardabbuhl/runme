@@ -45,7 +45,7 @@ public class RunMeFrame extends JFrame {
     private JTextField subcontractorCity = new JTextField();
     private Button searchButton = new Button("Search");
     private JTextField bookCity = new JTextField();
-    private Button bookButton = new Button("Book/Unbook");
+    private Button bookButton = new Button("Save");
     private String[] columnNames = {"Record Num",
                                     "Subcontractor Name",
                                     "City",
@@ -314,7 +314,7 @@ public class RunMeFrame extends JFrame {
 
                     if (!valid) {
                         JOptionPane.showMessageDialog(null,
-                                "Customer holding must be either be an 8-digits customer number or empty.",
+                                "Customer holding must be either be an 8-digit customer number or empty.",
                                 "alert", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
