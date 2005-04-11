@@ -355,6 +355,24 @@ public class RunMeFrame extends JFrame {
         resultsTable.setPreferredScrollableViewportSize(new Dimension(800, 500));
         JScrollPane scrollPane = new JScrollPane(resultsTable);
 
+        resultsTable.addMouseListener(new MouseListener() {
+            public void mouseClicked(MouseEvent e) {
+                JOptionPane.showMessageDialog(null, "Clicked", "alert", JOptionPane.INFORMATION_MESSAGE);
+            }
+
+            public void mousePressed(MouseEvent e) {
+            }
+
+            public void mouseReleased(MouseEvent e) {
+            }
+
+            public void mouseEntered(MouseEvent e) {
+            }
+
+            public void mouseExited(MouseEvent e) {
+            }
+        });
+
         // Return the scroll pane.
         return scrollPane;
     }
