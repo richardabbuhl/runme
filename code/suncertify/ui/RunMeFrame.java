@@ -347,7 +347,7 @@ public class RunMeFrame extends JFrame {
                 } else {
                     JOptionPane.showMessageDialog(null,
                             "No customer data is being edited. Double-click on a customer holding,\n" +
-                            "change the value and then press then update button.",
+                            "change the value and then press then book button.",
                             "alert", JOptionPane.ERROR_MESSAGE);
                 }
             }
