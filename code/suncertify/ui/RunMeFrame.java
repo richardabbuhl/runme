@@ -45,14 +45,14 @@ public class RunMeFrame extends JFrame {
     private JTextField subcontractorCity = new JTextField();
     private Button searchButton = new Button("Search");
     private JTextField bookCity = new JTextField();
-    private Button bookButton = new Button("Book");
+    private Button bookButton = new Button("Book/Unbook");
     private String[] columnNames = {"Record Num",
                                     "Subcontractor Name",
                                     "City",
                                     "Types of work performed",
                                     "Number of staff in organization",
                                     "Hourly charge",
-                                    "Customer holding this record"};
+                                    "Customer holding"};
     private JTable resultsTable = new JTable();
     private boolean dbRemote = false;
 
@@ -284,10 +284,19 @@ public class RunMeFrame extends JFrame {
         return pane;
     }
 
+    public boolean hasOnlyDigits(String s) {
+        for (int i = 0; i < s.length(); i++) {
+            if (!Character.isDigit(s.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private JPanel addBookComponents() {
         JPanel pane = new JPanel();
         pane.setLayout(new GridLayout(0, 1));
-        pane.add(new JLabel("Customer holding this record:"));
+        pane.add(new JLabel("Customer holding:"));
         pane.add(bookCity);
         pane.add(bookButton);
 
@@ -295,7 +304,20 @@ public class RunMeFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 int rowIndex = resultsTable.getSelectedRow();
                 if (rowIndex != -1) {
-                    String newCustomerHold = bookCity.getText();
+                    String newCustomerHold = bookCity.getText().trim();
+                    boolean valid = false;
+                    if ("".equals(newCustomerHold)) {
+                        valid = true;
+                    } else if (newCustomerHold.length() == 8) {
+                        valid = hasOnlyDigits(newCustomerHold);
+                    }
+
+                    if (!valid) {
+                        JOptionPane.showMessageDialog(null,
+                                "Customer holding must be either be an 8-digits customer number or empty.",
+                                "alert", JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
 
                     try {
                         DB data = getDB();
@@ -333,8 +355,13 @@ public class RunMeFrame extends JFrame {
                             resultsModel.setValueAt(newCustomerHold, rowIndex, COL_CUST_HOLD);
                             resultsModel.fireTableCellUpdated(rowIndex, COL_CUST_HOLD);
 
-                            JOptionPane.showMessageDialog(null, "Booked Record Num " + recNo + " customer to " +
-                                    newCustomerHold, "alert", JOptionPane.INFORMATION_MESSAGE);
+                            if ("".equals(newCustomerHold)) {
+                                JOptionPane.showMessageDialog(null, "Unbooked Record Num " + recNo,
+                                        "alert", JOptionPane.INFORMATION_MESSAGE);
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Booked Record Num " + recNo + " customer " +
+                                        newCustomerHold, "alert", JOptionPane.INFORMATION_MESSAGE);
+                            }
                         }
 
                     } catch (Exception ex) {
@@ -345,7 +372,7 @@ public class RunMeFrame extends JFrame {
 
                 } else {
                     JOptionPane.showMessageDialog(null,
-                            "No customer data is being edited. Double-click on a customer holding,\n" +
+                            "No customer data is being edited. Click on a customer holding,\n" +
                             "change the value and then press then book button.",
                             "alert", JOptionPane.ERROR_MESSAGE);
                 }
