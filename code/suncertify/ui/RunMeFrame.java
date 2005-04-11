@@ -366,7 +366,7 @@ public class RunMeFrame extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 int rowIndex = resultsTable.getSelectedRow();
                 if (rowIndex != -1) {
-                    bookCity.setText((String)resultsTable.getModel().getValueAt(rowIndex, 6));
+                    bookCity.setText((String)resultsTable.getModel().getValueAt(rowIndex, COL_CUST_HOLD));
                 }
             }
 
