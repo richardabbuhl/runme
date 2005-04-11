@@ -359,7 +359,7 @@ public class RunMeFrame extends JFrame {
                                 JOptionPane.showMessageDialog(null, "Unbooked Record Num " + recNo,
                                         "alert", JOptionPane.INFORMATION_MESSAGE);
                             } else {
-                                JOptionPane.showMessageDialog(null, "Booked Record Num " + recNo + " customer " +
+                                JOptionPane.showMessageDialog(null, "Booked Record Num " + recNo + " to customer " +
                                         newCustomerHold, "alert", JOptionPane.INFORMATION_MESSAGE);
                             }
                         }
