@@ -41,7 +41,7 @@ public class RunMeFrame extends JFrame {
     private JTextField subcontractorName = new JTextField();
     private JTextField subcontractorCity = new JTextField();
     private Button searchButton = new Button("Search");
-    private Button updateButton = new Button("Update");
+    private Button bookButton = new Button("Book");
     private String[] columnNames = {"Record Num",
                                     "Subcontractor Name",
                                     "City",
@@ -273,7 +273,7 @@ public class RunMeFrame extends JFrame {
         pane.add(new JLabel("Subcontractor City:"));
         pane.add(subcontractorCity);
         pane.add(searchButton);
-        pane.add(updateButton);
+        pane.add(bookButton);
 
         searchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -282,7 +282,7 @@ public class RunMeFrame extends JFrame {
             }
         });
 
-        updateButton.addActionListener(new ActionListener() {
+        bookButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (resultsTable.isEditing()) {
                     String newCustomerHold = ((JTextComponent)resultsTable.getEditorComponent()).getText();
