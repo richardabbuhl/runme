@@ -275,6 +275,10 @@ public class RunMeFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 Vector o = matchTest();
                 resultsTable.setModel(new MyTableModel(o));
+                if (o.size() > 0) {
+                    ListSelectionModel selectionModel = resultsTable.getSelectionModel();
+                    selectionModel.setSelectionInterval( 0, 0 );
+                }
             }
         });
 
