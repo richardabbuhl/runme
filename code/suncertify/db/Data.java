@@ -16,8 +16,9 @@ import java.util.HashMap;
 
 /**
  * Data implements the DB class in order to provide access to the customer data.
- * @version 1.00
+ *
  * @author Richard Abbuhl
+ * @version 1.00
  */
 public class Data implements DB {
 
@@ -38,6 +39,7 @@ public class Data implements DB {
 
     /**
      * Initialize a Data object so that it contains the path to the data file.
+     *
      * @param filename path to the data file.
      */
     public Data(String filename) {
@@ -46,6 +48,7 @@ public class Data implements DB {
 
     /**
      * Read in the schema and return a completed schema object.
+     *
      * @param file a readable file object.
      * @return a filled-in schema object.
      * @throws IOException thrown if there are problems accessing the file.
@@ -75,6 +78,7 @@ public class Data implements DB {
      * Reads a record from the file and returns an array where each element is a record value.  The record
      * should be locked to prevent a dirty read of the record but this is not enforced to reads to occur
      * once a lock is obtained.
+     *
      * @param recNo record from the file to be read.
      * @return an array where each element is a record value.
      * @throws RecordNotFoundException thrown if there are problems reading the record.
@@ -123,6 +127,7 @@ public class Data implements DB {
 
     /**
      * Checks that record is actually locked
+     *
      * @param recNo record number whose lock is to be checked.
      * @param lockCookie cookie value that represents the lock.
      * @throws SecurityException thrown if the record is not locked.
@@ -137,6 +142,7 @@ public class Data implements DB {
 
     /**
      * Modifies the fields of a record. The new value for field n appears in data[n].
+     *
      * @param recNo record number to be updated.
      * @param data new values for this record.
      * @param lockCookie cookie value that represents the lock.
@@ -192,6 +198,7 @@ public class Data implements DB {
 
     /**
      * Deletes a record, making the record number and associated disk storage available for reuse.
+     *
      * @param recNo record number to be deleted.
      * @param lockCookie cookie value that represents the lock.
      * @throws RecordNotFoundException thrown if the record can not be found in the database.
@@ -236,6 +243,7 @@ public class Data implements DB {
      * Returns an array of record numbers that match the specified criteria. Field n in the database file is described
      * by criteria[n]. A null value in criteria[n] matches any field value. A non-null  value in criteria[n] matches
      * any field value that begins with criteria[n]. (For example, "Fred" matches "Fred" or "Freddy".)
+     *
      * @param criteria criteria used for matching records.
      * @return an array of record numbers that match the specified criteria.
      */
@@ -308,6 +316,7 @@ public class Data implements DB {
     /**
      * Creates a new record in the database (possibly reusing a deleted entry). Inserts the given data, and returns
      * the record number of the new record.
+     *
      * @param data values for this new record.
      * @return the record number of the new record.
      * @throws DuplicateKeyException thrown if the record cannot be created.
@@ -383,6 +392,7 @@ public class Data implements DB {
      * Locks a record so that it can only be updated or deleted by this client. Returned value is a cookie that must
      * be used when the record is unlocked, updated, or deleted. If the specified record is already locked by a
      * different client, the current thread gives up the CPU and consumes no CPU cycles until the record is unlocked.
+     *
      * @param recNo record number to be locked.
      * @return cookie value that represents the lock.
      * @throws RecordNotFoundException thrown if the record can not be found in the database.
@@ -395,7 +405,7 @@ public class Data implements DB {
                     // Wait for notification to again check the lock.
                     cookies.wait();
                 } catch (InterruptedException e) {
-                    System.out.println("Exception " + e.toString());                
+                    System.out.println("Exception " + e.toString());
                 }
             }
 
@@ -441,6 +451,7 @@ public class Data implements DB {
     /**
      * Releases the lock on a record. Cookie must be the cookie returned when the record was locked; otherwise
      * throws SecurityException.
+     *
      * @param recNo record number to be unlocked.
      * @param cookie cookie value that represents the lock.
      * @throws RecordNotFoundException thrown if the record can not be found in the database.

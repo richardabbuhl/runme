@@ -30,8 +30,9 @@ import java.io.FileOutputStream;
 
 /**
  * RunMeFrame implements the user interface using Swing components.
- * @version 1.00, April 12, 2005
+ *
  * @author Richard Abbuhl
+ * @version 1.00, April 12, 2005
  */
 public class RunMeFrame extends JFrame {
 
@@ -39,12 +40,12 @@ public class RunMeFrame extends JFrame {
     private static final int COL_REC_NUM = 0;
     private static final int COL_CUST_HOLD = 6;
     private static final String[] columnNames = {"Record Num",
-                                    "Subcontractor Name",
-                                    "City",
-                                    "Types of work performed",
-                                    "Number of staff in organization",
-                                    "Hourly charge",
-                                    "Customer holding"};
+                                                 "Subcontractor Name",
+                                                 "City",
+                                                 "Types of work performed",
+                                                 "Number of staff in organization",
+                                                 "Hourly charge",
+                                                 "Customer holding"};
 
     private JMenuItem optionsMenuItem;
     private JMenuItem exitMenuItem;
@@ -59,7 +60,7 @@ public class RunMeFrame extends JFrame {
     private class MyTableModel extends AbstractTableModel {
         private Vector v = new Vector();
 
-        MyTableModel(Vector v){
+        MyTableModel(Vector v) {
             super();
             this.v = v;
         }
@@ -77,11 +78,11 @@ public class RunMeFrame extends JFrame {
         }
 
         public Object getValueAt(int rowIndex, int colIndex) {
-            return ((String[])v.get(rowIndex))[colIndex];
+            return ((String[]) v.get(rowIndex))[colIndex];
         }
 
         public void setValueAt(Object aValue, int rowIndex, int colIndex) {
-            ((String[])v.get(rowIndex))[colIndex] = (String)aValue;
+            ((String[]) v.get(rowIndex))[colIndex] = (String) aValue;
         }
 
         public boolean isCellEditable(int row, int col) {
@@ -124,7 +125,7 @@ public class RunMeFrame extends JFrame {
             if (dbRemote) {
                 String remoteHost = getProperty("remote-host", "localhost");
                 Registry remoteRegistry = LocateRegistry.getRegistry(remoteHost);
-                data = (DB)remoteRegistry.lookup(DB.SERVICENAME);
+                data = (DB) remoteRegistry.lookup(DB.SERVICENAME);
             } else {
                 String localDBPath = getProperty("localdb-path", "db-2x2.db");
                 data = new Data(localDBPath);
@@ -134,7 +135,7 @@ public class RunMeFrame extends JFrame {
             JOptionPane.showMessageDialog(null, "Error reading " + PROPERTIES_FILE + " " + e.toString(),
                     "alert", JOptionPane.ERROR_MESSAGE);
         }
-        return data ;
+        return data;
     }
 
     public boolean isDbRemote() {
@@ -174,14 +175,13 @@ public class RunMeFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if (dbRemote) {
                     String remoteHost = getProperty("remote-host", "localhost");
-                    String result = (String)JOptionPane.showInputDialog(
-                                                null,
-                                                "Remote host:",
-                                                "Options",
-                                                JOptionPane.PLAIN_MESSAGE,
-                                                null,
-                                                null,
-                                                remoteHost);
+                    String result = (String) JOptionPane.showInputDialog(null,
+                            "Remote host:",
+                            "Options",
+                            JOptionPane.PLAIN_MESSAGE,
+                            null,
+                            null,
+                            remoteHost);
 
                     if (result != null && !"".equals(result)) {
                         setProperty("remote-host", result);
@@ -192,19 +192,18 @@ public class RunMeFrame extends JFrame {
                 } else {
 
                     String localDBPath = getProperty("localdb-path", "db-2x2.db");
-                    String result = (String)JOptionPane.showInputDialog(
-                                                null,
-                                                "Local DB Path:",
-                                                "Options",
-                                                JOptionPane.PLAIN_MESSAGE,
-                                                null,
-                                                null,
-                                                localDBPath);
+                    String result = (String) JOptionPane.showInputDialog(null,
+                            "Local DB Path:",
+                            "Options",
+                            JOptionPane.PLAIN_MESSAGE,
+                            null,
+                            null,
+                            localDBPath);
 
                     if (result != null && !"".equals(result)) {
                         setProperty("localdb-path", result);
                         JOptionPane.showMessageDialog(null, "Local DB Path updated to " + result,
-                                    "alert", JOptionPane.INFORMATION_MESSAGE);
+                                "alert", JOptionPane.INFORMATION_MESSAGE);
                     }
                 }
             }
@@ -236,7 +235,7 @@ public class RunMeFrame extends JFrame {
     private Vector matchTest() {
         Vector v = new Vector();
         try {
-            String [] d = { "", "", "", "", "", "" };
+            String[] d = {"", "", "", "", "", ""};
 
             String name = subcontractorName.getText().trim();
             String city = subcontractorCity.getText().trim();
@@ -255,8 +254,8 @@ public class RunMeFrame extends JFrame {
             int[] matches = data.find(d);
             if (matches != null) {
                 for (int i = 0; i < matches.length; i++) {
-                    String [] result = data.read(matches[i]);
-                    String [] fullResults = new String[result.length + 1];
+                    String[] result = data.read(matches[i]);
+                    String[] fullResults = new String[result.length + 1];
                     fullResults[0] = String.valueOf(matches[i]);
                     for (int j = 0; j < result.length; j++) {
                         fullResults[j + 1] = result[j].trim();
@@ -316,22 +315,22 @@ public class RunMeFrame extends JFrame {
 
                     try {
                         DB data = getDB();
-                        int recNo = Integer.parseInt((String)resultsTable.getModel().getValueAt(rowIndex, COL_REC_NUM));
-                        String currentCustomerHold = (String)resultsTable.getModel().getValueAt(rowIndex, COL_CUST_HOLD);
+                        int recNo = Integer.parseInt((String) resultsTable.getModel().getValueAt(rowIndex, COL_REC_NUM));
+                        String currentCustomerHold = (String) resultsTable.getModel().getValueAt(rowIndex, COL_CUST_HOLD);
                         System.out.println("Update started recNo " + recNo + " customer to " + newCustomerHold);
                         boolean doUpdate = true;
-                        String [] currentValues = data.read(recNo);
+                        String[] currentValues = data.read(recNo);
                         if (!currentValues[5].trim().equals(currentCustomerHold)) {
 
                             int result = JOptionPane.showConfirmDialog(null,
-                                "Customer holding was recently booked by another CSR to " + currentValues[5].trim() +
-                                ". Click YES to book customer holding to " +  newCustomerHold,
-                                "alert", JOptionPane.YES_NO_OPTION);
+                                    "Customer holding was recently booked by another CSR to " + currentValues[5].trim() +
+                                    ". Click YES to book customer holding to " + newCustomerHold,
+                                    "alert", JOptionPane.YES_NO_OPTION);
 
                             if (result == JOptionPane.NO_OPTION) {
                                 System.out.println("Rollback recNo " + recNo + " customer to " + currentValues[5].trim());
 
-                                MyTableModel resultsModel = (MyTableModel)resultsTable.getModel();
+                                MyTableModel resultsModel = (MyTableModel) resultsTable.getModel();
                                 resultsModel.setValueAt(currentValues[5].trim(), rowIndex, COL_CUST_HOLD);
                                 resultsModel.fireTableCellUpdated(rowIndex, COL_CUST_HOLD);
 
@@ -340,13 +339,13 @@ public class RunMeFrame extends JFrame {
                         }
 
                         if (doUpdate) {
-                            String [] d = { null, null, null, null, null, newCustomerHold };
+                            String[] d = {null, null, null, null, null, newCustomerHold};
                             long cookie = data.lock(recNo);
                             data.update(recNo, d, cookie);
                             data.unlock(recNo, cookie);
                             System.out.println("Update commited recNo " + recNo + " customer to " + newCustomerHold);
 
-                            MyTableModel resultsModel = (MyTableModel)resultsTable.getModel();
+                            MyTableModel resultsModel = (MyTableModel) resultsTable.getModel();
                             resultsModel.setValueAt(newCustomerHold, rowIndex, COL_CUST_HOLD);
                             resultsModel.fireTableCellUpdated(rowIndex, COL_CUST_HOLD);
 
@@ -391,7 +390,7 @@ public class RunMeFrame extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 int rowIndex = resultsTable.getSelectedRow();
                 if (rowIndex != -1) {
-                    bookCity.setText((String)resultsTable.getModel().getValueAt(rowIndex, COL_CUST_HOLD));
+                    bookCity.setText((String) resultsTable.getModel().getValueAt(rowIndex, COL_CUST_HOLD));
                 }
             }
 
