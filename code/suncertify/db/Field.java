@@ -65,7 +65,7 @@ public class Field {
     }
 
     /**
-     * Dumps the value of all attributes.
+     * Dump the value of all attributes.
      */
     public void dump() {
         System.out.println("Name=" + name + ",length=" + length);
