@@ -13,11 +13,7 @@ import suncertify.db.Data;
 import suncertify.db.DB;
 
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
-import javax.swing.event.TableModelListener;
-import javax.swing.event.TableModelEvent;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
