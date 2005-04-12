@@ -10,11 +10,9 @@
 package suncertify.db;
 
 /**
- * Created by IntelliJ IDEA.
- * User: RichardAbbuhl
- * Date: Feb 14, 2005
- * Time: 4:26:01 PM
- * To change this template use File | Settings | File Templates.
+ * Schema holds the database schema for the customer's non-relational database file.
+ * @version 1.00, April 12, 2005
+ * @author Richard Abbuhl
  */
 public class Schema {
 

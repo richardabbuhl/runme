@@ -10,11 +10,11 @@
 package suncertify.db;
 
 /**
- * Created by IntelliJ IDEA.
- * User: rabbuhl
- * Date: Nov 19, 2004
- * Time: 10:36:48 PM
- * To change this template use File | Settings | File Templates.
+ * RecordNotFoundException is an exceptions that can be thrown by the DB interface.  It
+ * is thrown whenever an attempt is made to lock, read, update, or delete a specified
+ * record that does not exist or is marked as deleted in the database file.
+ * @version 1.00, April 12, 2005
+ * @author Richard Abbuhl
  */
 public class RecordNotFoundException extends Exception {
     public RecordNotFoundException() {

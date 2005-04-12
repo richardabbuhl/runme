@@ -13,7 +13,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 /**
- * DB is the interface class provided for accessing the customers non-relational database file.
+ * DB is the interface class provided for accessing the customer's non-relational database file.
  * @version 1.00, April 12, 2005
  * @author Richard Abbuhl
  */

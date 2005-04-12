@@ -10,11 +10,10 @@
 package suncertify.db;
 
 /**
- * Created by IntelliJ IDEA.
- * User: RichardAbbuhl
- * Date: Feb 14, 2005
- * Time: 5:03:39 PM
- * To change this template use File | Settings | File Templates.
+ * Field represent a column in the customer's non-relational database file.  A collection of fields
+ * represents the databse schema.
+ * @version 1.00, April 12, 2005
+ * @author Richard Abbuhl
  */
 public class Field {
 
