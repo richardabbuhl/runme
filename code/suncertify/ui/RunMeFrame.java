@@ -32,9 +32,20 @@ import java.io.FileOutputStream;
  */
 public class RunMeFrame extends JFrame {
 
+    /**
+     * Define a constant for the properties file for the user interface.
+     */
     private static final String PROPERTIES_FILE = "suncertify.properties";
+
+    /**
+     * Define a constant for the rec number and customer holding columns in the user interface.
+     */
     private static final int COL_REC_NUM = 0;
     private static final int COL_CUST_HOLD = 6;
+
+    /**
+     * Define values for the the column names.
+     */
     private static final String[] columnNames = {"Record Num",
                                                  "Subcontractor Name",
                                                  "City",
@@ -43,6 +54,14 @@ public class RunMeFrame extends JFrame {
                                                  "Hourly charge",
                                                  "Customer holding"};
 
+    /**
+     * Define a boolean which indicates if the database connection is remote.
+     */
+    private boolean dbRemote = false;
+
+    /**
+     * Define the components for the user interface.
+     */
     private JMenuItem optionsMenuItem;
     private JMenuItem exitMenuItem;
     private JTextField subcontractorName = new JTextField();
@@ -51,41 +70,89 @@ public class RunMeFrame extends JFrame {
     private JTextField bookCity = new JTextField();
     private Button bookButton = new Button("Save");
     private JTable resultsTable = new JTable();
-    private boolean dbRemote = false;
 
+    /**
+     * Define a class that allows data read from the customer's database to be displayed using a JTable
+     * in the user interface.
+     */
     private class MyTableModel extends AbstractTableModel {
+
+        /**
+         * Define a list to hold the data for all of the values in the JTable.
+         */
         private java.util.List modelList = new Vector();
 
-        MyTableModel(List v) {
+        /**
+         * Define a constructor which allows a list to be specified that contains the model data.
+         * @param modelList list that contains the model data.
+         */
+        MyTableModel(List modelList) {
             super();
-            this.modelList = v;
+            this.modelList = modelList;
         }
 
+        /**
+         * Gets the name of the column.
+         * @param colIndex index of the column name to be returned.
+         * @return the name of the column.
+         */
         public String getColumnName(int colIndex) {
             return columnNames[colIndex];
         }
 
+        /**
+         * Gets a count of all of the columns.
+         * @return the count of all of the columns.
+         */
         public int getColumnCount() {
             return columnNames.length;
         }
 
+        /**
+         * Gets a count of all of the rows.
+         * @return the count of all of the rows.
+         */
         public int getRowCount() {
             return modelList.size();
         }
 
+        /**
+         * Gets the model data defined for a row and column.
+         * @param rowIndex row for the model data to be returned.
+         * @param colIndex column for the model data to be returned.
+         * @return the model data defined for a row and column.
+         */
         public Object getValueAt(int rowIndex, int colIndex) {
             return ((String[]) modelList.get(rowIndex))[colIndex];
         }
 
+        /**
+         * Sets the model data for a row and column.
+         * @param aValue value to be updated.
+         * @param rowIndex row for the model data to be updated.
+         * @param colIndex column for the model data to be updated.
+         */
         public void setValueAt(Object aValue, int rowIndex, int colIndex) {
             ((String[]) modelList.get(rowIndex))[colIndex] = (String) aValue;
         }
 
+        /**
+         * Returns true if the model data for a row and column is editable by the user.
+         * @param row row of the model data to be edited.
+         * @param col column of the model data to be edited.
+         * @return true if the model data for a row and column is editable by the user.
+         */
         public boolean isCellEditable(int row, int col) {
             return false;
         }
     }
 
+    /**
+     * Gets the property value from the properties file identified by key.
+     * @param key key of the property value to be returned.
+     * @param defaultValue default value to be returned if the key does not exist in the properties file.
+     * @return the property value from the properties file identified by key.
+     */
     private String getProperty(String key, String defaultValue) {
         String value = defaultValue;
         try {
@@ -98,6 +165,11 @@ public class RunMeFrame extends JFrame {
         return value;
     }
 
+    /**
+     * Sets the properties value in the properties files identified by key.
+     * @param key key of the property value to be updated.
+     * @param value value of the property to be updated.
+     */
     private void setProperty(String key, String value) {
         Properties properties = new Properties();
         try {
@@ -115,6 +187,11 @@ public class RunMeFrame extends JFrame {
         }
     }
 
+    /**
+     * Returns a instance of the database based upon the value of dbRemote.  If dbRemote is true then a remote
+     * database connection will be established.  Otherwise, a local database connection will be established.
+     * @return a database connection or null if the connection was not allowed.
+     */
     private DB getDB() {
         DB data = null;
         try {
@@ -150,6 +227,10 @@ public class RunMeFrame extends JFrame {
         this.dbRemote = dbRemote;
     }
 
+    /**
+     * Sets up the menu bar so it can be added to the user interface..
+     * @return a menu bar.
+     */
     private JMenuBar addMenuBar() {
         JMenuBar menuBar = new JMenuBar();
 
@@ -174,6 +255,9 @@ public class RunMeFrame extends JFrame {
         return menuBar;
     }
 
+    /**
+     * Creates the listeners for menu items.
+     */
     private void createMenuBarListeners() {
         optionsMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -220,6 +304,10 @@ public class RunMeFrame extends JFrame {
         });
     }
 
+    /**
+     * Sets up the search and booking components so they can be added to the user interface..
+     * @return the search and booking components.
+     */
     private JPanel addSearchBookComponents() {
         JPanel pane = new JPanel();
         pane.setLayout(new GridLayout(0, 1));
@@ -236,6 +324,11 @@ public class RunMeFrame extends JFrame {
         return pane;
     }
 
+    /**
+     * Calls the find on the DB interface to return a list records that matched the current value of the subcontractor
+     * name and subcontractor city.
+     * @return a list records that matched the current value of the subcontractor name and subcontractor city.
+     */
     private List matchTest() {
         List matchList = new Vector();
         try {
@@ -277,6 +370,11 @@ public class RunMeFrame extends JFrame {
         return matchList;
     }
 
+    /**
+     * Returns true if the string s contains only digits.
+     * @param s string to check
+     * @return true if the string s contains only digits.
+     */
     private boolean hasOnlyDigits(String s) {
         for (int i = 0; i < s.length(); i++) {
             if (!Character.isDigit(s.charAt(i))) {
@@ -286,6 +384,9 @@ public class RunMeFrame extends JFrame {
         return true;
     }
 
+    /**
+     * Creates the listeners for search and booking components..
+     */
     private void createSearchBookListeners() {
         searchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -378,6 +479,10 @@ public class RunMeFrame extends JFrame {
         });
     }
 
+    /**
+     * Sets up the JTable components so they can be added to the user interface..
+     * @return the JTable components.
+     */
     private JScrollPane addTableComponents() {
         // Create the scroll pane and add the table to it.
         resultsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -389,6 +494,9 @@ public class RunMeFrame extends JFrame {
         return scrollPane;
     }
 
+    /**
+     * Creates the listeners for the JTable.
+     */
     private void createTableListeners() {
         resultsTable.addMouseListener(new MouseListener() {
             public void mouseClicked(MouseEvent e) {
