@@ -29,11 +29,9 @@ import java.io.IOException;
 import java.io.FileOutputStream;
 
 /**
- * Created by IntelliJ IDEA.
- * User: RichardAbbuhl
- * Date: Feb 23, 2005
- * Time: 4:44:40 PM
- * To change this template use File | Settings | File Templates.
+ * RunMeFrame implements the user interface using Swing components. 
+ * @version 1.00, April 12, 2005
+ * @author Richard Abbuhl
  */
 public class RunMeFrame extends JFrame {
 
