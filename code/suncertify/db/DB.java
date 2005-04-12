@@ -26,6 +26,7 @@ public interface DB extends Remote {
 
     /**
      * Reads a record from the file. Returns an array where each element is a record value.
+     *
      * @param recNo record from the file to be read.
      * @return an array where each element is a record value.
      * @throws RecordNotFoundException thrown if recNo cannot be found.
@@ -36,6 +37,7 @@ public interface DB extends Remote {
     /**
      * Modifies the fields of a record. The new value for field n appears in data[n]. Throws SecurityException
      * if the record is locked with a cookie other than lockCookie.
+     *
      * @param recNo record number to be updated.
      * @param data new values for this record.
      * @param lockCookie cookie value that represents the lock.
@@ -49,6 +51,7 @@ public interface DB extends Remote {
     /**
      * Deletes a record, making the record number and associated disk storage available for reuse.  Throws
      * SecurityException if the record is locked with a cookie other than lockCookie.
+     *
      * @param recNo record number to be deleted.
      * @param lockCookie cookie value that represents the lock.
      * @throws RecordNotFoundException thrown if recNo cannot be found.
@@ -63,6 +66,7 @@ public interface DB extends Remote {
      * described by criteria[n]. A null value in criteria[n] matches any field value. A non-null value in
      * criteria[n] matches any field value that begins with criteria[n]. (For example, "Fred" matches "Fred"
      * or "Freddy".)
+     *
      * @param criteria criteria used for matching records.
      * @return an array of record numbers that match the specified criteria
      * @throws RemoteException thrown if a problem occurs during execution of the remote method call.
@@ -72,6 +76,7 @@ public interface DB extends Remote {
     /**
      * Creates a new record in the database (possibly reusing a deleted entry). Inserts the given data, and returns
      * the record number of the new record.
+     *
      * @param data values for this new record.
      * @return the record number of the new record.
      * @throws DuplicateKeyException thrown if the record cannot be created.
@@ -83,6 +88,7 @@ public interface DB extends Remote {
      * Locks a record so that it can only be updated or deleted by this client. Returned value is a cookie that must
      * be used when the record is unlocked, updated, or deleted. If the specified record is already locked by a
      * different client, the current thread gives up the CPU and consumes no CPU cycles until the record is unlocked.
+     *
      * @param recNo record number to be locked.
      * @return cookie value that represents the lock.
      * @throws RecordNotFoundException thrown if recNo cannot be found.
@@ -93,6 +99,7 @@ public interface DB extends Remote {
     /**
      * Releases the lock on a record. Cookie must be the cookie returned when the record was locked; otherwise
      * throws SecurityException.
+     *
      * @param recNo record number to be unlocked.
      * @param cookie cookie value that represents the lock.
      * @throws RecordNotFoundException

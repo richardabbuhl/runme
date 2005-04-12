@@ -40,6 +40,7 @@ public class Schema {
 
     /**
      * Gets the magic cookie for the database.
+     *
      * @return the magic cookie for the database.
      */
     public int getMagicCookie() {
@@ -48,6 +49,7 @@ public class Schema {
 
     /**
      * Sets the magic cookie for the database.
+     *
      * @param magicCookie the magic cookie for the database.
      */
     public void setMagicCookie(int magicCookie) {
@@ -56,6 +58,7 @@ public class Schema {
 
     /**
      * Gets the offset of the first record in the database.
+     *
      * @return the offset of the first record in the database.
      */
     public int getOffset() {
@@ -64,6 +67,7 @@ public class Schema {
 
     /**
      * Gets the offset of the first record in the database.
+     *
      * @param offset the offset of the first record in the database.
      */
     public void setOffset(int offset) {
@@ -72,6 +76,7 @@ public class Schema {
 
     /**
      * Gets the number of fields in the database.
+     *
      * @return the number of fields in the database.
      */
     public short getNumFields() {
@@ -80,6 +85,7 @@ public class Schema {
 
     /**
      * Sets the number of fields in the database.
+     *
      * @param numFields the number of fields in the database.
      */
     public void setNumFields(short numFields) {
@@ -88,6 +94,7 @@ public class Schema {
 
     /**
      * Gets the length of all fields in the database.
+     *
      * @return the length of all fields in the database.
      */
     public int getLengthAllFields() {
@@ -100,6 +107,7 @@ public class Schema {
 
     /**
      * Gets the list of all fields in the database
+     *
      * @return the list of all fields in the database
      */
     public Field[] getFields() {
@@ -108,6 +116,7 @@ public class Schema {
 
     /**
      * Sets the list of all fields in the database
+     *
      * @param fields the list of all fields in the database
      */
     public void setFields(Field[] fields) {
