@@ -46,6 +46,8 @@ public class RunMeFrame extends JFrame {
                                     "Hourly charge",
                                     "Customer holding"};
 
+    private JMenuItem optionsMenuItem;
+    private JMenuItem exitMenuItem;
     private JTextField subcontractorName = new JTextField();
     private JTextField subcontractorCity = new JTextField();
     private Button searchButton = new Button("Search");
@@ -143,23 +145,32 @@ public class RunMeFrame extends JFrame {
         this.dbRemote = dbRemote;
     }
 
-    private JMenuBar createMenuBar() {
+    private JMenuBar addMenuBar() {
         JMenuBar menuBar = new JMenuBar();
-        JMenuItem menuItem;
 
-        // Build the first menu.
+        // Build the File menu.
         JMenu menu = new JMenu("File");
         menu.setMnemonic(KeyEvent.VK_F);
-        menu.getAccessibleContext().setAccessibleDescription("The only menu in this program that has menu items");
+        menu.getAccessibleContext().setAccessibleDescription("File menu");
         menuBar.add(menu);
 
-        // a group of JMenuItems
-        menuItem = new JMenuItem("Options", KeyEvent.VK_O);
-        menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.ALT_MASK));
-        menuItem.getAccessibleContext().setAccessibleDescription("Options");
-        menu.add(menuItem);
+        // Build the options menu item.
+        optionsMenuItem = new JMenuItem("Options", KeyEvent.VK_O);
+        optionsMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.ALT_MASK));
+        optionsMenuItem.getAccessibleContext().setAccessibleDescription("Options menu item");
+        menu.add(optionsMenuItem);
 
-        menuItem.addActionListener(new ActionListener() {
+        // a group of JMenuItems
+        exitMenuItem = new JMenuItem("Exit", KeyEvent.VK_E);
+        exitMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.ALT_MASK));
+        exitMenuItem.getAccessibleContext().setAccessibleDescription("Exit");
+        menu.add(exitMenuItem);
+
+        return menuBar;
+    }
+
+    private void createMenuBarListeners() {
+        optionsMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (dbRemote) {
                     String remoteHost = getProperty("remote-host", "localhost");
@@ -199,19 +210,11 @@ public class RunMeFrame extends JFrame {
             }
         });
 
-        // a group of JMenuItems
-        menuItem = new JMenuItem("Exit", KeyEvent.VK_E);
-        menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.ALT_MASK));
-        menuItem.getAccessibleContext().setAccessibleDescription("Exit");
-        menu.add(menuItem);
-
-        menuItem.addActionListener(new ActionListener() {
+        exitMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
             }
         });
-
-        return menuBar;
     }
 
     private JPanel addSearchBookComponents() {
@@ -411,11 +414,12 @@ public class RunMeFrame extends JFrame {
         setTitle("Sun Certified Developer for the Java 2 Platform: Application Submission");
         JFrame.setDefaultLookAndFeelDecorated(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setJMenuBar(createMenuBar());
+        setJMenuBar(addMenuBar());
         getContentPane().setLayout(new FlowLayout());
         getContentPane().add(addSearchBookComponents());
         getContentPane().add(addTableComponents());
 
+        createMenuBarListeners();
         createSearchBookListeners();
         createTableListeners();
 
