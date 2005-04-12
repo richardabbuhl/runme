@@ -260,7 +260,7 @@ public class RunMeFrame extends JFrame {
      */
     private void createMenuBarListeners() {
         optionsMenuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent event) {
                 if (dbRemote) {
                     String remoteHost = getProperty("remote-host", "localhost");
                     String result = (String) JOptionPane.showInputDialog(null,
@@ -298,7 +298,7 @@ public class RunMeFrame extends JFrame {
         });
 
         exitMenuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent event) {
                 System.exit(0);
             }
         });
@@ -389,7 +389,7 @@ public class RunMeFrame extends JFrame {
      */
     private void createSearchBookListeners() {
         searchButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent event) {
                 List matchList = matchTest();
                 resultsTable.setModel(new MyTableModel(matchList));
                 if (matchList.size() > 0) {
@@ -400,7 +400,7 @@ public class RunMeFrame extends JFrame {
         });
 
         bookButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent event) {
                 int rowIndex = resultsTable.getSelectedRow();
                 if (rowIndex != -1) {
                     String newCustomerHold = bookCity.getText().trim();
@@ -463,9 +463,9 @@ public class RunMeFrame extends JFrame {
                             }
                         }
 
-                    } catch (Exception ex) {
-                        System.out.println("Exception " + ex.toString());
-                        JOptionPane.showMessageDialog(null, "Error writing DB " + ex.toString(),
+                    } catch (Exception e) {
+                        System.out.println("Exception " + e.toString());
+                        JOptionPane.showMessageDialog(null, "Error writing DB " + e.toString(),
                                 "alert", JOptionPane.ERROR_MESSAGE);
                     }
 

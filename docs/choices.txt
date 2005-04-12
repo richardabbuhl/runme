@@ -37,7 +37,7 @@ RMI Implementation
 I did some quick research and RMI seemed to be the best and easiest choice for remote access to the database.  Some
 documentation indicated, for instance, "that sockets require the client and server to engage in applications-level
 protocols to encode and decode messages for exchange, and the design of such protocols is cumbersome and can be
-error-prone."
+error-prone" so it was easy to make the choice for RMI.
 
 I order to support local and remote DB access, I modified the DB class that that it extended the Remote class.  It
 was relatively easy to implement remote usage by extending the UnicastRemoteObject object.  It did take some work to
