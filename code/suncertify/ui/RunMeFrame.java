@@ -259,7 +259,7 @@ public class RunMeFrame extends JFrame {
         return v;
     }
 
-    public boolean hasOnlyDigits(String s) {
+    private boolean hasOnlyDigits(String s) {
         for (int i = 0; i < s.length(); i++) {
             if (!Character.isDigit(s.charAt(i))) {
                 return false;
