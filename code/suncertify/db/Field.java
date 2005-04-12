@@ -30,6 +30,7 @@ public class Field {
 
     /**
      * Gets the name of the column.
+     *
      * @return the name of the column.
      */
     public String getName() {
@@ -38,6 +39,7 @@ public class Field {
 
     /**
      * Sets the name of the column.
+     *
      * @param name the name of the column.
      */
     public void setName(String name) {
@@ -46,6 +48,7 @@ public class Field {
 
     /**
      * Returns the length of the column.
+     *
      * @return the length of the column.
      */
     public short getLength() {
@@ -54,6 +57,7 @@ public class Field {
 
     /**
      * Sets the length of the column.
+     *
      * @param length the length of the column.
      */
     public void setLength(short length) {
