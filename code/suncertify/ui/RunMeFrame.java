@@ -306,7 +306,7 @@ public class RunMeFrame extends JFrame {
 
                     if (!valid) {
                         JOptionPane.showMessageDialog(null,
-                                "Customer holding must be either an 8-digit customer number or empty.",
+                                "Customer holding must be either an 8-digit customer number to book or empty to unbook.",
                                 "alert", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
