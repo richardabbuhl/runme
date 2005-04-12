@@ -464,7 +464,7 @@ public class RunMeFrame extends JFrame {
                         }
 
                     } catch (Exception ex) {
-                        System.out.println("Exception " + e.toString());
+                        System.out.println("Exception " + ex.toString());
                         JOptionPane.showMessageDialog(null, "Error writing DB " + ex.toString(),
                                 "alert", JOptionPane.ERROR_MESSAGE);
                     }
