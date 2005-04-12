@@ -261,7 +261,16 @@ public class RunMeFrame extends JFrame {
         return v;
     }
 
-    private JPanel addSearchComponents() {
+    public boolean hasOnlyDigits(String s) {
+        for (int i = 0; i < s.length(); i++) {
+            if (!Character.isDigit(s.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private JPanel addSearchBookComponents() {
         JPanel pane = new JPanel();
         pane.setLayout(new GridLayout(0, 1));
         pane.add(new JLabel("Subcontractor Name:"));
@@ -269,6 +278,10 @@ public class RunMeFrame extends JFrame {
         pane.add(new JLabel("Subcontractor City:"));
         pane.add(subcontractorCity);
         pane.add(searchButton);
+        pane.add(new JSeparator());
+        pane.add(new JLabel("Customer Holding:"));
+        pane.add(bookCity);
+        pane.add(bookButton);
 
         searchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -280,25 +293,6 @@ public class RunMeFrame extends JFrame {
                 }
             }
         });
-
-        return pane;
-    }
-
-    public boolean hasOnlyDigits(String s) {
-        for (int i = 0; i < s.length(); i++) {
-            if (!Character.isDigit(s.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private JPanel addBookComponents() {
-        JPanel pane = new JPanel();
-        pane.setLayout(new GridLayout(0, 1));
-        pane.add(new JLabel("Customer Holding:"));
-        pane.add(bookCity);
-        pane.add(bookButton);
 
         bookButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -421,8 +415,7 @@ public class RunMeFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setJMenuBar(createMenuBar());
         getContentPane().setLayout(new FlowLayout());
-        getContentPane().add(addSearchComponents());
-        getContentPane().add(addBookComponents());
+        getContentPane().add(addSearchBookComponents());
         getContentPane().add(addTableComponents());
 
         pack();
