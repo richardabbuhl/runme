@@ -327,6 +327,10 @@ public class Data implements DB {
             int recNo = 0;
             RandomAccessFile file = null;
             try {
+                int[] matches = find(data);
+                if (matches != null) {
+                    throw new DuplicateKeyException("This record already exists in the database" + data);
+                }
                 file = new RandomAccessFile(filename, "rw");
                 if (schema == null) {
                     schema = readSchema(file);
