@@ -22,8 +22,9 @@ import java.rmi.registry.LocateRegistry;
  * RunMe is the driver for the runme application.  Based on the mode parameter it either starts the application
  * in server mode (starts the server), standalone mode (starts the server and client), or the default mode (starts
  * the client).
- * @version 1.00, April 12, 2005
+ *
  * @author Richard Abbuhl
+ * @version 1.00, April 12, 2005
  */
 public class RunMe {
 
@@ -51,7 +52,7 @@ public class RunMe {
             System.out.println("Published RemoteDB as service \"" + DB.SERVICENAME + "\". Ready.");
 
         } catch (RemoteException e) {
-            System.out.println( "Problem starting the server" + e );
+            System.out.println("Problem starting the server" + e);
             System.exit(0);
         }
     }
@@ -68,6 +69,7 @@ public class RunMe {
 
     /**
      * Driver for the RunMe application.
+     *
      * @param args command-line arguments, i.e. either server, alone, or none parameters.
      */
     public static void main(String[] args) {
