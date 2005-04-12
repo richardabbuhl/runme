@@ -16,8 +16,8 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Vector;
-import java.util.Properties;
+import java.util.*;
+import java.util.List;
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
 import java.io.FileInputStream;
@@ -54,11 +54,11 @@ public class RunMeFrame extends JFrame {
     private boolean dbRemote = false;
 
     private class MyTableModel extends AbstractTableModel {
-        private Vector v = new Vector();
+        private java.util.List modelList = new Vector();
 
-        MyTableModel(Vector v) {
+        MyTableModel(List v) {
             super();
-            this.v = v;
+            this.modelList = v;
         }
 
         public String getColumnName(int colIndex) {
@@ -70,15 +70,15 @@ public class RunMeFrame extends JFrame {
         }
 
         public int getRowCount() {
-            return v.size();
+            return modelList.size();
         }
 
         public Object getValueAt(int rowIndex, int colIndex) {
-            return ((String[]) v.get(rowIndex))[colIndex];
+            return ((String[]) modelList.get(rowIndex))[colIndex];
         }
 
         public void setValueAt(Object aValue, int rowIndex, int colIndex) {
-            ((String[]) v.get(rowIndex))[colIndex] = (String) aValue;
+            ((String[]) modelList.get(rowIndex))[colIndex] = (String) aValue;
         }
 
         public boolean isCellEditable(int row, int col) {
@@ -236,8 +236,8 @@ public class RunMeFrame extends JFrame {
         return pane;
     }
 
-    private Vector matchTest() {
-        Vector v = new Vector();
+    private List matchTest() {
+        List matchList = new Vector();
         try {
             String[] d = {"", "", "", "", "", ""};
 
@@ -264,7 +264,7 @@ public class RunMeFrame extends JFrame {
                     for (int j = 0; j < result.length; j++) {
                         fullResults[j + 1] = result[j].trim();
                     }
-                    v.add(fullResults);
+                    matchList.add(fullResults);
                 }
             }
 
@@ -274,7 +274,7 @@ public class RunMeFrame extends JFrame {
                     "alert", JOptionPane.ERROR_MESSAGE);
         }
 
-        return v;
+        return matchList;
     }
 
     private boolean hasOnlyDigits(String s) {
@@ -289,9 +289,9 @@ public class RunMeFrame extends JFrame {
     private void createSearchBookListeners() {
         searchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Vector o = matchTest();
-                resultsTable.setModel(new MyTableModel(o));
-                if (o.size() > 0) {
+                List matchList = matchTest();
+                resultsTable.setModel(new MyTableModel(matchList));
+                if (matchList.size() > 0) {
                     ListSelectionModel selectionModel = resultsTable.getSelectionModel();
                     selectionModel.setSelectionInterval(0, 0);
                 }

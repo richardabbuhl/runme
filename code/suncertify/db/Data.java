@@ -13,6 +13,7 @@ import java.io.*;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Data implements the DB class in order to provide access to the customer data.
@@ -30,7 +31,7 @@ public class Data implements DB {
     /**
      * A HashMap is used for holding the locking information to lock the database using cookies.
      */
-    private static HashMap cookies = new HashMap();
+    private static Map cookies = new HashMap();
 
     /**
      * The path to the data file.
