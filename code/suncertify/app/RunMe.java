@@ -38,21 +38,22 @@ public class RunMe {
      */
     public void createServer() {
         try {
-              System.out.println("Creating a local RMI registry on the default port.");
-              Registry localRegistry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
+            System.out.println("Creating a local RMI registry on the default port.");
+            Registry localRegistry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
 
-              System.out.println("Creating local object and remote adapter.");
-              Data adaptee = new Data("db-2x2.db");
-              RemoteData adapter = new RemoteData(adaptee);
+            System.out.println("Creating local object and remote adapter.");
+            Data adaptee = new Data("db-2x2.db");
+            RemoteData adapter = new RemoteData(adaptee);
 
-              System.out.println("Publishing service \"" + DB.SERVICENAME + "\" in local registry.");
-              localRegistry.rebind(DB.SERVICENAME, adapter);
+            System.out.println("Publishing service \"" + DB.SERVICENAME + "\" in local registry.");
+            localRegistry.rebind(DB.SERVICENAME, adapter);
 
-              System.out.println("Published RemoteDB as service \"" + DB.SERVICENAME + "\". Ready.");
+            System.out.println("Published RemoteDB as service \"" + DB.SERVICENAME + "\". Ready.");
 
-           } catch (RemoteException e) {
-              System.out.println( "Problem starting the server" + e );
-           }
+        } catch (RemoteException e) {
+            System.out.println( "Problem starting the server" + e );
+            System.exit(0);
+        }
     }
 
     /**
@@ -67,7 +68,7 @@ public class RunMe {
 
     /**
      * Driver for the RunMe application.
-     * @param args command-line arguments.
+     * @param args command-line arguments, i.e. either server, alone, or none parameters.
      */
     public static void main(String[] args) {
         boolean displayUsage = false;
@@ -100,18 +101,30 @@ public class RunMe {
          */
         if (mode == SERVER_MODE) {
 
+            /**
+             * Start the application in server mode (starts the server).  This mode allow remote clients to connect 
+             * to the DB.
+             */
             RunMe app = new RunMe();
             app.createServer();
 
         } else {
 
-            //Schedule a job for the event-dispatching thread:  creating and showing this application's GUI.
+            /**
+             * Schedule a job for the event-dispatching thread:  creating and showing this application's GUI.
+             */
             javax.swing.SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
                     RunMeFrame frame = new RunMeFrame();
                     if (mode == CLIENT_MODE) {
+                        /**
+                         * Start the application in the default mode (starts the client).  The DB connection is remote.
+                         */
                         frame.setDbRemote(true);
                     } else {
+                        /**
+                         * Start the application in standalone mode (starts the client).  The DB connection is local.
+                         */
                         frame.setDbRemote(false);
                     }
                     frame.createUI();
