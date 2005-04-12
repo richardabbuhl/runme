@@ -10,11 +10,10 @@
 package suncertify.db;
 
 /**
- * Created by IntelliJ IDEA.
- * User: rabbuhl
- * Date: Nov 19, 2004
- * Time: 10:37:49 PM
- * To change this template use File | Settings | File Templates.
+ * DuplicateKeyException is one the exceptions that can be thrown by the DB interface.  It
+ * is thrown whenever an attempt is made to insert an occuppied record in the database.
+ * @version 1.00, April 12, 2005
+ * @author Richard Abbuhl
  */
 public class DuplicateKeyException extends Exception {
     public DuplicateKeyException() {

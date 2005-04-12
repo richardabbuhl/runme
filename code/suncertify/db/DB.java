@@ -13,11 +13,9 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 /**
- * Created by IntelliJ IDEA.
- * User: rabbuhl
- * Date: Nov 19, 2004
- * Time: 10:38:37 PM
- * To change this template use File | Settings | File Templates.
+ * DB is the interface class provided for accessing the customers non-relational database file.
+ * @version 1.00, April 12, 2005
+ * @author Richard Abbuhl
  */
 public interface DB extends Remote {
 // Define a constant to identify this service.
