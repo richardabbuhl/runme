@@ -40,19 +40,19 @@ public class RunMeFrame extends JFrame {
     private static final String PROPERTIES_FILE = "suncertify.properties";
     private static final int COL_REC_NUM = 0;
     private static final int COL_CUST_HOLD = 6;
-
-    private JTextField subcontractorName = new JTextField();
-    private JTextField subcontractorCity = new JTextField();
-    private Button searchButton = new Button("Search");
-    private JTextField bookCity = new JTextField();
-    private Button bookButton = new Button("Save");
-    private String[] columnNames = {"Record Num",
+    private static final String[] columnNames = {"Record Num",
                                     "Subcontractor Name",
                                     "City",
                                     "Types of work performed",
                                     "Number of staff in organization",
                                     "Hourly charge",
                                     "Customer holding"};
+
+    private JTextField subcontractorName = new JTextField();
+    private JTextField subcontractorCity = new JTextField();
+    private Button searchButton = new Button("Search");
+    private JTextField bookCity = new JTextField();
+    private Button bookButton = new Button("Save");
     private JTable resultsTable = new JTable();
     private boolean dbRemote = false;
 
