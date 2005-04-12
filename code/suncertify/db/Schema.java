@@ -106,18 +106,18 @@ public class Schema {
     }
 
     /**
-     * Gets the list of all fields in the database
+     * Gets the list of all fields in the database.
      *
-     * @return the list of all fields in the database
+     * @return the list of all fields in the database.
      */
     public Field[] getFields() {
         return fields;
     }
 
     /**
-     * Sets the list of all fields in the database
+     * Sets the list of all fields in the database.
      *
-     * @param fields the list of all fields in the database
+     * @param fields the list of all fields in the database.
      */
     public void setFields(Field[] fields) {
         this.fields = fields;
