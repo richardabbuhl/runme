@@ -315,6 +315,80 @@ public class Data implements DB {
     }
 
     /**
+     * Returns an array of record numbers that exactly match the specified criteria.
+     *
+     * @param criteria criteria used for matching records.
+     * @return an array of record numbers that match the specified criteria.
+     */
+    private int[] findDuplicates(String[] criteria) {
+        synchronized (cookies) {
+            int[] result = null;
+            RandomAccessFile file = null;
+            try {
+                file = new RandomAccessFile(filename, "rw");
+                if (schema == null) {
+                    schema = readSchema(file);
+                }
+                List resultList = new ArrayList();
+                int recNo = 0;
+                int nextPos = schema.getOffset() + recNo * (schema.getLengthAllFields() + 2);
+                while (nextPos < file.length()) {
+                    file.seek(nextPos);
+                    short flag = file.readShort();
+                    boolean match = false;
+                    if (flag == 0) {
+                        for (int i = 0; i < schema.getNumFields(); i++) {
+                            StringBuffer sb = new StringBuffer();
+                            for (int k = 0; k < schema.getFields()[i].getLength(); k++) {
+                                sb.append((char) file.readByte());
+                            }
+                            if (criteria[i] == null) {
+                                if (sb.length() == 0) {
+                                    match = true;
+                                } else {
+                                    match = false;
+                                }
+                            } else if (criteria[i].length() > 0) {
+                                if (sb.toString().trim().equals(criteria[i])) {
+                                    match = true;
+                                } else {
+                                    match = false;
+                                }
+                            }
+                        }
+                    }
+                    if (match) {
+                        resultList.add(new Integer(recNo));
+                    }
+                    recNo++;
+                    nextPos = schema.getOffset() + recNo * (schema.getLengthAllFields() + 2);
+                }
+
+                if (resultList.size() > 0) {
+                    result = new int[resultList.size()];
+                    for (int i = 0; i < resultList.size(); i++) {
+                        Integer a = (Integer) resultList.get(i);
+                        result[i] = a.intValue();
+                    }
+                }
+
+            } catch (Exception e) {
+                System.out.println("Exception " + e.toString());
+            } finally {
+                if (file != null) {
+                    try {
+                        file.close();
+                    } catch (Exception e) {
+                        System.out.println("Error closing file + " + filename + " " + e.toString());
+                    }
+                }
+            }
+
+            return result;
+        }
+    }
+
+    /**
      * Creates a new record in the database (possibly reusing a deleted entry). Inserts the given data, and returns
      * the record number of the new record.
      *
@@ -327,7 +401,7 @@ public class Data implements DB {
             int recNo = 0;
             RandomAccessFile file = null;
             try {
-                int[] matches = find(data);
+                int[] matches = findDuplicates(data);
                 if (matches != null) {
                     throw new DuplicateKeyException("This record already exists in the database");
                 }
