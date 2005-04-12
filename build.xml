@@ -35,7 +35,7 @@
             author="true"
             version="true"
             use="true"
-            packagenames="suncertify.*"            
+            packagenames="suncertify.*"
             windowtitle="Sun Certified Developer for the Java 2 Platform: Application Submission">
 
             <packageset dir="code" defaultexcludes="yes">
@@ -63,6 +63,6 @@
     <target name="buildtest" depends="compiletest">
     </target>
 
-    <target name="release" depends="doc, build"/>
+    <target name="release" depends="build, doc"/>
 
 </project>
