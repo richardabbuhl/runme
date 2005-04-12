@@ -138,10 +138,18 @@ public class RunMeFrame extends JFrame {
         return data;
     }
 
+    /**
+     * Returns true if the database connection is remote.
+     * @return true if the database connection is remote.
+     */
     public boolean isDbRemote() {
         return dbRemote;
     }
 
+    /**
+     * Set a boolean value which indicates if the database connection is remote.
+     * @param dbRemote true if the database connection is remote.
+     */
     public void setDbRemote(boolean dbRemote) {
         this.dbRemote = dbRemote;
     }
@@ -408,6 +416,9 @@ public class RunMeFrame extends JFrame {
         });
     }
 
+    /**
+     * Creates the user interface for the client.
+     */
     public void createUI() {
         // Create the top-level container and add contents to it.
         setTitle("Sun Certified Developer for the Java 2 Platform: Application Submission");
