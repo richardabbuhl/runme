@@ -329,7 +329,7 @@ public class Data implements DB {
             try {
                 int[] matches = find(data);
                 if (matches != null) {
-                    throw new DuplicateKeyException("This record already exists in the database" + data);
+                    throw new DuplicateKeyException("This record already exists in the database");
                 }
                 file = new RandomAccessFile(filename, "rw");
                 if (schema == null) {
