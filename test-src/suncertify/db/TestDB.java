@@ -82,10 +82,10 @@ public class TestDB {
         }
 
         private void addTest(DB data) {
+            String [] d = new String[6];
             try {
-                String [] d = new String[6];
 
-                d[0] = "A";
+                d[0] = "A" + Thread.currentThread().getName();
                 d[1] = "B";
                 d[2] = "C";
                 d[3] = "D";
@@ -95,7 +95,7 @@ public class TestDB {
                 int recNo = data.create(d);
 
             } catch (DuplicateKeyException e) {
-                System.out.println("Exception " + e.toString());
+                System.out.println("Exception " + e.toString() + " " + d[0]);
             } catch (RemoteException e) {
                 System.out.println("Exception " + e.toString());
             }
