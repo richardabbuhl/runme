@@ -144,15 +144,11 @@ public class RunMeFrame extends JFrame {
     }
 
     private JMenuBar createMenuBar() {
-        JMenuBar menuBar;
-        JMenu menu;
+        JMenuBar menuBar = new JMenuBar();
         JMenuItem menuItem;
 
-        // Create the menu bar.
-        menuBar = new JMenuBar();
-
         // Build the first menu.
-        menu = new JMenu("File");
+        JMenu menu = new JMenu("File");
         menu.setMnemonic(KeyEvent.VK_F);
         menu.getAccessibleContext().setAccessibleDescription("The only menu in this program that has menu items");
         menuBar.add(menu);
@@ -218,6 +214,22 @@ public class RunMeFrame extends JFrame {
         return menuBar;
     }
 
+    private JPanel addSearchBookComponents() {
+        JPanel pane = new JPanel();
+        pane.setLayout(new GridLayout(0, 1));
+        pane.add(new JLabel("Subcontractor Name:"));
+        pane.add(subcontractorName);
+        pane.add(new JLabel("Subcontractor City:"));
+        pane.add(subcontractorCity);
+        pane.add(searchButton);
+        pane.add(new JSeparator());
+        pane.add(new JLabel("Customer Holding:"));
+        pane.add(bookCity);
+        pane.add(bookButton);
+
+        return pane;
+    }
+
     private Vector matchTest() {
         Vector v = new Vector();
         try {
@@ -268,19 +280,7 @@ public class RunMeFrame extends JFrame {
         return true;
     }
 
-    private JPanel addSearchBookComponents() {
-        JPanel pane = new JPanel();
-        pane.setLayout(new GridLayout(0, 1));
-        pane.add(new JLabel("Subcontractor Name:"));
-        pane.add(subcontractorName);
-        pane.add(new JLabel("Subcontractor City:"));
-        pane.add(subcontractorCity);
-        pane.add(searchButton);
-        pane.add(new JSeparator());
-        pane.add(new JLabel("Customer Holding:"));
-        pane.add(bookCity);
-        pane.add(bookButton);
-
+    private void createSearchBookListeners() {
         searchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 Vector o = matchTest();
@@ -370,8 +370,6 @@ public class RunMeFrame extends JFrame {
                 }
             }
         });
-
-        return pane;
     }
 
     private JScrollPane addTableComponents() {
@@ -381,6 +379,11 @@ public class RunMeFrame extends JFrame {
         resultsTable.setPreferredScrollableViewportSize(new Dimension(800, 500));
         JScrollPane scrollPane = new JScrollPane(resultsTable);
 
+        // Return the scroll pane.
+        return scrollPane;
+    }
+
+    private void createTableListeners() {
         resultsTable.addMouseListener(new MouseListener() {
             public void mouseClicked(MouseEvent e) {
                 int rowIndex = resultsTable.getSelectedRow();
@@ -401,9 +404,6 @@ public class RunMeFrame extends JFrame {
             public void mouseExited(MouseEvent e) {
             }
         });
-
-        // Return the scroll pane.
-        return scrollPane;
     }
 
     public void createUI() {
@@ -415,6 +415,9 @@ public class RunMeFrame extends JFrame {
         getContentPane().setLayout(new FlowLayout());
         getContentPane().add(addSearchBookComponents());
         getContentPane().add(addTableComponents());
+
+        createSearchBookListeners();
+        createTableListeners();
 
         pack();
         setVisible(true);
