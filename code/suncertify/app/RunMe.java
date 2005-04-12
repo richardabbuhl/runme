@@ -22,7 +22,7 @@ import java.rmi.registry.LocateRegistry;
  * RunMe is the driver for the runme application.  Based on the mode parameter it either starts the application
  * in server mode (starts the server), standalone mode (starts the server and client), or the default mode (starts
  * the client).
- * @version 1.00
+ * @version 1.00, April 12, 2005
  * @author Richard Abbuhl
  */
 public class RunMe {

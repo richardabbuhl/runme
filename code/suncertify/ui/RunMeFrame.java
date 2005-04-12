@@ -29,7 +29,7 @@ import java.io.IOException;
 import java.io.FileOutputStream;
 
 /**
- * RunMeFrame implements the user interface using Swing components. 
+ * RunMeFrame implements the user interface using Swing components.
  * @version 1.00, April 12, 2005
  * @author Richard Abbuhl
  */
@@ -306,7 +306,7 @@ public class RunMeFrame extends JFrame {
 
                     if (!valid) {
                         JOptionPane.showMessageDialog(null,
-                                "Customer holding must be either be an 8-digit customer number or empty.",
+                                "Customer holding must be either an 8-digit customer number or empty.",
                                 "alert", JOptionPane.ERROR_MESSAGE);
                         return;
                     }
