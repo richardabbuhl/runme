@@ -180,7 +180,7 @@ public class TestDB {
                 data = new Data("db-2x2.db");
             }
 
-            for (int i = 0; i < 20; i++) {
+            for (int i = 0; i < 10; i++) {
                 Thread foo = new Thread(new TestDB.testDataThread(data));
                 foo.start();
             }
