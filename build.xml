@@ -12,6 +12,7 @@
     <target name="prepare"/>
 
     <target name="clean">
+        <delete file="runme.jar"/>
         <delete dir="${out.dir}"/>
         <delete dir="${classes.dir}"/>
         <delete dir="${javadocs.dir}"/>        
@@ -49,20 +50,25 @@
     </target>
 
     <target name="build" depends="compile">
-        <mkdir dir="${out.dir}"/>
-        <jar jarfile="${out.dir}/sr1623343.jar">
+        <jar jarfile="runme.jar">
             <fileset dir="${classes.dir}" includes="**/*.class"/>
-            <fileset dir="." excludes="test-src/**" includes="**/*.java, docs/**/*.*, version.txt, db-2x2.db"/>
             <manifest>
                 <attribute name="Main-Class" value="suncertify.app.RunMe"/>
             </manifest>
         </jar>
-        <copy file="db-2x2.db" todir="${out.dir}"/>
+        <!--copy file="db-2x2.db" todir="${out.dir}"/-->
     </target>
 
     <target name="buildtest" depends="compiletest">
     </target>
 
-    <target name="release" depends="build, doc"/>
+    <target name="release" depends="build, doc">
+        <mkdir dir="${out.dir}"/>
+        <jar jarfile="${out.dir}/sr1623343.jar">
+            <fileset dir="."
+                excludes="test-src/**"
+                includes="runme.jar, **/*.java, docs/**/*.*, version.txt, db-2x2.db"/>
+        </jar>
+    </target>
 
 </project>
