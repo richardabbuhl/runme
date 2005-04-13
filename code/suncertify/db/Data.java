@@ -501,14 +501,24 @@ public class Data implements DB {
     public void unlock(int recNo, long cookie)
             throws RecordNotFoundException, SecurityException, IOException {
         synchronized (cookies) {
+            RandomAccessFile file = null;
             try {
-                Long key = new Long(recNo);
-                Long value = (Long) cookies.remove(key);
-                if (value == null || value.longValue() != cookie) {
-                    throw new SecurityException("Record " + recNo + " cookie invalid");
+                lockCheck(recNo, cookie);
+                file = new RandomAccessFile(filename, "r");
+                if (schema == null) {
+                    schema = readSchema(file);
+                }
+                file.seek(schema.getOffset() + recNo * (schema.getLengthAllFields() + 2));
+                short flag = file.readShort();
+                if (flag != 0) {
+                    throw new RecordNotFoundException("Record " + recNo + " was not found");
                 }
 
             } finally {
+                if (file != null) {
+                    file.close();
+                }
+
                 cookies.notifyAll();
             }
         }

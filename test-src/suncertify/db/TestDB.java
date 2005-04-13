@@ -4,6 +4,7 @@ import java.util.Random;
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.RemoteException;
+import java.io.IOException;
 
 /**
  * Created by IntelliJ IDEA.
@@ -44,13 +45,13 @@ public class TestDB {
                 dump(data.read(recNo));
 
             } catch (RecordNotFoundException e) {
-            } catch (RemoteException e) {
+            } catch (IOException e) {
             } finally {
                 if (cookie != -1) {
                     try {
                         data.unlock(recNo, cookie);
                     } catch (RecordNotFoundException f) {
-                    } catch (RemoteException e) {
+                    } catch (IOException e) {
                         System.out.println("Exception " + e.toString());
                     }
                 }
@@ -67,14 +68,14 @@ public class TestDB {
                 data.update(recNo, d, cookie);
 
             } catch (RecordNotFoundException e) {
-            } catch (RemoteException e) {
+            } catch (IOException e) {
                 System.out.println("Exception " + e.toString());
             } finally {
                 if (cookie != -1) {
                     try {
                         data.unlock(recNo, cookie);
                     } catch (RecordNotFoundException f) {
-                    } catch (RemoteException e) {
+                    } catch (IOException e) {
                         System.out.println("Exception " + e.toString());
                     }
                 }
@@ -96,7 +97,7 @@ public class TestDB {
 
             } catch (DuplicateKeyException e) {
                 System.out.println("Exception " + e.toString() + " " + d[0]);
-            } catch (RemoteException e) {
+            } catch (IOException e) {
                 System.out.println("Exception " + e.toString());
             }
         }
@@ -108,14 +109,14 @@ public class TestDB {
                 data.delete(recNo, cookie);
 
             } catch (RecordNotFoundException e) {
-            } catch (RemoteException e) {
+            } catch (IOException e) {
                 System.out.println("Exception " + e.toString());
             } finally {
                 if (cookie != -1) {
                     try {
                         data.unlock(recNo, cookie);
                     } catch (RecordNotFoundException e) {
-                    } catch (RemoteException e) {
+                    } catch (IOException e) {
                         System.out.println("Exception " + e.toString());
                     }
                 }
