@@ -11,7 +11,7 @@ package suncertify.db;
 
 /**
  * Field represent a column in the customer's non-relational database file.  A collection of fields
- * represents the databse schema.
+ * represents the database schema.
  *
  * @author Richard Abbuhl
  * @version 1.00, April 12, 2005

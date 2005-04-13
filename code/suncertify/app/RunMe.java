@@ -20,8 +20,8 @@ import java.rmi.registry.LocateRegistry;
 
 /**
  * RunMe is the driver for the runme application.  Based on the mode parameter it either starts the application
- * in server mode (starts the server), standalone mode (starts the server and client), or the default mode (starts
- * the client).
+ * in server mode (starts only the server), standalone mode (starts both the server and client), or the default
+ * mode (starts only the client).
  *
  * @author Richard Abbuhl
  * @version 1.00, April 12, 2005
@@ -35,7 +35,7 @@ public class RunMe {
     private static int mode = CLIENT_MODE;
 
     /**
-     * Start the server.
+     * Starts the server and listens for requests on the default port (1099).
      */
     public void createServer() {
         try {
@@ -70,7 +70,7 @@ public class RunMe {
     /**
      * Driver for the RunMe application.
      *
-     * @param args command-line arguments, i.e. either server, alone, or none parameters.
+     * @param args command-line arguments, i.e. either "server", "alone", or no parameters for default mode.
      */
     public static void main(String[] args) {
         boolean displayUsage = false;
