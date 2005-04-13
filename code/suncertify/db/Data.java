@@ -52,7 +52,7 @@ public class Data implements DB {
      *
      * @param file a readable file object.
      * @return a filled-in schema object.
-     * @throws IOException thrown if there are problems accessing the file.
+     * @throws IOException thrown if an error occurs accessing the database file.
      */
     private Schema readSchema(RandomAccessFile file) throws IOException {
         Schema schema = new Schema();

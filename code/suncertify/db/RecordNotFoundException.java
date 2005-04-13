@@ -10,7 +10,7 @@
 package suncertify.db;
 
 /**
- * RecordNotFoundException is an exceptions that can be thrown by the DB interface.  It
+ * RecordNotFoundException is an exception that can be thrown by the DB interface.  It
  * is thrown whenever an attempt is made to lock, read, update, or delete a specified
  * record that does not exist or is marked as deleted in the database file.
  *

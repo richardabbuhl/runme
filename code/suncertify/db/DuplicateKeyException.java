@@ -10,7 +10,7 @@
 package suncertify.db;
 
 /**
- * DuplicateKeyException is one the exceptions that can be thrown by the DB interface.  It
+ * DuplicateKeyException is an exception that can be thrown by the DB interface.  It
  * is thrown whenever an attempt is made to insert an occuppied record in the database.
  *
  * @author Richard Abbuhl
