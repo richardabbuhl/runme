@@ -7,7 +7,7 @@
     <property name="testsrc.dir" value="${basedir}/test-src"/>
     <property name="out.dir" value="${basedir}/out"/>
     <property name="classes.dir" value="${basedir}/classes"/>
-    <property name="javadocs.dir" value="${basedir}/docs/javadocs"/>
+    <property name="javadoc.dir" value="${basedir}/docs/javadoc"/>
 
     <target name="prepare"/>
 
@@ -15,7 +15,7 @@
         <delete file="runme.jar"/>
         <delete dir="${out.dir}"/>
         <delete dir="${classes.dir}"/>
-        <delete dir="${javadocs.dir}"/>        
+        <delete dir="${javadoc.dir}"/>
     </target>
 
     <target name="compile" depends="clean">
@@ -30,9 +30,9 @@
     </target>
 
     <target name="doc">
-        <delete dir="${javadocs.dir}"/>
+        <delete dir="${javadoc.dir}"/>
         <javadoc
-            destdir="${javadocs.dir}"
+            destdir="${javadoc.dir}"
             author="true"
             version="true"
             use="true"
