@@ -43,4 +43,7 @@ error-prone" so it was easy to make the choice for RMI.
 
 I order to support local and remote DB access, I modified the DB class that that it extended the Remote class.  It
 was relatively easy to implement remote usage by extending the UnicastRemoteObject object.  It did take some work to
-figure out how to use the rmi compiler but once that was done the rest was easy.
+figure out how to use the rmi compiler but once that was done the rest was easy.  It also seems logical that the
+DB interface may throw exceptions that may occur when connected either locally or remotely.  Since it is unknown
+except at run-time whether these database is local or remote the interface dictates all of the possible exceptions
+(and errors) that may occur.
