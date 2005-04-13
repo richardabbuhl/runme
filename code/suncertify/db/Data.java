@@ -111,11 +111,7 @@ public class Data implements DB {
 
             } finally {
                 if (file != null) {
-                    try {
-                        file.close();
-                    } catch (IOException e) {
-                        System.out.println("Error closing file + " + filename + " " + e.toString());
-                    }
+                    file.close();
                 }
 
                 cookies.notifyAll();
@@ -182,11 +178,7 @@ public class Data implements DB {
 
             } finally {
                 if (file != null) {
-                    try {
-                        file.close();
-                    } catch (Exception e) {
-                        System.out.println("Error closing file + " + filename + " " + e.toString());
-                    }
+                    file.close();
                 }
 
                 cookies.notifyAll();
@@ -223,11 +215,7 @@ public class Data implements DB {
 
             } finally {
                 if (file != null) {
-                    try {
-                        file.close();
-                    } catch (Exception e) {
-                        System.out.println("Error closing file + " + filename + " " + e.toString());
-                    }
+                    file.close();
                 }
 
                 cookies.notifyAll();
@@ -294,11 +282,7 @@ public class Data implements DB {
 
             } finally {
                 if (file != null) {
-                    try {
-                        file.close();
-                    } catch (Exception e) {
-                        System.out.println("Error closing file + " + filename + " " + e.toString());
-                    }
+                    file.close();
                 }
 
                 cookies.notifyAll();
@@ -369,11 +353,7 @@ public class Data implements DB {
 
             } finally {
                 if (file != null) {
-                    try {
-                        file.close();
-                    } catch (Exception e) {
-                        System.out.println("Error closing file + " + filename + " " + e.toString());
-                    }
+                    file.close();
                 }
             }
 
@@ -445,11 +425,7 @@ public class Data implements DB {
 
             } finally {
                 if (file != null) {
-                    try {
-                        file.close();
-                    } catch (Exception e) {
-                        System.out.println("Error closing file + " + filename + " " + e.toString());
-                    }
+                    file.close();
                 }
 
                 cookies.notifyAll();
@@ -502,11 +478,7 @@ public class Data implements DB {
 
             } finally {
                 if (file != null) {
-                    try {
-                        file.close();
-                    } catch (Exception e) {
-                        System.out.println("Error closing file + " + filename + " " + e.toString());
-                    }
+                    file.close();
                 }
 
                 cookies.notifyAll();

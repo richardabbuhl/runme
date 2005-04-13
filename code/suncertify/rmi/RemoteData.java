@@ -16,6 +16,7 @@ import suncertify.db.DB;
 
 import java.rmi.server.UnicastRemoteObject;
 import java.rmi.RemoteException;
+import java.io.IOException;
 
 /**
  * RemoteData implements the DB class as a remote interface to the Data class using the adopter / adoptee pattern.
@@ -45,10 +46,11 @@ public class RemoteData extends UnicastRemoteObject implements DB {
      * @param recNo record from the file to be read.
      * @return an array where each element is a record value.
      * @throws RecordNotFoundException thrown if recNo cannot be found.
+     * @throws IOException thrown if an error occurs accessing the database file.
      * @throws RemoteException thrown if a problem occurs during execution of the remote method call.
      */
     public String[] read(int recNo)
-            throws RecordNotFoundException, RemoteException {
+            throws RecordNotFoundException, IOException, RemoteException {
         return adaptee.read(recNo);
     }
 
@@ -60,10 +62,11 @@ public class RemoteData extends UnicastRemoteObject implements DB {
      * @param lockCookie cookie value that represents the lock.
      * @throws RecordNotFoundException thrown if if recNo cannot be found.
      * @throws SecurityException thrown if the record is not locked by cookie.
+     * @throws IOException thrown if an error occurs accessing the database file.
      * @throws RemoteException thrown if a problem occurs during execution of the remote method call.
      */
     public void update(int recNo, String[] data, long lockCookie)
-            throws RecordNotFoundException, SecurityException, RemoteException {
+            throws RecordNotFoundException, SecurityException, IOException, RemoteException {
         adaptee.update(recNo, data, lockCookie);
     }
 
@@ -74,10 +77,11 @@ public class RemoteData extends UnicastRemoteObject implements DB {
      * @param lockCookie cookie value that represents the lock.
      * @throws RecordNotFoundException thrown if recNo cannot be found.
      * @throws SecurityException thrown if the record is not locked by cookie.
+     * @throws IOException thrown if an error occurs accessing the database file.
      * @throws RemoteException thrown if a problem occurs during execution of the remote method call.
      */
     public void delete(int recNo, long lockCookie)
-            throws RecordNotFoundException, SecurityException, RemoteException {
+            throws RecordNotFoundException, SecurityException, IOException, RemoteException {
         adaptee.delete(recNo, lockCookie);
     }
 
@@ -86,9 +90,10 @@ public class RemoteData extends UnicastRemoteObject implements DB {
      *
      * @param criteria criteria used for matching records.
      * @return an array of record numbers that match the specified criteria
+     * @throws IOException thrown if an error occurs accessing the database file.
      * @throws RemoteException thrown if a problem occurs during execution of the remote method call.
      */
-    public int[] find(String[] criteria) throws RemoteException {
+    public int[] find(String[] criteria) throws IOException, RemoteException {
         return adaptee.find(criteria);
     }
 
@@ -97,11 +102,12 @@ public class RemoteData extends UnicastRemoteObject implements DB {
      *
      * @param data values for this new record.
      * @return the record number of the new record.
-     * @throws DuplicateKeyException thrown if the record cannot be created.
+     * @throws DuplicateKeyException thrown if the record already exists in the database.
+     * @throws IOException thrown if an error occurs accessing the database file.
      * @throws RemoteException thrown if a problem occurs during execution of the remote method call.
      */
     public int create(String[] data)
-            throws DuplicateKeyException, RemoteException {
+            throws DuplicateKeyException, IOException, RemoteException {
         return adaptee.create(data);
     }
 
@@ -111,10 +117,11 @@ public class RemoteData extends UnicastRemoteObject implements DB {
      * @param recNo record number to be locked.
      * @return cookie value that represents the lock.
      * @throws RecordNotFoundException thrown if recNo cannot be found.
+     * @throws IOException thrown if an error occurs accessing the database file.
      * @throws RemoteException thrown if a problem occurs during execution of the remote method call.
      */
     public long lock(int recNo)
-            throws RecordNotFoundException, RemoteException {
+            throws RecordNotFoundException, IOException, RemoteException {
         return adaptee.lock(recNo);
     }
 
@@ -125,10 +132,11 @@ public class RemoteData extends UnicastRemoteObject implements DB {
      * @param cookie cookie value that represents the lock.
      * @throws RecordNotFoundException
      * @throws SecurityException thrown if the record is not locked by cookie.
+     * @throws IOException thrown if an error occurs accessing the database file.
      * @throws RemoteException thrown if a problem occurs during execution of the remote method call.
      */
     public void unlock(int recNo, long cookie)
-            throws RecordNotFoundException, SecurityException, RemoteException {
+            throws RecordNotFoundException, SecurityException, IOException, RemoteException {
         adaptee.unlock(recNo, cookie);
     }
 

@@ -11,6 +11,7 @@ package suncertify.db;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.io.IOException;
 
 /**
  * DB is the interface class provided for accessing the customer's non-relational database file.
@@ -30,9 +31,10 @@ public interface DB extends Remote {
      * @param recNo record from the file to be read.
      * @return an array where each element is a record value.
      * @throws RecordNotFoundException thrown if recNo cannot be found.
+     * @throws IOException thrown if an error occurs accessing the database file.
      * @throws RemoteException thrown if a problem occurs during execution of the remote method call.
      */
-    public String[] read(int recNo) throws RecordNotFoundException, RemoteException;
+    public String[] read(int recNo) throws RecordNotFoundException, IOException, RemoteException;
 
     /**
      * Modifies the fields of a record. The new value for field n appears in data[n]. Throws SecurityException
@@ -43,10 +45,11 @@ public interface DB extends Remote {
      * @param lockCookie cookie value that represents the lock.
      * @throws RecordNotFoundException thrown if if recNo cannot be found.
      * @throws SecurityException thrown if the record is not locked by cookie.
+     * @throws IOException thrown if an error occurs accessing the database file.
      * @throws RemoteException thrown if a problem occurs during execution of the remote method call.
      */
     public void update(int recNo, String[] data, long lockCookie)
-            throws RecordNotFoundException, SecurityException, RemoteException;
+            throws RecordNotFoundException, SecurityException, IOException, RemoteException;
 
     /**
      * Deletes a record, making the record number and associated disk storage available for reuse.  Throws
@@ -56,10 +59,11 @@ public interface DB extends Remote {
      * @param lockCookie cookie value that represents the lock.
      * @throws RecordNotFoundException thrown if recNo cannot be found.
      * @throws SecurityException thrown if the record is not locked by cookie.
+     * @throws IOException thrown if an error occurs accessing the database file.
      * @throws RemoteException thrown if a problem occurs during execution of the remote method call.
      */
     public void delete(int recNo, long lockCookie)
-            throws RecordNotFoundException, SecurityException, RemoteException;
+            throws RecordNotFoundException, SecurityException, IOException, RemoteException;
 
     /**
      * Returns an array of record numbers that match the specified criteria. Field n in the database file is
@@ -69,9 +73,10 @@ public interface DB extends Remote {
      *
      * @param criteria criteria used for matching records.
      * @return an array of record numbers that match the specified criteria
+     * @throws IOException thrown if an error occurs accessing the database file.
      * @throws RemoteException thrown if a problem occurs during execution of the remote method call.
      */
-    public int[] find(String[] criteria) throws RemoteException;
+    public int[] find(String[] criteria) throws IOException, RemoteException;
 
     /**
      * Creates a new record in the database (possibly reusing a deleted entry). Inserts the given data, and returns
@@ -79,10 +84,11 @@ public interface DB extends Remote {
      *
      * @param data values for this new record.
      * @return the record number of the new record.
-     * @throws DuplicateKeyException thrown if the record cannot be created.
+     * @throws DuplicateKeyException thrown if the record already exists in the database.
+     * @throws IOException thrown if an error occurs accessing the database file.
      * @throws RemoteException thrown if a problem occurs during execution of the remote method call.
      */
-    public int create(String[] data) throws DuplicateKeyException, RemoteException;
+    public int create(String[] data) throws DuplicateKeyException, IOException, RemoteException;
 
     /**
      * Locks a record so that it can only be updated or deleted by this client. Returned value is a cookie that must
@@ -92,9 +98,10 @@ public interface DB extends Remote {
      * @param recNo record number to be locked.
      * @return cookie value that represents the lock.
      * @throws RecordNotFoundException thrown if recNo cannot be found.
+     * @throws IOException thrown if an error occurs accessing the database file.
      * @throws RemoteException thrown if a problem occurs during execution of the remote method call.
      */
-    public long lock(int recNo) throws RecordNotFoundException, RemoteException;
+    public long lock(int recNo) throws RecordNotFoundException, IOException, RemoteException;
 
     /**
      * Releases the lock on a record. Cookie must be the cookie returned when the record was locked; otherwise
@@ -104,8 +111,9 @@ public interface DB extends Remote {
      * @param cookie cookie value that represents the lock.
      * @throws RecordNotFoundException
      * @throws SecurityException thrown if the record is not locked by cookie.
+     * @throws IOException thrown if an error occurs accessing the database file.
      * @throws RemoteException thrown if a problem occurs during execution of the remote method call.
      */
     public void unlock(int recNo, long cookie)
-            throws RecordNotFoundException, SecurityException, RemoteException;
+            throws RecordNotFoundException, SecurityException, IOException, RemoteException;
 }
