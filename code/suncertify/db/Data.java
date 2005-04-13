@@ -316,67 +316,69 @@ public class Data implements DB {
      * @throws IOException thrown if an error occurs accessing the database file.
      */
     private int[] findDuplicates(String[] criteria) throws IOException {
-        int[] result = null;
-        RandomAccessFile file = null;
-        try {
-            file = new RandomAccessFile(filename, "rw");
-            if (schema == null) {
-                schema = readSchema(file);
-            }
-            List resultList = new ArrayList();
-            int recNo = 0;
-            int nextPos = schema.getOffset() + recNo * (schema.getLengthAllFields() + 2);
-            while (nextPos < file.length()) {
-                file.seek(nextPos);
-                short flag = file.readShort();
-                boolean match = false;
-                if (flag == 0) {
-                    for (int i = 0; i < schema.getNumFields(); i++) {
-                        StringBuffer sb = new StringBuffer();
-                        for (int k = 0; k < schema.getFields()[i].getLength(); k++) {
-                            sb.append((char) file.readByte());
-                        }
-                        if (criteria[i] == null) {
-                            if (sb.length() == 0) {
-                                match = true;
-                            } else {
-                                match = false;
+        synchronized (cookies) {
+            int[] result = null;
+            RandomAccessFile file = null;
+            try {
+                file = new RandomAccessFile(filename, "rw");
+                if (schema == null) {
+                    schema = readSchema(file);
+                }
+                List resultList = new ArrayList();
+                int recNo = 0;
+                int nextPos = schema.getOffset() + recNo * (schema.getLengthAllFields() + 2);
+                while (nextPos < file.length()) {
+                    file.seek(nextPos);
+                    short flag = file.readShort();
+                    boolean match = false;
+                    if (flag == 0) {
+                        for (int i = 0; i < schema.getNumFields(); i++) {
+                            StringBuffer sb = new StringBuffer();
+                            for (int k = 0; k < schema.getFields()[i].getLength(); k++) {
+                                sb.append((char) file.readByte());
                             }
-                        } else if (criteria[i].length() > 0) {
-                            if (sb.toString().trim().equals(criteria[i])) {
-                                match = true;
-                            } else {
-                                match = false;
+                            if (criteria[i] == null) {
+                                if (sb.length() == 0) {
+                                    match = true;
+                                } else {
+                                    match = false;
+                                }
+                            } else if (criteria[i].length() > 0) {
+                                if (sb.toString().trim().equals(criteria[i])) {
+                                    match = true;
+                                } else {
+                                    match = false;
+                                }
                             }
                         }
                     }
+                    if (match) {
+                        resultList.add(new Integer(recNo));
+                    }
+                    recNo++;
+                    nextPos = schema.getOffset() + recNo * (schema.getLengthAllFields() + 2);
                 }
-                if (match) {
-                    resultList.add(new Integer(recNo));
+
+                if (resultList.size() > 0) {
+                    result = new int[resultList.size()];
+                    for (int i = 0; i < resultList.size(); i++) {
+                        Integer a = (Integer) resultList.get(i);
+                        result[i] = a.intValue();
+                    }
                 }
-                recNo++;
-                nextPos = schema.getOffset() + recNo * (schema.getLengthAllFields() + 2);
+
+            } finally {
+                if (file != null) {
+                    try {
+                        file.close();
+                    } catch (IOException e) {
+                        System.out.println("Error closing file + " + filename + " " + e.toString());
+                    }
+                }
             }
 
-            if (resultList.size() > 0) {
-                result = new int[resultList.size()];
-                for (int i = 0; i < resultList.size(); i++) {
-                    Integer a = (Integer) resultList.get(i);
-                    result[i] = a.intValue();
-                }
-            }
-
-        } finally {
-            if (file != null) {
-                try {
-                    file.close();
-                } catch (IOException e) {
-                    System.out.println("Error closing file + " + filename + " " + e.toString());
-                }
-            }
+            return result;
         }
-
-        return result;
     }
 
     /**
@@ -529,7 +531,12 @@ public class Data implements DB {
         synchronized (cookies) {
             RandomAccessFile file = null;
             try {
-                lockCheck(recNo, cookie);
+                Long key = new Long(recNo);
+                Long value = (Long) cookies.remove(key);
+                if (value == null || value.longValue() != cookie) {
+                    throw new SecurityException("Record " + recNo + " cookie invalid");
+                }
+
                 file = new RandomAccessFile(filename, "r");
                 if (schema == null) {
                     schema = readSchema(file);
