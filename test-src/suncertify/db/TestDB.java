@@ -50,7 +50,8 @@ public class TestDB {
                 if (cookie != -1) {
                     try {
                         data.unlock(recNo, cookie);
-                    } catch (RecordNotFoundException f) {
+                    } catch (RecordNotFoundException e) {
+                        System.out.println("Exception " + e.toString());
                     } catch (IOException e) {
                         System.out.println("Exception " + e.toString());
                     }
@@ -74,7 +75,8 @@ public class TestDB {
                 if (cookie != -1) {
                     try {
                         data.unlock(recNo, cookie);
-                    } catch (RecordNotFoundException f) {
+                    } catch (RecordNotFoundException e) {
+                        System.out.println("Exception " + e.toString());
                     } catch (IOException e) {
                         System.out.println("Exception " + e.toString());
                     }
@@ -109,6 +111,7 @@ public class TestDB {
                 data.delete(recNo, cookie);
 
             } catch (RecordNotFoundException e) {
+                System.out.println("Exception " + e.toString());
             } catch (IOException e) {
                 System.out.println("Exception " + e.toString());
             } finally {
@@ -116,6 +119,7 @@ public class TestDB {
                     try {
                         data.unlock(recNo, cookie);
                     } catch (RecordNotFoundException e) {
+                        System.out.println("Exception " + e.toString());
                     } catch (IOException e) {
                         System.out.println("Exception " + e.toString());
                     }
