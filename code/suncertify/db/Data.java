@@ -83,8 +83,9 @@ public class Data implements DB {
      * @param recNo record from the file to be read.
      * @return an array where each element is a record value.
      * @throws RecordNotFoundException thrown if there are problems reading the record.
+     * @throws IOException thrown if an error occurs accessing the database file.
      */
-    public String[] read(int recNo) throws RecordNotFoundException {
+    public String[] read(int recNo) throws RecordNotFoundException, IOException {
         synchronized (cookies) {
             String[] result = null;
             RandomAccessFile file = null;
@@ -108,8 +109,6 @@ public class Data implements DB {
                     throw new RecordNotFoundException("Record " + recNo + " was not found");
                 }
 
-            } catch (IOException e) {
-                throw new RecordNotFoundException(e.getMessage());
             } finally {
                 if (file != null) {
                     try {
@@ -149,8 +148,10 @@ public class Data implements DB {
      * @param lockCookie cookie value that represents the lock.
      * @throws RecordNotFoundException thrown if the record can not be found in the database.
      * @throws SecurityException thrown if the record is locked with a cookie other than lockCookie.
+     * @throws IOException thrown if an error occurs accessing the database file.
      */
-    public void update(int recNo, String[] data, long lockCookie) throws RecordNotFoundException, SecurityException {
+    public void update(int recNo, String[] data, long lockCookie)
+            throws RecordNotFoundException, SecurityException, IOException {
         synchronized (cookies) {
             RandomAccessFile file = null;
             try {
@@ -179,10 +180,6 @@ public class Data implements DB {
                     throw new RecordNotFoundException("Record " + recNo + " was not found");
                 }
 
-            } catch (FileNotFoundException e) {
-                throw new RecordNotFoundException(e.getMessage());
-            } catch (IOException e) {
-                throw new RecordNotFoundException(e.getMessage());
             } finally {
                 if (file != null) {
                     try {
@@ -204,8 +201,10 @@ public class Data implements DB {
      * @param lockCookie cookie value that represents the lock.
      * @throws RecordNotFoundException thrown if the record can not be found in the database.
      * @throws SecurityException thrown if the record is locked with a cookie other than lockCookie.
+     * @throws IOException thrown if an error occurs accessing the database file.
      */
-    public void delete(int recNo, long lockCookie) throws RecordNotFoundException, SecurityException {
+    public void delete(int recNo, long lockCookie)
+            throws RecordNotFoundException, SecurityException, IOException {
         synchronized (cookies) {
             RandomAccessFile file = null;
             try {
@@ -222,10 +221,6 @@ public class Data implements DB {
                     }
                 }
 
-            } catch (FileNotFoundException e) {
-                throw new RecordNotFoundException(e.getMessage());
-            } catch (IOException e) {
-                throw new RecordNotFoundException(e.getMessage());
             } finally {
                 if (file != null) {
                     try {
@@ -247,8 +242,9 @@ public class Data implements DB {
      *
      * @param criteria criteria used for matching records.
      * @return an array of record numbers that match the specified criteria.
+     * @throws IOException thrown if an error occurs accessing the database file.
      */
-    public int[] find(String[] criteria) {
+    public int[] find(String[] criteria) throws IOException {
         synchronized (cookies) {
             int[] result = null;
             RandomAccessFile file = null;
@@ -296,8 +292,6 @@ public class Data implements DB {
                     }
                 }
 
-            } catch (Exception e) {
-                System.out.println("Exception " + e.toString());
             } finally {
                 if (file != null) {
                     try {
@@ -319,8 +313,9 @@ public class Data implements DB {
      *
      * @param criteria criteria used for matching records.
      * @return an array of record numbers that match the specified criteria.
+     * @throws IOException thrown if an error occurs accessing the database file.
      */
-    private int[] findDuplicates(String[] criteria) {
+    private int[] findDuplicates(String[] criteria) throws IOException {
         synchronized (cookies) {
             int[] result = null;
             RandomAccessFile file = null;
@@ -372,8 +367,6 @@ public class Data implements DB {
                     }
                 }
 
-            } catch (Exception e) {
-                System.out.println("Exception " + e.toString());
             } finally {
                 if (file != null) {
                     try {
@@ -394,9 +387,10 @@ public class Data implements DB {
      *
      * @param data values for this new record.
      * @return the record number of the new record.
-     * @throws DuplicateKeyException thrown if the record cannot be created.
+     * @throws DuplicateKeyException thrown if the record already exists in the database.
+     * @throws IOException thrown if an error occurs accessing the database file.
      */
-    public int create(String[] data) throws DuplicateKeyException {
+    public int create(String[] data) throws DuplicateKeyException, IOException {
         synchronized (cookies) {
             int recNo = 0;
             RandomAccessFile file = null;
@@ -449,8 +443,6 @@ public class Data implements DB {
                     }
                 }
 
-            } catch (Exception e) {
-                throw new DuplicateKeyException(e.getMessage());
             } finally {
                 if (file != null) {
                     try {
@@ -475,8 +467,9 @@ public class Data implements DB {
      * @param recNo record number to be locked.
      * @return cookie value that represents the lock.
      * @throws RecordNotFoundException thrown if the record can not be found in the database.
+     * @throws IOException thrown if an error occurs accessing the database file.
      */
-    public long lock(int recNo) throws RecordNotFoundException {
+    public long lock(int recNo) throws RecordNotFoundException, IOException {
         synchronized (cookies) {
             Long key = new Long(recNo);
             while (cookies.get(key) != null) {
@@ -507,10 +500,6 @@ public class Data implements DB {
                     throw new RecordNotFoundException("Record " + recNo + " was not found");
                 }
 
-            } catch (FileNotFoundException e) {
-                throw new RecordNotFoundException(e.getMessage());
-            } catch (IOException e) {
-                throw new RecordNotFoundException(e.getMessage());
             } finally {
                 if (file != null) {
                     try {
@@ -535,8 +524,10 @@ public class Data implements DB {
      * @param cookie cookie value that represents the lock.
      * @throws RecordNotFoundException thrown if the record can not be found in the database.
      * @throws SecurityException thrown if the record is not locked.
+     * @throws IOException thrown if an error occurs accessing the database file.
      */
-    public void unlock(int recNo, long cookie) throws RecordNotFoundException, SecurityException {
+    public void unlock(int recNo, long cookie)
+            throws RecordNotFoundException, SecurityException, IOException {
         synchronized (cookies) {
             try {
                 Long key = new Long(recNo);
@@ -545,10 +536,6 @@ public class Data implements DB {
                     throw new SecurityException("Record " + recNo + " cookie invalid");
                 }
 
-            } catch (SecurityException e) {
-                throw new SecurityException(e.getMessage());
-            } catch (Exception e) {
-                throw new RecordNotFoundException(e.getMessage());
             } finally {
                 cookies.notifyAll();
             }
