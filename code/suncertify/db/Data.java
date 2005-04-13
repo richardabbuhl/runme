@@ -543,7 +543,7 @@ public class Data implements DB {
                 }
                 file.seek(schema.getOffset() + recNo * (schema.getLengthAllFields() + 2));
                 short flag = file.readShort();
-                if (flag != 0) {
+                if (flag != 0 && flag != 0x8000) {
                     throw new RecordNotFoundException("Record " + recNo + " was not found");
                 }
 
