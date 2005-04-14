@@ -270,6 +270,10 @@ public class RunMeFrame extends JFrame {
      * Creates the listeners for menu items.
      */
     private void createMenuBarListeners() {
+
+        // If the user select options then allow then to change the database connection property.  For remote
+        // connections this is either localhost or the ip address of the server.  For local connections this
+        // is the path of the database file.
         optionsMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 if (dbRemote) {
@@ -308,6 +312,7 @@ public class RunMeFrame extends JFrame {
             }
         });
 
+        // If the user selects exit then shutdown the user interface.
         exitMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 System.exit(0);
