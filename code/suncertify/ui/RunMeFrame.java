@@ -202,13 +202,18 @@ public class RunMeFrame extends JFrame {
         DB data = null;
         try {
             if (dbRemote) {
+                // If a remote connection to the database is required then use RMI.
                 String remoteHost = getProperty("remote-host", "localhost");
                 Registry remoteRegistry = LocateRegistry.getRegistry(remoteHost);
                 data = (DB) remoteRegistry.lookup(DB.SERVICENAME);
+
             } else {
+
+                // If a local connection to the database is required then use the Data class.
                 String localDBPath = getProperty("localdb-path", "db-2x2.db");
                 data = new Data(localDBPath);
             }
+
         } catch (Exception e) {
             System.out.println("Exception " + e.toString());
             JOptionPane.showMessageDialog(null, "Error reading " + PROPERTIES_FILE + " " + e.toString(),
