@@ -406,7 +406,7 @@ public class RunMeFrame extends JFrame {
 
     /**
      * Try and update the update the customer holding for the currently selected record.  Before allowing the
-     * update to continue the record is checked for a dirty update (another user changed the value). 
+     * update to continue the record is checked for a dirty update (another user changed the value).
      * @param rowIndex current selected row.
      * @param newCustomerHold new value for the customer holding.
      */
@@ -416,6 +416,8 @@ public class RunMeFrame extends JFrame {
             int recNo = Integer.parseInt((String) resultsTable.getModel().getValueAt(rowIndex, COL_REC_NUM));
             String currentCustomerHold = (String) resultsTable.getModel().getValueAt(rowIndex, COL_CUST_HOLD);
             System.out.println("Update started recNo " + recNo + " customer to " + newCustomerHold);
+
+            // Check for a dirty update.
             boolean doUpdate = true;
             String[] currentValues = data.read(recNo);
             if (!currentValues[5].trim().equals(currentCustomerHold)) {
@@ -436,6 +438,7 @@ public class RunMeFrame extends JFrame {
                 }
             }
 
+            // update the customer holding for the currently selected record.
             if (doUpdate) {
                 String[] d = {null, null, null, null, null, newCustomerHold};
                 long cookie = data.lock(recNo);
