@@ -430,6 +430,7 @@ public class RunMeFrame extends JFrame {
                 if (result == JOptionPane.NO_OPTION) {
                     System.out.println("Rollback recNo " + recNo + " customer to " + currentValues[5].trim());
 
+                    // Update the row with the current value from the database.
                     MyTableModel resultsModel = (MyTableModel) resultsTable.getModel();
                     resultsModel.setValueAt(currentValues[5].trim(), rowIndex, COL_CUST_HOLD);
                     resultsModel.fireTableCellUpdated(rowIndex, COL_CUST_HOLD);
