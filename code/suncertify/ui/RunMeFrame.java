@@ -404,10 +404,65 @@ public class RunMeFrame extends JFrame {
         return true;
     }
 
+    private void updateCustomerHolding(int rowIndex, String newCustomerHold) {
+        try {
+            DB data = getDB();
+            int recNo = Integer.parseInt((String) resultsTable.getModel().getValueAt(rowIndex, COL_REC_NUM));
+            String currentCustomerHold = (String) resultsTable.getModel().getValueAt(rowIndex, COL_CUST_HOLD);
+            System.out.println("Update started recNo " + recNo + " customer to " + newCustomerHold);
+            boolean doUpdate = true;
+            String[] currentValues = data.read(recNo);
+            if (!currentValues[5].trim().equals(currentCustomerHold)) {
+
+                int result = JOptionPane.showConfirmDialog(null,
+                        "Customer holding was recently booked by another CSR to " + currentValues[5].trim() +
+                        ". Click YES to book customer holding to " + newCustomerHold,
+                        "alert", JOptionPane.YES_NO_OPTION);
+
+                if (result == JOptionPane.NO_OPTION) {
+                    System.out.println("Rollback recNo " + recNo + " customer to " + currentValues[5].trim());
+
+                    MyTableModel resultsModel = (MyTableModel) resultsTable.getModel();
+                    resultsModel.setValueAt(currentValues[5].trim(), rowIndex, COL_CUST_HOLD);
+                    resultsModel.fireTableCellUpdated(rowIndex, COL_CUST_HOLD);
+
+                    doUpdate = false;
+                }
+            }
+
+            if (doUpdate) {
+                String[] d = {null, null, null, null, null, newCustomerHold};
+                long cookie = data.lock(recNo);
+                data.update(recNo, d, cookie);
+                data.unlock(recNo, cookie);
+                System.out.println("Update commited recNo " + recNo + " customer to " + newCustomerHold);
+
+                MyTableModel resultsModel = (MyTableModel) resultsTable.getModel();
+                resultsModel.setValueAt(newCustomerHold, rowIndex, COL_CUST_HOLD);
+                resultsModel.fireTableCellUpdated(rowIndex, COL_CUST_HOLD);
+
+                if ("".equals(newCustomerHold)) {
+                    JOptionPane.showMessageDialog(null, "Unbooked Record Num " + recNo,
+                            "alert", JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Booked Record Num " + recNo + " to customer " +
+                            newCustomerHold, "alert", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println("Exception " + e.toString());
+            JOptionPane.showMessageDialog(null, "Error writing DB " + e.toString(),
+                    "alert", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     /**
      * Creates the listeners for search and booking components..
      */
     private void createSearchBookListeners() {
+
+        // If the user presses the search button then update the table model and redisplay the table.
         searchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 List matchList = matchTest();
@@ -419,73 +474,34 @@ public class RunMeFrame extends JFrame {
             }
         });
 
+        // If the user presses the book button then try to update the customer holding.
         bookButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
+
+                // Updates are allowed only when a row is selected.
                 int rowIndex = resultsTable.getSelectedRow();
                 if (rowIndex != -1) {
+
+                    // Validate the customer holding value.
                     String newCustomerHold = bookCity.getText().trim();
-                    boolean valid = false;
+                    boolean validCustomerHolding = false;
                     if ("".equals(newCustomerHold)) {
-                        valid = true;
+                        validCustomerHolding = true;
                     } else if (newCustomerHold.length() == 8) {
-                        valid = hasOnlyDigits(newCustomerHold);
+                        validCustomerHolding = hasOnlyDigits(newCustomerHold);
                     }
 
-                    if (!valid) {
+                    // If the entered value for customer holding is valid then update the record.
+                    if (validCustomerHolding) {
+
+                        // Try to update the record.
+                        updateCustomerHolding(rowIndex, newCustomerHold);
+
+                    } else {
+
+                        // Let the user know that the entered value for customer holding is invalid.
                         JOptionPane.showMessageDialog(null,
                                 "Customer holding must be either an 8-digit customer number to book or empty to unbook.",
-                                "alert", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-
-                    try {
-                        DB data = getDB();
-                        int recNo = Integer.parseInt((String) resultsTable.getModel().getValueAt(rowIndex, COL_REC_NUM));
-                        String currentCustomerHold = (String) resultsTable.getModel().getValueAt(rowIndex, COL_CUST_HOLD);
-                        System.out.println("Update started recNo " + recNo + " customer to " + newCustomerHold);
-                        boolean doUpdate = true;
-                        String[] currentValues = data.read(recNo);
-                        if (!currentValues[5].trim().equals(currentCustomerHold)) {
-
-                            int result = JOptionPane.showConfirmDialog(null,
-                                    "Customer holding was recently booked by another CSR to " + currentValues[5].trim() +
-                                    ". Click YES to book customer holding to " + newCustomerHold,
-                                    "alert", JOptionPane.YES_NO_OPTION);
-
-                            if (result == JOptionPane.NO_OPTION) {
-                                System.out.println("Rollback recNo " + recNo + " customer to " + currentValues[5].trim());
-
-                                MyTableModel resultsModel = (MyTableModel) resultsTable.getModel();
-                                resultsModel.setValueAt(currentValues[5].trim(), rowIndex, COL_CUST_HOLD);
-                                resultsModel.fireTableCellUpdated(rowIndex, COL_CUST_HOLD);
-
-                                doUpdate = false;
-                            }
-                        }
-
-                        if (doUpdate) {
-                            String[] d = {null, null, null, null, null, newCustomerHold};
-                            long cookie = data.lock(recNo);
-                            data.update(recNo, d, cookie);
-                            data.unlock(recNo, cookie);
-                            System.out.println("Update commited recNo " + recNo + " customer to " + newCustomerHold);
-
-                            MyTableModel resultsModel = (MyTableModel) resultsTable.getModel();
-                            resultsModel.setValueAt(newCustomerHold, rowIndex, COL_CUST_HOLD);
-                            resultsModel.fireTableCellUpdated(rowIndex, COL_CUST_HOLD);
-
-                            if ("".equals(newCustomerHold)) {
-                                JOptionPane.showMessageDialog(null, "Unbooked Record Num " + recNo,
-                                        "alert", JOptionPane.INFORMATION_MESSAGE);
-                            } else {
-                                JOptionPane.showMessageDialog(null, "Booked Record Num " + recNo + " to customer " +
-                                        newCustomerHold, "alert", JOptionPane.INFORMATION_MESSAGE);
-                            }
-                        }
-
-                    } catch (Exception e) {
-                        System.out.println("Exception " + e.toString());
-                        JOptionPane.showMessageDialog(null, "Error writing DB " + e.toString(),
                                 "alert", JOptionPane.ERROR_MESSAGE);
                     }
 
