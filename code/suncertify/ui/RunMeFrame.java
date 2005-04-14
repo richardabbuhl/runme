@@ -350,6 +350,8 @@ public class RunMeFrame extends JFrame {
         try {
             String[] d = {"", "", "", "", "", ""};
 
+            // If both the subcontractor name and city are specified then search for both.  If neither are specfied
+            // then do search for all records by specifying null for the subcontractor name.
             String name = subcontractorName.getText().trim();
             String city = subcontractorCity.getText().trim();
             if (name != null && name.length() > 0) {
@@ -363,6 +365,8 @@ public class RunMeFrame extends JFrame {
                 d[0] = null;
             }
 
+            // Perform the search and return a list of records.  Add an extra column which contains the record
+            // number so that it can be used for updated to easily find the record.
             DB data = getDB();
             int[] matches = data.find(d);
             if (matches != null) {
