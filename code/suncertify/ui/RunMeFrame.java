@@ -172,12 +172,18 @@ public class RunMeFrame extends JFrame {
      */
     private void setProperty(String key, String value) {
         Properties properties = new Properties();
+
+        // Load the properties file.
         try {
             properties.load(new FileInputStream(PROPERTIES_FILE));
         } catch (IOException e) {
             System.out.println("Exception " + e.toString());
         }
+
+        // Update the desired properties.
         properties.setProperty(key, value);
+
+        // Save the properties file.
         try {
             properties.store(new FileOutputStream(PROPERTIES_FILE), null);
         } catch (IOException e) {
