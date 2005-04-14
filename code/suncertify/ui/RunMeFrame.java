@@ -438,7 +438,7 @@ public class RunMeFrame extends JFrame {
                 }
             }
 
-            // update the customer holding for the currently selected record.
+            // Update the customer holding for the currently selected record.
             if (doUpdate) {
                 String[] d = {null, null, null, null, null, newCustomerHold};
                 long cookie = data.lock(recNo);
