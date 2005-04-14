@@ -404,6 +404,12 @@ public class RunMeFrame extends JFrame {
         return true;
     }
 
+    /**
+     * Try and update the update the customer holding for the currently selected record.  Before allowing the
+     * update to continue the record is checked for a dirty update (another user changed the value). 
+     * @param rowIndex current selected row.
+     * @param newCustomerHold new value for the customer holding.
+     */
     private void updateCustomerHolding(int rowIndex, String newCustomerHold) {
         try {
             DB data = getDB();
