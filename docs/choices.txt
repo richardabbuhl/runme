@@ -34,6 +34,21 @@ related to editing so I choose to use a text box and button to edit the customer
 best approach for usability.  For DB configurtion, a menu item was added so that a dialog could be used to update
 the DB configuration information.
 
+Dirty Updates
+
+If two users are remotely accessing the database, it is possible that the first user updates the customer holding but
+the second user does not yet see the change.  The second user can then try to update the same record and would overwrite
+the changes from the first user.  This is dealt with during an update by reading the value of customer holding from the
+database and comparing it against the current value of customer holding.  If the two are different the user updating the
+record is given the choice to abort the update or to overwrite the record.  This is done without holding a lock to the
+record to prevent deadlocks if the user does not respond.  During the actual update of the record a lock is requested
+so that the update is protected.  However, during the time between presenting the choice to the user and the update of
+the record if the user chooses to continue an update could also have occurred.  This could be solved by getting a lock
+and again reading the value of customer holding from the database and comparing it against the current value of customer
+holding.  If the two are different then the update should be aborted and reported to the user as an update conflict.
+However, this second check was not implemented.  Also, it was decided not to get a lock and then query the user since
+another user could be locked from the record during the time that a responce must be entered by the user.
+
 RMI Implementation
 
 I did some quick research and RMI seemed to be the best and easiest choice for remote access to the database.  Some
