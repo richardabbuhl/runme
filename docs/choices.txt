@@ -65,8 +65,8 @@ except at run-time whether these database is local or remote the interface dicta
 
 Exception Handling
 
-For the DB interface, it was difficult to implement proper exception handling.  All of the interfaces were defined
-to throw certain exceptions and it seemed that IOException should be added although it would have been nicer to define
-another exception like DatabaseErrorException.  It would then have been necessary to catch IOException and to re-throw
-DatabaseErrorException instead for the Data class methods.  For RemoteData class methods, they must throw RemoteException
-which extends IOException.
+For the DB interface, it was difficult to implement proper exception handling.  All of the interfaces were initially
+defined to throw certain exceptions and it seemed that IOException should be added although it would have been nicer
+to define a generic exception like DatabaseErrorException.  Using DatabaseErrorException, it would then have been
+necessary to catch IOException and to re-throw DatabaseErrorException instead for the Data class methods.  For
+RemoteData class methods, they must throw RemoteException which extends IOException.
