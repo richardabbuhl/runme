@@ -21,7 +21,7 @@ public class Field {
     /**
      * The name of the column in the database.
      */
-    private String name = new String();
+    private String name;
 
     /**
      * The length of the column in the database.
