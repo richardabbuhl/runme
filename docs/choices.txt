@@ -68,5 +68,6 @@ Exception Handling
 For the DB interface, it was difficult to implement proper exception handling.  All of the interfaces were initially
 defined to throw certain exceptions and it seemed that IOException should be added although it would have been nicer
 to define a generic exception like DatabaseErrorException.  Using DatabaseErrorException, it would then have been
-necessary to catch IOException and to re-throw DatabaseErrorException instead for the Data class methods.  For
-RemoteData class methods, they must throw RemoteException which extends IOException.
+necessary to catch IOException and to re-throw DatabaseErrorException instead for the Data class methods.  Also,
+the RemoteData class methods already need to throw RemoteException (which extends IOException) and yet IOException
+is on the list of exceptions.
