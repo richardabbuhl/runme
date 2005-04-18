@@ -24,6 +24,16 @@ import java.util.Map;
 public class Data implements DB {
 
     /**
+     * The database value that indicates a record is valid.
+     */
+    private static final short VALID_RECORD_FLAG = 0;
+
+    /**
+     * The database value that indicates a record is deleted.
+     */
+    private static final short DELETED_RECORD_FLAG = (short)0x8000;
+
+    /**
      * The database schema is cached for performance reasons.
      */
     private static Schema schema = null;
@@ -77,8 +87,8 @@ public class Data implements DB {
 
     /**
      * Reads a record from the file and returns an array where each element is a record value.  The record
-     * should be locked to prevent a dirty read of the record but this is not enforced to reads to occur
-     * once a lock is obtained.
+     * should be locked to prevent a dirty read of the record but this is not enforced so that it is possible
+     * to read a record while holding a lock for that record.
      *
      * @param recNo record from the file to be read.
      * @return an array where each element is a record value.
@@ -96,7 +106,7 @@ public class Data implements DB {
                 }
                 file.seek(schema.getOffset() + recNo * (schema.getLengthAllFields() + 2));
                 short flag = file.readShort();
-                if (flag == 0) {
+                if (flag == VALID_RECORD_FLAG) {
                     result = new String[schema.getNumFields()];
                     for (int i = 0; i < schema.getNumFields(); i++) {
                         StringBuffer sb = new StringBuffer();
@@ -126,7 +136,7 @@ public class Data implements DB {
     }
 
     /**
-     * Checks that record is actually locked
+     * Checks that record is actually locked and throws SecurityException exception if it is not locked.
      *
      * @param recNo record number whose lock is to be checked.
      * @param lockCookie cookie value that represents the lock.
@@ -162,7 +172,7 @@ public class Data implements DB {
                 }
                 file.seek(schema.getOffset() + recNo * (schema.getLengthAllFields() + 2));
                 short flag = file.readShort();
-                if (flag == 0) {
+                if (flag == VALID_RECORD_FLAG) {
                     for (int i = 0; i < schema.getNumFields(); i++) {
                         if (i < data.length && data[i] != null) {
                             file.writeBytes(data[i]);
@@ -214,7 +224,7 @@ public class Data implements DB {
                     schema = readSchema(file);
                 }
                 file.seek(schema.getOffset() + recNo * (schema.getLengthAllFields() + 2));
-                file.writeShort(0x8000);
+                file.writeShort(DELETED_RECORD_FLAG);
                 for (int i = 0; i < schema.getNumFields(); i++) {
                     for (int k = 0; k < schema.getFields()[i].getLength(); k++) {
                         file.writeBytes(" ");
@@ -249,7 +259,7 @@ public class Data implements DB {
             int[] result = null;
             RandomAccessFile file = null;
             try {
-                file = new RandomAccessFile(filename, "rw");
+                file = new RandomAccessFile(filename, "r");
                 if (schema == null) {
                     schema = readSchema(file);
                 }
@@ -259,8 +269,8 @@ public class Data implements DB {
                 while (nextPos < file.length()) {
                     file.seek(nextPos);
                     short flag = file.readShort();
-                    boolean match = false;
-                    if (flag == 0) {
+                    if (flag == VALID_RECORD_FLAG) {
+                        boolean match = false;
                         for (int i = 0; i < schema.getNumFields(); i++) {
                             StringBuffer sb = new StringBuffer();
                             for (int k = 0; k < schema.getFields()[i].getLength(); k++) {
@@ -269,16 +279,16 @@ public class Data implements DB {
                             if (criteria[i] == null) {
                                 match = true;
                             } else if (criteria[i].length() > 0) {
-                                if (sb.toString().startsWith(criteria[i])) {
+                                if (sb.toString() != null && sb.toString().startsWith(criteria[i])) {
                                     match = true;
                                 } else {
                                     match = false;
                                 }
                             }
                         }
-                    }
-                    if (match) {
-                        resultList.add(new Integer(recNo));
+                        if (match) {
+                            resultList.add(new Integer(recNo));
+                        }
                     }
                     recNo++;
                     nextPos = schema.getOffset() + recNo * (schema.getLengthAllFields() + 2);
@@ -309,62 +319,50 @@ public class Data implements DB {
     }
 
     /**
-     * Returns an array of record numbers that exactly match the specified criteria.
+     * Returns true if any records in the database exactly match the specified criteria.
      *
      * @param criteria criteria used for matching records.
-     * @return an array of record numbers that match the specified criteria.
+     * @return true if any records in the database exactly match the specified criteria.
      * @throws IOException thrown if an error occurs accessing the database file.
      */
-    private int[] findDuplicates(String[] criteria) throws IOException {
+    private boolean foundDuplicates(String[] criteria) throws IOException {
         synchronized (cookies) {
-            int[] result = null;
             RandomAccessFile file = null;
             try {
-                file = new RandomAccessFile(filename, "rw");
+                file = new RandomAccessFile(filename, "r");
                 if (schema == null) {
                     schema = readSchema(file);
                 }
-                List resultList = new ArrayList();
                 int recNo = 0;
                 int nextPos = schema.getOffset() + recNo * (schema.getLengthAllFields() + 2);
                 while (nextPos < file.length()) {
                     file.seek(nextPos);
                     short flag = file.readShort();
-                    boolean match = false;
-                    if (flag == 0) {
+                    if (flag == VALID_RECORD_FLAG) {
+                        boolean allMatch = true;
                         for (int i = 0; i < schema.getNumFields(); i++) {
                             StringBuffer sb = new StringBuffer();
                             for (int k = 0; k < schema.getFields()[i].getLength(); k++) {
                                 sb.append((char) file.readByte());
                             }
                             if (criteria[i] == null) {
-                                if (sb.length() == 0) {
-                                    match = true;
-                                } else {
-                                    match = false;
+                                if (sb.toString() != null && sb.toString().trim().length() > 0) {
+                                    allMatch = false;
+                                    break;
                                 }
                             } else if (criteria[i].length() > 0) {
-                                if (sb.toString().trim().equals(criteria[i])) {
-                                    match = true;
-                                } else {
-                                    match = false;
+                                if (sb.toString() != null && !sb.toString().trim().equals(criteria[i])) {
+                                    allMatch = false;
+                                    break;
                                 }
                             }
                         }
-                    }
-                    if (match) {
-                        resultList.add(new Integer(recNo));
+                        if (allMatch) {
+                            return true;
+                        }
                     }
                     recNo++;
                     nextPos = schema.getOffset() + recNo * (schema.getLengthAllFields() + 2);
-                }
-
-                if (resultList.size() > 0) {
-                    result = new int[resultList.size()];
-                    for (int i = 0; i < resultList.size(); i++) {
-                        Integer a = (Integer) resultList.get(i);
-                        result[i] = a.intValue();
-                    }
                 }
 
             } finally {
@@ -377,7 +375,7 @@ public class Data implements DB {
                 }
             }
 
-            return result;
+            return false;
         }
     }
 
@@ -395,8 +393,7 @@ public class Data implements DB {
             int recNo = 0;
             RandomAccessFile file = null;
             try {
-                int[] matches = findDuplicates(data);
-                if (matches != null) {
+                if (foundDuplicates(data)) {
                     throw new DuplicateKeyException("This record already exists in the database");
                 }
                 file = new RandomAccessFile(filename, "rw");
@@ -407,9 +404,9 @@ public class Data implements DB {
                 while (nextPos < file.length()) {
                     file.seek(nextPos);
                     short flag = file.readShort();
-                    if (flag == 0x8000) {
+                    if (flag == DELETED_RECORD_FLAG) {
                         file.seek(nextPos);
-                        file.writeShort(0);
+                        file.writeShort(VALID_RECORD_FLAG);
                         for (int i = 0; i < schema.getNumFields(); i++) {
                             if (i < data.length && data[i] != null) {
                                 file.writeBytes(data[i]);
@@ -490,7 +487,7 @@ public class Data implements DB {
                 }
                 file.seek(schema.getOffset() + recNo * (schema.getLengthAllFields() + 2));
                 short flag = file.readShort();
-                if (flag == 0) {
+                if (flag == VALID_RECORD_FLAG) {
 
                     cookie = key.hashCode();
                     Long value = new Long(cookie);
@@ -543,7 +540,7 @@ public class Data implements DB {
                 }
                 file.seek(schema.getOffset() + recNo * (schema.getLengthAllFields() + 2));
                 short flag = file.readShort();
-                if (flag != 0 && flag != 0x8000) {
+                if (flag != VALID_RECORD_FLAG && flag != DELETED_RECORD_FLAG) {
                     throw new RecordNotFoundException("Record " + recNo + " was not found");
                 }
 

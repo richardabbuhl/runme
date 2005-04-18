@@ -84,11 +84,11 @@ public class TestDB {
             }
         }
 
-        private void addTest(DB data) {
+        private void addTest(DB data, int i) {
             String [] d = new String[6];
             try {
 
-                d[0] = "A" + Thread.currentThread().getName();
+                d[0] = "A" + i + Thread.currentThread().getName();
                 d[1] = "B";
                 d[2] = "C";
                 d[3] = "D";
@@ -156,7 +156,7 @@ public class TestDB {
             }
 
             for (int i = 0; i < maxRecords; i++) {
-                addTest(data);
+                addTest(data, i);
             }
 
             for (int i = 0; i < 1; i++) {
