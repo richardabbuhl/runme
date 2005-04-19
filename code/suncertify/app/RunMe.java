@@ -14,7 +14,6 @@ import suncertify.ui.RunMeFrame;
 import suncertify.db.Data;
 import suncertify.db.DB;
 
-import javax.swing.*;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
@@ -85,8 +84,6 @@ public class RunMe {
             properties.store(new FileOutputStream(PROPERTIES_FILE), null);
         } catch (IOException e) {
             System.out.println("Exception " + e.toString());
-            JOptionPane.showMessageDialog(null, "Error writing " + PROPERTIES_FILE + " " + e.toString(),
-                    "alert", JOptionPane.ERROR_MESSAGE);
         }
     }
 
