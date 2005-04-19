@@ -15,7 +15,7 @@ package suncertify.db;
  * record that does not exist or is marked as deleted in the database file.
  *
  * @author Richard Abbuhl
- * @version 1.00, April 12, 2005
+ * @version 1.0.0, April 19, 2005
  */
 public class RecordNotFoundException extends Exception {
 

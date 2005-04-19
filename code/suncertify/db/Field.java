@@ -14,7 +14,7 @@ package suncertify.db;
  * represents the database schema.
  *
  * @author Richard Abbuhl
- * @version 1.00, April 12, 2005
+ * @version 1.0.0, April 19, 2005
  */
 public class Field {
 

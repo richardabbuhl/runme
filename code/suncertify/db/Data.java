@@ -19,7 +19,7 @@ import java.util.Map;
  * Data implements the DB class in order to provide access to the customer data.
  *
  * @author Richard Abbuhl
- * @version 1.00, April 12, 2005
+ * @version 1.0.0, April 19, 2005
  */
 public class Data implements DB {
 

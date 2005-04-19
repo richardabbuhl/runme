@@ -17,7 +17,7 @@ import java.io.IOException;
  * DB is the interface class provided for accessing the customer's non-relational database file.
  *
  * @author Richard Abbuhl
- * @version 1.00, April 12, 2005
+ * @version 1.0.0, April 19, 2005
  */
 public interface DB extends Remote {
     /**

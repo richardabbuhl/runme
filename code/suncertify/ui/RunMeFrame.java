@@ -26,7 +26,7 @@ import java.rmi.registry.LocateRegistry;
  * RunMeFrame implements the user interface using Swing components.
  *
  * @author Richard Abbuhl
- * @version 1.00, April 12, 2005
+ * @version 1.0.0, April 19, 2005
  */
 public class RunMeFrame extends JFrame {
 

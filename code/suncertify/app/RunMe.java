@@ -28,7 +28,7 @@ import java.io.FileOutputStream;
  * mode (starts only the client).
  *
  * @author Richard Abbuhl
- * @version 1.00, April 12, 2005
+ * @version 1.0.0, April 19, 2005
  */
 public class RunMe {
 

@@ -14,7 +14,7 @@ package suncertify.db;
  * is thrown whenever an attempt is made to insert an occuppied record in the database.
  *
  * @author Richard Abbuhl
- * @version 1.00, April 12, 2005
+ * @version 1.0.0, April 19, 2005
  */
 public class DuplicateKeyException extends Exception {
 
