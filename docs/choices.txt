@@ -1,6 +1,4 @@
-Copyright (c) 2005 Richard Abbuhl.
-Haarlem, The Netherlands.
-All rights reserved.
+Copyright (c) 2005 Richard Abbuhl, Haarlem, The Netherlands.  All rights reserved.
 
 Overview
 
@@ -14,11 +12,12 @@ Database Issues
 I was not sure how to access the records in the file.  By default, I choose the DataAccessStream but it does not allow
 seeking within the file.  Instead, I choose RandomAccessFile since seeks are necessary to read/write files.
 
-For performance reasons, I seemed necessary to cache the schema.  I created a Schema class and the schema is read and
-in saved so it can be used when future database accesses are requested.
+For performance reasons, it seemed necessary to cache the schema.  I created a Schema class and the schema is read and
+saved so it can be used when future database accesses are requested. 
 
 I choose to use a HashMap for holding the locking information to lock the database using cookies.  To test locking, I
-wrote a test program with 20 threads that accessed the database simulatenously and no deadlocks occurred.
+wrote a test program with 20 threads that accessed the database simulatenously and called each interface (read, update,
+delete, and create) 25 times and no deadlocks occurred.
 
 To support RMI, The DB class was modified so that it extended the Remote class so that it can support local or remote
 usage.  An instance of the Data class can be instantiated for local database usage or an instance of the RemoteData
@@ -27,12 +26,11 @@ class can be instantiated for remote database usage.
 GUI Issues
 
 The user interface was designed to provide only limited functionality.  It allows the user to view all records, to view
-records matching the first letters of the subcontractor name or city, and allows the user the user to modify a record.
-It was chosen not to allow the user to delete a record.  It was difficult to decide how to allow editing and after some
-research it seemed the best way to accomplish this was editing using a JTable.  However, there are some Swing issues
-related to editing so I choose to use a text box and button to edit the customer holding.  This was the simpliest and
-best approach for usability.  For DB configurtion, a menu item was added so that a dialog could be used to update
-the DB configuration information.
+records matching the first letters of the subcontractor name or city, and to modify a record.  It was chosen not to allow 
+the user to delete a record.  It was difficult to decide how to allow editing and after some research it seemed the best 
+way to accomplish this was editing using a JTable.  However, there are some Swing issues related to editing so I choose to 
+use a text box and button to edit the customer holding.  This was the simpliest and best approach for usability.  For DB 
+configurtion, a menu item was added so that a dialog could be used to update the DB configuration information.
 
 Dirty Updates
 
@@ -46,8 +44,9 @@ so that the update is protected.  However, during the time between presenting th
 the record if the user chooses to continue an update could also have occurred.  This could be solved by getting a lock
 and again reading the value of customer holding from the database and comparing it against the current value of customer
 holding.  If the two are different then the update should be aborted and reported to the user as an update conflict.
-However, this second check was not implemented.  Also, it was decided not to get a lock and then query the user since
-another user could be locked from the record during the time that a responce must be entered by the user.
+However, this second check was not implemented due to time constraints.  Also, it was decided not to get a lock and 
+then ask the user what is desired since this could block another user from the record during the time that a responce 
+must be entered by the user.
 
 RMI Implementation
 
