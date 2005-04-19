@@ -39,7 +39,7 @@ public class RunMe {
     private static int mode = CLIENT_MODE;
 
     /**
-     * Define a constant for the properties file for the user interface.
+     * Define a constant for the properties file filename.
      */
     public static final String PROPERTIES_FILE = "suncertify.properties";
 
