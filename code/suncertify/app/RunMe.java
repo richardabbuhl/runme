@@ -14,9 +14,14 @@ import suncertify.ui.RunMeFrame;
 import suncertify.db.Data;
 import suncertify.db.DB;
 
+import javax.swing.*;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
+import java.util.Properties;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.FileOutputStream;
 
 /**
  * RunMe is the driver for the runme application.  Based on the mode parameter it either starts the application
@@ -35,6 +40,57 @@ public class RunMe {
     private static int mode = CLIENT_MODE;
 
     /**
+     * Define a constant for the properties file for the user interface.
+     */
+    public static final String PROPERTIES_FILE = "suncertify.properties";
+
+    /**
+     * Gets the property value from the properties file identified by key.
+     * @param key key of the property value to be returned.
+     * @param defaultValue default value to be returned if the key does not exist in the properties file.
+     * @return the property value from the properties file identified by key.
+     */
+    public static String getProperty(String key, String defaultValue) {
+        String value = defaultValue;
+        try {
+            Properties properties = new Properties();
+            properties.load(new FileInputStream(PROPERTIES_FILE));
+            value = properties.getProperty(key, defaultValue);
+        } catch (IOException e) {
+            System.out.println("Exception " + e.toString());
+        }
+        return value;
+    }
+
+    /**
+     * Sets the properties value in the properties files identified by key.
+     * @param key key of the property value to be updated.
+     * @param value value of the property to be updated.
+     */
+    public static void setProperty(String key, String value) {
+        Properties properties = new Properties();
+
+        // Load the properties file.
+        try {
+            properties.load(new FileInputStream(PROPERTIES_FILE));
+        } catch (IOException e) {
+            System.out.println("Exception " + e.toString());
+        }
+
+        // Update the desired properties.
+        properties.setProperty(key, value);
+
+        // Save the properties file.
+        try {
+            properties.store(new FileOutputStream(PROPERTIES_FILE), null);
+        } catch (IOException e) {
+            System.out.println("Exception " + e.toString());
+            JOptionPane.showMessageDialog(null, "Error writing " + PROPERTIES_FILE + " " + e.toString(),
+                    "alert", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
      * Starts the server and listens for requests on the default port (1099).
      */
     public void createServer() {
@@ -43,7 +99,9 @@ public class RunMe {
             Registry localRegistry = LocateRegistry.createRegistry(Registry.REGISTRY_PORT);
 
             System.out.println("Creating local object and remote adapter.");
-            Data adaptee = new Data("db-2x2.db");
+            String localDBPath = RunMe.getProperty("localdb-path", "db-2x2.db");
+            System.out.println("Using DB location " + localDBPath);
+            Data adaptee = new Data(localDBPath);
             RemoteData adapter = new RemoteData(adaptee);
 
             System.out.println("Publishing service \"" + DB.SERVICENAME + "\" in local registry.");
@@ -60,7 +118,7 @@ public class RunMe {
     /**
      * Show the command-line options to the user.
      */
-    private static void showUsage() {
+    public static void showUsage() {
         System.out.println("Usage: java -jar runme.jar [server|alone]");
         System.out.println("  server - indicates server mode and that the server must run.");
         System.out.println("  alone - indicates standalone mode and that both the client and server must run.");

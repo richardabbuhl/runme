@@ -11,6 +11,7 @@ package suncertify.ui;
 
 import suncertify.db.Data;
 import suncertify.db.DB;
+import suncertify.app.RunMe;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -20,9 +21,6 @@ import java.util.*;
 import java.util.List;
 import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.FileOutputStream;
 
 /**
  * RunMeFrame implements the user interface using Swing components.
@@ -31,11 +29,6 @@ import java.io.FileOutputStream;
  * @version 1.00, April 12, 2005
  */
 public class RunMeFrame extends JFrame {
-
-    /**
-     * Define a constant for the properties file for the user interface.
-     */
-    private static final String PROPERTIES_FILE = "suncertify.properties";
 
     /**
      * Define a constant for the rec number and customer holding columns in the user interface.
@@ -148,52 +141,6 @@ public class RunMeFrame extends JFrame {
     }
 
     /**
-     * Gets the property value from the properties file identified by key.
-     * @param key key of the property value to be returned.
-     * @param defaultValue default value to be returned if the key does not exist in the properties file.
-     * @return the property value from the properties file identified by key.
-     */
-    private String getProperty(String key, String defaultValue) {
-        String value = defaultValue;
-        try {
-            Properties properties = new Properties();
-            properties.load(new FileInputStream(PROPERTIES_FILE));
-            value = properties.getProperty(key, defaultValue);
-        } catch (IOException e) {
-            System.out.println("Exception " + e.toString());
-        }
-        return value;
-    }
-
-    /**
-     * Sets the properties value in the properties files identified by key.
-     * @param key key of the property value to be updated.
-     * @param value value of the property to be updated.
-     */
-    private void setProperty(String key, String value) {
-        Properties properties = new Properties();
-
-        // Load the properties file.
-        try {
-            properties.load(new FileInputStream(PROPERTIES_FILE));
-        } catch (IOException e) {
-            System.out.println("Exception " + e.toString());
-        }
-
-        // Update the desired properties.
-        properties.setProperty(key, value);
-
-        // Save the properties file.
-        try {
-            properties.store(new FileOutputStream(PROPERTIES_FILE), null);
-        } catch (IOException e) {
-            System.out.println("Exception " + e.toString());
-            JOptionPane.showMessageDialog(null, "Error writing " + PROPERTIES_FILE + " " + e.toString(),
-                    "alert", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    /**
      * Returns a instance of the database based upon the value of dbRemote.  If dbRemote is true then a remote
      * database connection will be established.  Otherwise, a local database connection will be established.
      * @return a database connection or null if the connection was not allowed.
@@ -203,20 +150,20 @@ public class RunMeFrame extends JFrame {
         try {
             if (dbRemote) {
                 // If a remote connection to the database is required then use RMI.
-                String remoteHost = getProperty("remote-host", "localhost");
+                String remoteHost = RunMe.getProperty("remote-host", "localhost");
                 Registry remoteRegistry = LocateRegistry.getRegistry(remoteHost);
                 data = (DB) remoteRegistry.lookup(DB.SERVICENAME);
 
             } else {
 
                 // If a local connection to the database is required then use the Data class.
-                String localDBPath = getProperty("localdb-path", "db-2x2.db");
+                String localDBPath = RunMe.getProperty("localdb-path", "db-2x2.db");
                 data = new Data(localDBPath);
             }
 
         } catch (Exception e) {
             System.out.println("Exception " + e.toString());
-            JOptionPane.showMessageDialog(null, "Error reading " + PROPERTIES_FILE + " " + e.toString(),
+            JOptionPane.showMessageDialog(null, "Error reading " + RunMe.PROPERTIES_FILE + " " + e.toString(),
                     "alert", JOptionPane.ERROR_MESSAGE);
         }
         return data;
@@ -277,7 +224,7 @@ public class RunMeFrame extends JFrame {
         optionsMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
                 if (dbRemote) {
-                    String remoteHost = getProperty("remote-host", "localhost");
+                    String remoteHost = RunMe.getProperty("remote-host", "localhost");
                     String result = (String) JOptionPane.showInputDialog(null,
                             "Remote host:",
                             "Options",
@@ -287,14 +234,14 @@ public class RunMeFrame extends JFrame {
                             remoteHost);
 
                     if (result != null && !"".equals(result)) {
-                        setProperty("remote-host", result);
+                        RunMe.setProperty("remote-host", result);
                         JOptionPane.showMessageDialog(null, "Remote host updated to " + result,
                                 "alert", JOptionPane.INFORMATION_MESSAGE);
                     }
 
                 } else {
 
-                    String localDBPath = getProperty("localdb-path", "db-2x2.db");
+                    String localDBPath = RunMe.getProperty("localdb-path", "db-2x2.db");
                     String result = (String) JOptionPane.showInputDialog(null,
                             "Local DB Path:",
                             "Options",
@@ -304,7 +251,7 @@ public class RunMeFrame extends JFrame {
                             localDBPath);
 
                     if (result != null && !"".equals(result)) {
-                        setProperty("localdb-path", result);
+                        RunMe.setProperty("localdb-path", result);
                         JOptionPane.showMessageDialog(null, "Local DB Path updated to " + result,
                                 "alert", JOptionPane.INFORMATION_MESSAGE);
                     }
